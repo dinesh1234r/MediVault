@@ -3,6 +3,7 @@ const route=express.Router()
 const DoctorPatientsSchema=require('../Models/DoctorPatientsSchema')
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
+const NurseScheme=require('../Models/NurseScheme')
 
 route.post('/login',async(req,res)=>{
     try{

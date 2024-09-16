@@ -1,6 +1,6 @@
 const mongoose=require('mongoose')
 
-const DoctorPatientsSchema=new mongoose.Schema({
+const NursePatientsSchema=new mongoose.Schema({
     email:{
         type: String,
         required: true
@@ -15,7 +15,7 @@ const DoctorPatientsSchema=new mongoose.Schema({
     photo:{
         type:String,
     },
-    DUID:{
+    NUID:{
         type:String
     },
     patients:{
@@ -23,4 +23,4 @@ const DoctorPatientsSchema=new mongoose.Schema({
     }
 })
 
-module.exports=mongoose.model('DoctorPatients',DoctorPatientsSchema);
+module.exports=mongoose.model('NursePatientsSchema',NursePatientsSchema);

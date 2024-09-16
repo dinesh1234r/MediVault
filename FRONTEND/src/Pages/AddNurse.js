@@ -7,10 +7,8 @@ import { Divider } from '@chakra-ui/react'
 import { jwtDecode } from 'jwt-decode';
 import { BeatLoader } from 'react-spinners';
 
-
-
-function AddDoctors() {
-  const toast=useToast();
+function AddNurse() {
+    const toast=useToast();
   const [isLoading,SetisLoading]=useState(false);
   const [page,Setpage]=useState(true);
   const [gender,Setgender]=useState("");
@@ -145,19 +143,6 @@ function AddDoctors() {
       }
       })
     }
-    else if(Contract_type.length===0)
-    {
-      toast({
-        title:"Contract type can't be Empty",
-        status:"error",
-        position:"top",
-        duration:1500,
-        isClosable:true,
-        onCloseComplete:()=>{ 
-        SetisLoading(false);
-      }
-      })
-    }
     else if(gender.length===0)
     {
       toast({
@@ -174,7 +159,7 @@ function AddDoctors() {
     else
     {
       console.log(DOB);
-    const response=await axios.post('http://localhost:5000/admin/postbyadmin',{Admin,gender,Doctor_name,DOB,photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Contract_type},{
+    const response=await axios.post('http://localhost:5000/admin/postbyadminfornurse',{Admin,gender,Doctor_name,DOB,photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'
@@ -325,16 +310,15 @@ function AddDoctors() {
         <VStack align={'baseline'} spacing={2} p={2}>
         <FormLabel > Qualifications</FormLabel>
         <Input name='Qualifications' placeholder='Qualifications' value={values.Qualifications} alignItems={'center'} maxW={'90%'} boxShadow={'md'} onChange={(e)=>handlechange(e)} ml={'5%'} bg='white'/>
-        <FormLabel > Specialization Of Work</FormLabel>
+        <FormLabel > Work</FormLabel>
         <Input name='Specialization' placeholder='Specialization (e.g., Cardiology, Pediatrics)' value={values.Specialization} alignItems={'center'} maxW={'90%'} boxShadow={'md'} onChange={(e)=>handlechange(e)} ml={'5%'} bg='white'/>
-        <FormLabel > Specialization Of Medical License Number</FormLabel>
+        <FormLabel > Medical License Number</FormLabel>
         <Input name='Medical_License_Number' placeholder='Medical License Number' value={values.Medical_License_Number} alignItems={'center'} maxW={'90%'} boxShadow={'md'} onChange={(e)=>handlechange(e)} ml={'5%'} bg='white'/>
-        <FormLabel > Specialization Of Medical Council Registration Number</FormLabel>
+        <FormLabel > Medical Council Registration Number</FormLabel>
         <Input name='Medical_Council_Registration_Number' placeholder='Medical Council Registration Number' value={values.Medical_Council_Registration_Number} alignItems={'center'} maxW={'90%'} boxShadow={'md'} onChange={(e)=>handlechange(e)} ml={'5%'} bg='white'/>
-        <FormLabel > Specialization Of Years Of Experience</FormLabel>
+        <FormLabel > Years Of Experience</FormLabel>
         <Input name='Years_of_experience' placeholder='Years of experience' value={values.Years_of_experience} alignItems={'center'} maxW={'90%'} boxShadow={'md'} onChange={(e)=>handlechange(e)} ml={'5%'} bg='white'/>
-        <FormLabel > Specialization Of Contract Type</FormLabel>
-        <Input name='Contract_type' placeholder='Contract type' alignItems={'center'} value={values.Contract_type} maxW={'90%'} boxShadow={'md'} onChange={(e)=>handlechange(e)} ml={'5%'} bg='white'/>
+        
       <HStack>
       <Button colorScheme='teal' onClick={handlesubmit} isLoading={isLoading} loadingText={'Submitting'} >Save</Button>
       <Button colorScheme='red' onClick={()=>handlereset()}>Reset</Button>
@@ -354,4 +338,4 @@ function AddDoctors() {
   )
 }
 
-export default AddDoctors
+export default AddNurse

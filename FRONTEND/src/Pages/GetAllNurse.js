@@ -25,14 +25,14 @@ import {jwtDecode} from 'jwt-decode'
 import { color } from 'framer-motion';
 import { Flex } from '@chakra-ui/react';
 
-function GetAllDoctor() {
+function GetAllNurse() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast=useToast();
   const [Details,SetDetails] = useState([])
   const [medicalnum,SetMedicalnum]=useState(null);
   const fetchdetails=async()=>{
     const Admin=jwtDecode(localStorage.getItem('jwt')).adminuser;
-    const response=await axios.post('http://localhost:5000/admin/getalldetailsofdoctor',{Admin},{
+    const response=await axios.post('http://localhost:5000/admin/getalldetailsofnurse',{Admin},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'
@@ -68,7 +68,7 @@ function GetAllDoctor() {
   }
 
   const handlesubmit=async()=>{
-    const response=await axios.post("http://localhost:5000/admin/deletedetail",{Medical_License_Number:medicalnum},{
+    const response=await axios.post("http://localhost:5000/admin/deletedetailnurse",{Medical_License_Number:medicalnum},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'
@@ -110,7 +110,7 @@ function GetAllDoctor() {
           <HStack  spacing={2} p={2} width={'90%'} flexDirection={'row'} >  
             <Image src={detail.Image} boxSize={'50px'} borderRadius="full"/>
             <h1>{detail.Doctor_name}</h1>
-            <h1>{detail.Medical_License_Number}</h1>
+            <h1>{detail.NUID}</h1>
           <Spacer/>
           <Popover>
           <PopoverTrigger>
@@ -129,7 +129,6 @@ function GetAllDoctor() {
               <h1>{`DOB:${detail.DOB}`}</h1>
               <h1>{`Address:${detail.Current_Address}`}</h1>
               <h1>{`Specialization:${detail.Specialization}`}</h1>
-              <h1>{`Contract Type:${detail.Contract_type}`}</h1>
               <h1>{`Joined-Date:${detail.Date_Joined}`}</h1>
               <h1>{`Joined-day:${detail.Day_Joined}`}</h1>
               <h1>{`Account-Created:${detail.Time_Joined}`}</h1>
@@ -163,4 +162,4 @@ function GetAllDoctor() {
   )
 }
 
-export default GetAllDoctor 
+export default GetAllNurse 

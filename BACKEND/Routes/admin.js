@@ -5,7 +5,9 @@ const AdminScheme=require('../Models/AdminSchema')
 const jwt=require('jsonwebtoken');
 const DoctorScheme=require('../Models/DoctorScheme');
 const Middleware=require('../Middleware/middleware');
-const DoctorPatientsSchema=require('../Models/DoctorPatientsSchema')
+const DoctorPatientsSchema=require('../Models/DoctorPatientsSchema');
+const NurseScheme = require('../Models/NurseScheme');
+const NursePatientsSchema=require('../Models/NursePatientsScheme')
 
 route.post('/login',async(req,res)=>{
     try{
@@ -58,6 +60,7 @@ route.post('/postbyadmin',Middleware,async(req,res)=>{
         email:Email_Address,
         username:Doctor_name,
         password:hashpassword,
+        DUID:Medical_License_Number,
         photo:photo
     })
     newdoctorpatients.save()
@@ -74,6 +77,40 @@ route.post('/postbyadmin',Middleware,async(req,res)=>{
     }
 })
 
+route.post('/postbyadminfornurse',async(req,res)=>{
+    try{
+        const {Admin,Doctor_name,gender,DOB,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,photo}=req.body;
+        const currentdatetime=new Date();
+        const currentdate=currentdatetime.toLocaleDateString()
+        const currenttime=currentdatetime.toLocaleTimeString();
+        const num=currentdatetime.getDay();
+        const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const currentday=daysOfWeek[num];
+        const hashpassword=await bcrypt.hash(Medical_License_Number,10);
+        const nurse=new NurseScheme({
+            Admin,Doctor_name,Gender:gender,DOB,Image:photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Date_Joined:currentdate,
+            Time_Joined:currenttime,Day_Joined:currentday
+        })
+        const newnursepatients=new NursePatientsSchema({
+            email:Email_Address,
+            username:Doctor_name,
+            password:hashpassword,
+            NUID:Medical_License_Number,
+            photo:photo
+        })
+        newnursepatients.save()
+        nurse.save()
+        res.json({
+            msg:"Details are saved successfully"
+        })
+    }
+    catch(err)
+    {
+        res.json({
+            msg:"Error occurred in addnurse"
+        })
+    }
+})
 route.post('/getalldetailsofdoctor',Middleware,async(req,res)=>{
     try{
         const {Admin} =req.body
@@ -97,11 +134,35 @@ route.post('/getalldetailsofdoctor',Middleware,async(req,res)=>{
     }
 })
 
+route.post('/getalldetailsofnurse',Middleware,async(req,res)=>{
+    try{
+        const {Admin} =req.body
+        const details=await NurseScheme.find({Admin});
+        if(details.length!=0)
+        {
+            return res.json({
+                msg:"Details are shown below",
+                details
+            })
+        }
+        return res.json({
+            msg:"No Details are found"
+        })
+    }
+    catch(err)
+    {
+        res.json({
+            msg:"Error occurred in getting details"
+        })
+    }
+})
+
 route.post('/deletedetail',Middleware,async(req,res)=>{
     try{
         const {Medical_License_Number}=req.body;
-        const check=await DoctorScheme.deleteOne({Medical_License_Number:Medical_License_Number});
-        if(check)
+        const check=await DoctorScheme.deleteOne({Medical_License_Number});
+        const verify=await DoctorPatientsSchema.deleteOne({DUID:Medical_License_Number})
+        if(check&&verify)
         {
             return res.json({
                 msg:"Delete Successfully"
@@ -118,5 +179,29 @@ route.post('/deletedetail',Middleware,async(req,res)=>{
         })
     }
 })
+
+route.post('/deletedetailnurse',Middleware,async(req,res)=>{
+    try{
+        const {Medical_License_Number}=req.body;
+        const check=await NurseScheme.deleteOne({Medical_License_Number});
+        const verify=await NursePatientsSchema.deleteOne({NUID:Medical_License_Number})
+        if(check&&verify)
+        {
+            return res.json({
+                msg:"Delete Successfully"
+            })
+        }
+        return res.json({
+            msg:"Not Deleted"
+        })
+    }
+    catch(err)
+    {
+        res.json({
+            msg:"Error occurred in deleting detail"
+        })
+    }
+})
+
 
 module.exports=route

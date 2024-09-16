@@ -4,6 +4,8 @@ import AddDoctors from './AddDoctors'
 import GetAllDoctor from './GetAllDoctor'
 import { useNavigate } from 'react-router-dom'
 import Toogle from './Toogle'
+import AddNurse from './AddNurse'
+import GetAllNurse from './GetAllNurse'
 
 function Home() {
   const [isLoading,SetisLoading]=useState(false);
@@ -40,12 +42,16 @@ function Home() {
       <TabList>
         <Tab>Get all Doctors list</Tab>
         <Tab>Add more Doctor</Tab>
+        <Tab>Add more Nurse</Tab>
+        <Tab>Get all Nurse list</Tab>
       </TabList>
       <TabPanels>
         <TabPanel>
           <GetAllDoctor/>
           </TabPanel>
         <TabPanel><AddDoctors/></TabPanel>
+        <TabPanel><AddNurse/></TabPanel>
+        <TabPanel><GetAllNurse/></TabPanel>
       </TabPanels>
     </Tabs>
     </Box>
