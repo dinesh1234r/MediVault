@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { HStack,Flex,Box, Center,Image, FormControl,Input, FormLabel } from '@chakra-ui/react';
-import patientslogin from '../assets/patientlogin.webp'
 import { motion } from "framer-motion";
 import {
   Modal,
@@ -22,9 +21,14 @@ function Patients() {
 
   return (
     <Box>
-      <motion.div whileTap={{scale:0.8}}>
-        <Image src={'https://www.freeiconspng.com/uploads/security-lock-icon-green-15.png'} boxSize={'20%'} mx={'auto'} onClick={onOpen}/>
-      </motion.div>
+        <HStack>
+            <motion.div whileTap={{scale:0.8}}>
+                <Image src={'https://www.freeiconspng.com/uploads/security-lock-icon-green-15.png'} boxSize={'40%'} mx={'auto'} onClick={onOpen}/>
+            </motion.div>
+            <motion.div whileTap={{scale:0.8}}>
+                <Image src={'https://www.togethercu.org/home/fiFiles/static/images/Button-Scheduling-Existing-Account-Update-Owners.png'} boxSize={'40%'} mx={'auto'} onClick={onOpen}/>
+            </motion.div>
+        </HStack>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>

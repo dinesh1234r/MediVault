@@ -5,7 +5,7 @@ const URI='mongodb+srv://root1:jocker22.dk@cluster01.watow3c.mongodb.net/';
 const cors=require('cors');
 const Admin=require('./Routes/admin')
 const Doctor=require('./Routes/doctor')
-const Nurse=require('./Models/NurseScheme')
+const Nurse=require('./Routes/Nurse')
 
 app.use(cors());
 

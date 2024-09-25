@@ -11,7 +11,7 @@ route.post('/login',async(req,res)=>{
         const check=await DoctorPatientsSchema.findOne({email:username});
         if(!check)
         {
-            res.json({
+            return res.json({
                 msg:"Username not valid"
             })
         }
@@ -21,7 +21,7 @@ route.post('/login',async(req,res)=>{
         {
             const user=check.username
             const token=jwt.sign({user},'this is your secret key to login in bro');
-            res.json({
+            return res.json({
                 msg:"Username Found",
                 objectID:check._id,
                 photo:check.photo,
@@ -31,7 +31,7 @@ route.post('/login',async(req,res)=>{
         }
         else
         {
-            res.json({
+            return res.json({
                 msg:"Password incorrect"
             })
         }

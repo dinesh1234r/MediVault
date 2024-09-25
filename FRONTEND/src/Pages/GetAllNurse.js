@@ -110,7 +110,7 @@ function GetAllNurse() {
           <HStack  spacing={2} p={2} width={'90%'} flexDirection={'row'} >  
             <Image src={detail.Image} boxSize={'50px'} borderRadius="full"/>
             <h1>{detail.Doctor_name}</h1>
-            <h1>{detail.NUID}</h1>
+            <h1>{detail.Medical_License_Number}</h1>
           <Spacer/>
           <Popover>
           <PopoverTrigger>
