@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { HStack,Flex,Box, Center,Image, FormControl,Input, FormLabel } from '@chakra-ui/react';
-import patientslogin from '../assets/patientlogin.webp'
+import { HStack,Flex,Box,useToast, Center,Image, FormControl,Input, FormLabel } from '@chakra-ui/react';
 import { motion } from "framer-motion";
+import { useNavigate } from 'react-router-dom';
 import {
   Modal,
   ModalOverlay,
@@ -11,13 +11,49 @@ import {
   ModalBody,
   ModalCloseButton,useDisclosure,Button
 } from '@chakra-ui/react'
+import axios from 'axios'
 
 function Patients() {
+  const navigate=useNavigate()
+  const toast=useToast()
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [username,Setusername]=useState();
   const [password,Setpassword]=useState();
-  const handlesumbit=()=>{
-    console.log(username+" "+password);
+  const handlesumbit=async()=>{
+    try{
+      const response=await axios.post('http://localhost:5000/patient/login',{Aadhar:username,password:password})
+      if(response.data.msg==="Patient login successfully Done")
+      {
+        localStorage.setItem('patient',JSON.stringify(response.data.result));
+        toast({
+          title:response.data.msg,
+          status:"success",
+          position:"top",
+          duration:1200,
+          onCloseComplete:()=>{
+            navigate('/patient-logged')
+          }
+        })
+      }
+      else
+      {
+        toast({
+          title:response.data.msg,
+          status:"error",
+          position:"top",
+          duration:1200
+        })
+      }
+    }
+    catch(err)
+    {
+      toast({
+        title:"Error in sending details",
+        status:"error",
+        duration:1200,
+        position:"top"
+      })
+    }
   }
 
   return (

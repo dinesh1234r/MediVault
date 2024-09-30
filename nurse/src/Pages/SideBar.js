@@ -65,12 +65,12 @@ function SideBar() {
             <Box h={'29vh'} mt={'5%'} >
               <VStack spacing={4}>
                 <Image src={photo} alt='Photo' boxSize={'100px'} borderRadius="full" alignItems={'center'} />
-                <Text color='white'>{`Dr.${username}`}</Text>
+                <Text color='white'>{`${username}`}</Text>
               </VStack>
             </Box>
             <Divider/>
             <Box  w={'95%'} h={'48vh'}> 
-              <Text>height</Text>
+              <Text></Text>
             </Box>
             <Divider/>
             <Box h={'6vh'} w={"100%"}>

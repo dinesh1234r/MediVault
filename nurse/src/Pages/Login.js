@@ -22,6 +22,7 @@ function Login() {
         if(res.data.msg==="Username Found")
         {
           toast({
+            title:res.data.msg,
             isClosable:true,
             position:"top",
             duration:1200,

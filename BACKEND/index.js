@@ -6,6 +6,7 @@ const cors=require('cors');
 const Admin=require('./Routes/admin')
 const Doctor=require('./Routes/doctor')
 const Nurse=require('./Routes/Nurse')
+const Patient=require('./Routes/Patients')
 
 app.use(cors());
 
@@ -22,6 +23,7 @@ app.use(express.json())
 app.use('/admin',Admin)
 app.use('/doctor',Doctor)
 app.use('/nurse',Nurse)
+app.use('/patient',Patient)
 
 app.listen(5000,()=>{
     console.log('Server is started');
