@@ -17,7 +17,7 @@ function Login() {
     SetisLoading(true);
     try{
       const {username,password}=values;
-      await axios.post("hhttps://medivault.onrender.com/nurse/login",{username,password})
+      await axios.post("https://medivault.onrender.com/nurse/login",{username,password})
       .then((res)=>{
         if(res.data.msg==="Username Found")
         {
@@ -27,13 +27,12 @@ function Login() {
             position:"top",
             duration:1200,
             status:"success",
-            onCloseComplete:()=>{
-              navigate('/home');
+        
+          })
+          navigate('/home');
               localStorage.setItem('Jwt',res.data.jwt);
               localStorage.setItem('Id',res.data.objectID);
               localStorage.setItem('Photo',res.data.photo);
-            },
-          })
           Setvalues({username:"",password:""});
         }
         else
@@ -48,8 +47,9 @@ function Login() {
     })
     .catch((err=>{
         toast({
-            title:err,
+            title:"Error in Login nurse",
             isClosable:true,
+            status:"error",
             position:"top",
             duration:1200,
           })
