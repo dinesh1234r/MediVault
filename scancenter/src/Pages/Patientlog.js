@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import SideBar from './Sidebar';
 import Patients from './Patient';
-import { HStack,Flex,Box,Image,useToast,Card,CardBody,CardHeader,Text,Spacer,Divider,Textarea,Button, Input, IconButton } from '@chakra-ui/react';
+import { HStack,Flex,Box,Image,useToast,Card,CardBody,CardHeader,Text,Spacer,Divider,IconButtonTextarea,Button, Input, IconButton,Textarea } from '@chakra-ui/react';
 import axios from 'axios'
 import { AddIcon } from '@chakra-ui/icons'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../firebase';
 import { DeleteIcon,CheckIcon } from '@chakra-ui/icons';
+import { useNavigate } from 'react-router-dom';
+import { FiLogOut } from 'react-icons/fi';
 
 
 function Patientlog() {
     const toast=useToast();
+    const navigate=useNavigate()
     const [today,Settoday]=useState({});
     useEffect(()=>{
         const fetchdetails=async()=>{
@@ -137,6 +140,11 @@ function Patientlog() {
         }
         
     }
+    
+    const handlelogout=()=>{
+        navigate('/home')
+        localStorage.removeItem('patient');
+      }
 
   return (
     <HStack w={'100%'} >
@@ -144,10 +152,11 @@ function Patientlog() {
             <SideBar />
         </Box>
         <Box w={'80%'} h={'100vh'}>
-        <HStack ml={20} mr={20} mt={5}>
+        <HStack ml={20} mr={10} mt={5} mb={2}>
             <Text fontSize={20}>Name:</Text><Text fontSize={20}>{JSON.parse(localStorage.getItem("patient")).Name}</Text>
             <Spacer/>
             <Text fontSize={20}>Age:</Text><Text fontSize={20}>35</Text>
+            <IconButton aria-label="Logout" color={'red'} bg={'white'} icon={<FiLogOut/>} onClick={()=>handlelogout()}/>
         </HStack>
         <Divider/>
         <Spacer h={10}/>

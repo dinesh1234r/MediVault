@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import SideBar from './SideBar'
-import { HStack,Flex,Box,Text,useToast, Spacer, VStack, Divider,Stack,StackDivider, Button, Input } from '@chakra-ui/react';
+import { HStack,Flex,Box,Text,useToast, Spacer, VStack, Divider,Stack,StackDivider, Button,IconButton, Input } from '@chakra-ui/react';
 import { Card, CardHeader, CardBody, CardFooter,Heading,Image } from '@chakra-ui/react'
 import axios from 'axios';
-
+import { FiLogOut } from 'react-icons/fi';
+import {useNavigate} from 'react-router-dom'
 
 function Entry() {
   const toast=useToast()
+  const navigate=useNavigate()
   const [disease,Setdisease]=useState("");
   const [key,Setkey]=useState("");
   const [value,Setvalue]=useState("");
@@ -56,6 +58,11 @@ function Entry() {
       })
     }
   }
+
+  const handlelogout=()=>{
+    navigate('/home')
+    localStorage.removeItem('patient');
+  }
   
   return (
     <HStack w={'100%'} >
@@ -63,10 +70,11 @@ function Entry() {
             <SideBar />
         </Box>
         <Box w={'80%'} h={'100vh'}>
-            <HStack ml={20} mr={20} mt={5}>
+            <HStack ml={20} mr={10} mt={5} mb={2}>
                 <Text fontSize={20}>Name:</Text><Text fontSize={20}>{JSON.parse(localStorage.getItem("patient")).Name}</Text>
                 <Spacer/>
                 <Text fontSize={20}>Age:</Text><Text fontSize={20}>35</Text>
+                <IconButton aria-label="Logout" color={'red'} bg={'white'} icon={<FiLogOut/>} onClick={()=>handlelogout()}/>
             </HStack>
             <Divider color={'gray'}/>
             <Spacer h={5}/>
