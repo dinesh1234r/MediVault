@@ -35,8 +35,9 @@ function PatientHistory() {
     const year = currentDate.getFullYear();
 
     const simpleFormattedDate = `${day}/${month}/${year}`;
+    // console.log(simpleFormattedDate)
 
-    console.log(currentDate)
+    // console.log(currentDate)
     const [notes,Setnotes]=useState("")
     useEffect(()=>{
         const fetchhistory=async()=>{
@@ -47,7 +48,7 @@ function PatientHistory() {
                 {
                     const result=response.data.result.reverse();
                     result.map((data)=>{
-                        if(data.Date===currentDate)
+                        if(data.Date===simpleFormattedDate)
                         {
                             Setnotes(data.notes);
                         }
@@ -207,7 +208,7 @@ function PatientHistory() {
                             <VStack>
                             <Button>Report</Button>
                             {
-                                currentDate==data.Date?<Button leftIcon={<AddIcon/>} colorScheme='red' onClick={onfirst}>Precription</Button>:<Button colorScheme='blue' onClick={onsecond}>Precription</Button>
+                                simpleFormattedDate==data.Date?<Button leftIcon={<AddIcon/>} colorScheme='red' onClick={onfirst}>Precription</Button>:<Button colorScheme='blue' onClick={onsecond}>Precription</Button>
                             }
                             </VStack>
                         </HStack>
