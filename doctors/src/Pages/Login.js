@@ -18,7 +18,7 @@ function Login() {
     SetisLoading(true);
     try{
       const {username,password}=values;
-      await axios.post("http://localhost:5000/doctor/login",{username,password})
+      await axios.post("https://medivault.onrender.com/doctor/login",{username,password})
       .then((res)=>{
         console.log(res);
         if(res.data.msg==="Username Found")

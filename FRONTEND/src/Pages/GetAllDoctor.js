@@ -32,7 +32,7 @@ function GetAllDoctor() {
   const [medicalnum,SetMedicalnum]=useState(null);
   const fetchdetails=async()=>{
     const Admin=jwtDecode(localStorage.getItem('jwt')).adminuser;
-    const response=await axios.post('http://localhost:5000/admin/getalldetailsofdoctor',{Admin},{
+    const response=await axios.post('https://medivault.onrender.com/admin/getalldetailsofdoctor',{Admin},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'
@@ -68,7 +68,7 @@ function GetAllDoctor() {
   }
 
   const handlesubmit=async()=>{
-    const response=await axios.post("http://localhost:5000/admin/deletedetail",{Medical_License_Number:medicalnum},{
+    const response=await axios.post("https://medivault.onrender.com/admin/deletedetail",{Medical_License_Number:medicalnum},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'

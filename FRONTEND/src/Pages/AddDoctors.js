@@ -174,7 +174,7 @@ function AddDoctors() {
     else
     {
       console.log(DOB);
-    const response=await axios.post('http://localhost:5000/admin/postbyadmin',{Admin,gender,Doctor_name,DOB,photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Contract_type},{
+    const response=await axios.post('https://medivault.onrender.com/admin/postbyadmin',{Admin,gender,Doctor_name,DOB,photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Contract_type},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'

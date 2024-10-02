@@ -36,7 +36,7 @@ function PatientHistory() {
         const fetchhistory=async()=>{
             try{
                 const _id=JSON.parse(localStorage.getItem('patient'))._id;
-                const response=await axios.post('http://localhost:5000/patient/history',{_id})
+                const response=await axios.post('https://medivault.onrender.com/patient/history',{_id})
                 if(response.data.msg==="History received")
                 {
                     const result=response.data.result.reverse();
@@ -84,7 +84,7 @@ function PatientHistory() {
     const savingnotes=async()=>{
         try{
             const _id=JSON.parse(localStorage.getItem('patient'))._id;
-            const response=await axios.post('http://localhost:5000/patient/notesadded',{_id,notes})
+            const response=await axios.post('https://medivault.onrender.com/patient/notesadded',{_id,notes})
             if(response.data.msg==="Notes added successfully")
             {
                 toast({

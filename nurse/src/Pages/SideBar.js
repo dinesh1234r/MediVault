@@ -29,7 +29,7 @@ function SideBar() {
   const handlechangepass=async()=>{
     try{
       const objectID=localStorage.getItem('Id');
-    const response=await axios.post('http://localhost:5000/doctor/passchange',{oldpass,newpass,objectID})
+    const response=await axios.post('https://medivault.onrender.com/doctor/passchange',{oldpass,newpass,objectID})
     
       if(response.data.msg==="Password change Successfully")
       {

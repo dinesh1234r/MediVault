@@ -159,7 +159,7 @@ function AddNurse() {
     else
     {
       console.log(DOB);
-    const response=await axios.post('http://localhost:5000/admin/postbyadminfornurse',{Admin,gender,Doctor_name,DOB,photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience},{
+    const response=await axios.post('https://medivault.onrender.com/admin/postbyadminfornurse',{Admin,gender,Doctor_name,DOB,photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'

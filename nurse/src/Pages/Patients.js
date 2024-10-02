@@ -35,7 +35,7 @@ function Patients() {
   const navigate=useNavigate()
   const [patient,Setpatient]=useState({name:"",aadhar:"",address:"",phone:"",dob:""});
   const handlesumbit=async()=>{
-    const response=await axios.post('http://localhost:5000/patient/login',{Aadhar:username,password:password})
+    const response=await axios.post('https://medivault.onrender.com/patient/login',{Aadhar:username,password:password})
     if(response.data.msg==="Patient login successfully Done")
     {
       toast({
@@ -62,7 +62,7 @@ function Patients() {
 
   const handleSubmitDrawer=async()=>{
     const {name,aadhar,address,phone,dob}=patient
-    const response=await axios.post('http://localhost:5000/patient/register',{
+    const response=await axios.post('https://medivault.onrender.com/patient/register',{
       Name:name,
       Address:address,
       Aadhar:aadhar,

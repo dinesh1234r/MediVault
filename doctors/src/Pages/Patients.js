@@ -21,7 +21,7 @@ function Patients() {
   const [password,Setpassword]=useState();
   const handlesumbit=async()=>{
     try{
-      const response=await axios.post('http://localhost:5000/patient/login',{Aadhar:username,password:password})
+      const response=await axios.post('https://medivault.onrender.com/patient/login',{Aadhar:username,password:password})
       if(response.data.msg==="Patient login successfully Done")
       {
         localStorage.setItem('patient',JSON.stringify(response.data.result));

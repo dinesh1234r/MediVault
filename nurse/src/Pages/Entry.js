@@ -28,7 +28,7 @@ function Entry() {
   const handledata=async()=>{
     try{
         const _id=JSON.parse(localStorage.getItem('patient'))._id
-        const response=await axios.post('http://localhost:5000/patient/entrypatient',{_id,disease,vitals})
+        const response=await axios.post('https://medivault.onrender.com/patient/entrypatient',{_id,disease,vitals})
         if(response.data.msg==="Datas added successfully")
         {
           toast({
