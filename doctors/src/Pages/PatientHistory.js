@@ -29,7 +29,13 @@ function PatientHistory() {
     const toast=useToast();
     const navigate=useNavigate()
     const [history,SetHistory]=useState([{}]);
-    const currentDate = new Date().toLocaleDateString();
+    const currentDate = new Date();
+    const day = String(currentDate.getDate()).padStart(2, '0'); 
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); 
+    const year = currentDate.getFullYear();
+
+    const simpleFormattedDate = `${day}/${month}/${year}`;
+
     console.log(currentDate)
     const [notes,Setnotes]=useState("")
     useEffect(()=>{
@@ -195,7 +201,7 @@ function PatientHistory() {
                         <Divider/>
                         <Spacer h={2}/>
                         <HStack><strong>Textarea</strong>
-                        {currentDate===data.Date?(<>
+                        {simpleFormattedDate===data.Date?(<>
                             <Textarea value={notes} onChange={(e)=>Setnotes(e.target.value)}/>
                             <Spacer/><Button onClick={()=>savingnotes()}>save</Button></>):(<Textarea value={data.notes} isDisabled/>)}
                             <VStack>

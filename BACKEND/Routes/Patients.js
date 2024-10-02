@@ -2,6 +2,14 @@ const express=require('express')
 const route=express.Router();
 const PatientSchemas=require('../Models/PatientsSchema');
 const { findByIdAndUpdate } = require('../Models/NursePatientsScheme');
+const currentDate = new Date();
+
+const day = String(currentDate.getDate()).padStart(2, '0'); 
+const month = String(currentDate.getMonth() + 1).padStart(2, '0'); 
+const year = currentDate.getFullYear();
+
+const simpleFormattedDate = `${day}/${month}/${year}`; 
+
 
 route.post('/register',async(req,res)=>{
     try{
@@ -52,7 +60,7 @@ route.post('/login',async(req,res)=>{
 route.post('/entrypatient',async(req,res)=>{
     try{
         const {_id,vitals,disease}=req.body;
-        const currentDate = new Date().toLocaleDateString();
+        // const currentDate = new Date().toLocaleDateString();
         // const obj={Empty:empty}
         const result=await PatientSchemas.findByIdAndUpdate(_id,{
             $push:{
@@ -60,7 +68,7 @@ route.post('/entrypatient',async(req,res)=>{
                     disease:disease,
                     notes:"",
                     vitals:vitals,
-                    Date:currentDate,
+                    Date:simpleFormattedDate,
                     report:{ placeholder: "to be updated" },
                     preciption:""
                 }
@@ -90,9 +98,9 @@ route.post('/entrypatient',async(req,res)=>{
 route.post('/notesadded',async(req,res)=>{
     try{
         const {_id,notes}=req.body;
-        const currentDate = new Date().toLocaleDateString();
+        // const currentDate = new Date().toLocaleDateString();
         const result=await PatientSchemas.findOneAndUpdate({_id,
-            'History.Date':currentDate
+            'History.Date':simpleFormattedDate
         },{
             $set:{
                 'History.$.notes':notes
@@ -122,9 +130,9 @@ route.post('/notesadded',async(req,res)=>{
 route.post('/entryreport',async(req,res)=>{
     try{
         const {_id}=req.body;
-        const currentDate = new Date().toLocaleDateString();
+        // const currentDate = new Date().toLocaleDateString();
         const check=await PatientSchemas.findOne({_id})
-        const result=check.History.find(item=>item.Date===currentDate)
+        const result=check.History.find(item=>item.Date===simpleFormattedDate)
         if(result)
         {
             res.json({
@@ -149,9 +157,9 @@ route.post('/entryreport',async(req,res)=>{
 route.post('/updatereport',async(req,res)=>{
     try{
         const {report,_id}=req.body;
-        const currentDate = new Date().toLocaleDateString();
+        // const currentDate = new Date().toLocaleDateString();
         const result=await PatientSchemas.updateOne({_id,
-            'History.Date':currentDate
+            'History.Date':simpleFormattedDate
         },
         {
             $set:{
@@ -175,9 +183,9 @@ route.post('/updatereport',async(req,res)=>{
 route.post('/updateprecription',async(req,res)=>{
     try{
         const {_id,preciption}=req.body;
-        const currentDate = new Date().toLocaleDateString();
+        // const currentDate = new Date().toLocaleDateString();
         const result=await PatientSchemas.findOneAndUpdate({_id,
-            'History.Date':currentDate
+            'History.Date':simpleFormattedDate
         },
         {
             $set:{
