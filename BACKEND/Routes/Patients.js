@@ -53,6 +53,7 @@ route.post('/entrypatient',async(req,res)=>{
     try{
         const {_id,vitals,disease}=req.body;
         const currentDate = new Date().toLocaleDateString();
+        // const obj={Empty:empty}
         const result=await PatientSchemas.findByIdAndUpdate(_id,{
             $push:{
                 History:{
@@ -60,7 +61,7 @@ route.post('/entrypatient',async(req,res)=>{
                     notes:"",
                     vitals:vitals,
                     Date:currentDate,
-                    report:[],
+                    report:{ placeholder: "to be updated" },
                     preciption:""
                 }
             }
@@ -117,11 +118,39 @@ route.post('/notesadded',async(req,res)=>{
         })
     }
 })
+
+route.post('/entryreport',async(req,res)=>{
+    try{
+        const {_id}=req.body;
+        const currentDate = new Date().toLocaleDateString();
+        const check=await PatientSchemas.findOne({_id})
+        const result=check.History.find(item=>item.Date===currentDate)
+        if(result)
+        {
+            res.json({
+                msg:"Entry Accepted",
+                result:result
+            })
+        }
+        else
+        {
+            res.json({
+                msg:"Entry Not Accepted"
+            })
+        }
+    }
+    catch(err)
+    {
+        res.json({
+            msg:"Error occured in Entry Report"
+        })
+    }
+})
 route.post('/updatereport',async(req,res)=>{
     try{
         const {report,_id}=req.body;
         const currentDate = new Date().toLocaleDateString();
-        const result=await PatientSchemas.findOneAndUpdate({_id,
+        const result=await PatientSchemas.updateOne({_id,
             'History.Date':currentDate
         },
         {
@@ -130,7 +159,7 @@ route.post('/updatereport',async(req,res)=>{
             }
         }
         )
-        const re=await PatientSchemas.findById({_id})
+        
         res.json({
             msg:"Report Added successfully"        
         })
