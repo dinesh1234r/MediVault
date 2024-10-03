@@ -208,7 +208,7 @@ function PatientHistory() {
                             <VStack>
                             <Button>Report</Button>
                             {
-                                simpleFormattedDate==data.Date?<Button leftIcon={<AddIcon/>} colorScheme='red' onClick={onfirst}>Precription</Button>:<Button colorScheme='blue' onClick={onsecond}>Precription</Button>
+                                simpleFormattedDate==data.Date?<Button leftIcon={<AddIcon/>} colorScheme='red' onClick={onfirst}>Prescription</Button>:<Button colorScheme='blue' onClick={onsecond}>Prescription</Button>
                             }
                             </VStack>
                         </HStack>
