@@ -24,9 +24,9 @@ import {
   } from '@chakra-ui/react'
   import { FiLogOut } from 'react-icons/fi';
   import { useNavigate } from 'react-router-dom'
-import { Worker, Viewer } from '@react-pdf-viewer/core';
-import '@react-pdf-viewer/core/lib/styles/index.css';
-import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+// import { Worker, Viewer } from '@react-pdf-viewer/core';
+// import '@react-pdf-viewer/core/lib/styles/index.css';
+// import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 function PatientHistory() {
     const toast=useToast();
@@ -221,10 +221,22 @@ function PatientHistory() {
       const handlereport=(data)=>{
         Setmedicines(data);
       }
-      const [pdflink,Setpdflink]=useState()
+      const [pdfdata,Setpdfdata]=useState({})
       const handlereporttoview=(data)=>{
+        if(data==undefined)
+        {
+            toast({
+                title:"Reports not Found",
+                duration:1200,
+                status:"warning",
 
+            })
+        }
+        Setpdfdata(data);
       }
+
+      const btnRef = React.useRef()
+      
       
 
   return (
@@ -487,6 +499,35 @@ function PatientHistory() {
                 </DrawerBody>
                 </DrawerContent>
                 </Drawer>
+                <Drawer
+        isOpen={isreport}
+        placement='right'
+        onClose={onClosereport}
+        // finalFocusRef={btnRef}
+        size={'full'}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Your Reports</DrawerHeader>
+
+          <DrawerBody>
+            {/* <Input placeholder='Type here...' /> */}
+            <Flex>
+            {pdfdata&&Object.entries(pdfdata).map(([key, value]) => (
+                <Button >{key}</Button>
+            ))}
+            </Flex>
+          </DrawerBody>
+
+          {/* <DrawerFooter>
+            <Button variant='outline' mr={3} onClick={onClosereport}>
+              Cancel
+            </Button>
+            <Button colorScheme='blue'>Save</Button>
+          </DrawerFooter> */}
+        </DrawerContent>
+      </Drawer>
         </Box>
     </Box>
   )
