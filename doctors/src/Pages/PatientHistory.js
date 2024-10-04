@@ -24,6 +24,9 @@ import {
   } from '@chakra-ui/react'
   import { FiLogOut } from 'react-icons/fi';
   import { useNavigate } from 'react-router-dom'
+import { Worker, Viewer } from '@react-pdf-viewer/core';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 function PatientHistory() {
     const toast=useToast();
@@ -51,6 +54,7 @@ function PatientHistory() {
                         if(data.Date===simpleFormattedDate)
                         {
                             Setnotes(data.notes);
+                            Setpreciption(data.preciption)
                         }
                     })
                     console.log(result)
@@ -133,6 +137,11 @@ function PatientHistory() {
         onOpen: onsecond,
         onClose: onClosesecond,
       } = useDisclosure();
+      const {
+        isOpen: isreport,
+        onOpen: onreport,
+        onClose: onClosereport,
+      } = useDisclosure();
 
     const [preciption,Setpreciption]=useState([])
     const [current,Setcurrent]=useState({
@@ -211,7 +220,10 @@ function PatientHistory() {
 
       const handlereport=(data)=>{
         Setmedicines(data);
-        onsecond();
+      }
+      const [pdflink,Setpdflink]=useState()
+      const handlereporttoview=(data)=>{
+
       }
       
 
@@ -249,9 +261,9 @@ function PatientHistory() {
                             <Textarea value={notes} onChange={(e)=>Setnotes(e.target.value)}/>
                             <Spacer/><Button onClick={()=>savingnotes()}>save</Button></>):(<Textarea value={data.notes} isDisabled/>)}
                             <VStack>
-                            <Button>Report</Button>
+                            <Button onClick={()=>{handlereporttoview(data.report);onreport()}}>Report</Button>
                             {
-                                simpleFormattedDate==data.Date?<Button leftIcon={<AddIcon/>} colorScheme='red' onClick={onfirst}>Prescription</Button>:<Button colorScheme='blue' onClick={()=>handlereport(data.preciption)}>Prescription</Button>
+                                simpleFormattedDate==data.Date?<Button leftIcon={<AddIcon/>} colorScheme='red' onClick={()=>{handlereport(data.preciption);onfirst()}}>Prescription</Button>:<Button colorScheme='blue' onClick={()=>{handlereport(data.preciption);onsecond()}}>Prescription</Button>
                             }
                             </VStack>
                         </HStack>
@@ -321,7 +333,7 @@ function PatientHistory() {
                         <Thead>
                             <Tr>
                                 <Th>
-                                    Medcicine
+                                    Medicine
                                 </Th>
                                 <Th>
                                     Morning
