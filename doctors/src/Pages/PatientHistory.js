@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { HStack,Flex,Box,Text,Card,CardHeader,CardBody,Image,Input,useToast,Spacer,Divider,Button,VStack,CardFooter,UnorderedList,Textarea,ListItem,useDisclosure, Heading,IconButton } from '@chakra-ui/react';
 import axios from 'axios'
-import { AddIcon } from '@chakra-ui/icons';
+import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import {
     Drawer,
     DrawerBody,
@@ -134,7 +134,7 @@ function PatientHistory() {
         onClose: onClosesecond,
       } = useDisclosure();
 
-    const [preciption,Setpreciption]=useState([{}])
+    const [preciption,Setpreciption]=useState([])
     const [current,Setcurrent]=useState({
         medicine:"",
         morning:"",
@@ -171,6 +171,45 @@ function PatientHistory() {
         localStorage.removeItem('patient');
       }
 
+      const handledelete=(index)=>{
+        const temp=[...preciption];
+        temp.splice(index,1);
+        Setpreciption(temp);
+      }
+
+      const handlesendprecription=async()=>{
+        try{
+            const _id=JSON.parse(localStorage.getItem('patient'))._id
+            const response=await axios.post('/https://medivault.onrender.com/patient/updateprecription',{_id,preciption})
+            if(response.data.msg==="Precription added successfully")
+            {
+                toast({
+                    title:response.data.msg,
+                    position:"top",
+                    duration:1200,
+                    status:"success"
+                })
+            }
+            else
+            {
+                toast({
+                    title:response.data.msg,
+                    position:"top",
+                    duration:1200,
+                    status:"error"
+                })
+            }
+        }
+        catch(err)
+        {
+            toast({
+                title:"Error occured in sending precription",
+                position:"top",
+                duration:1200,
+                status:"error"
+            })
+        }
+      }
 
   return (
     <Box h={'100vh'}>
@@ -223,7 +262,13 @@ function PatientHistory() {
                 <DrawerOverlay />
                 <DrawerContent>
                 <DrawerCloseButton />
-                <DrawerHeader>PRECRIPTION</DrawerHeader>
+                <DrawerHeader>
+                    <HStack mr={6}>
+                        <Text>PRECRIPTION</Text>
+                        <Spacer/>
+                        <Button onClick={()=>handlesendprecription()}>Save</Button>
+                    </HStack>
+                </DrawerHeader>
                 <Divider/>
                 <DrawerBody>
                     <TableContainer>
@@ -257,7 +302,7 @@ function PatientHistory() {
                             <Td ><Input name='lunch' value={current.lunch} onChange={(e)=>handlechange(e)} borderColor={'black'}/></Td>
                             <Td ><Input name='dinner' value={current.dinner} onChange={(e)=>handlechange(e)} borderColor={'black'}/></Td>
                             <Td ><Input name='shift' value={current.shift} onChange={(e)=>handlechange(e)} borderColor={'black'}/></Td>
-                            <Td><Button onClick={()=>handleclick()}>save</Button></Td>
+                            <Td><IconButton icon={<AddIcon/>} color={'green'} onClick={()=>handleclick()}/></Td>
                         </Tr>
                            
 
@@ -267,6 +312,7 @@ function PatientHistory() {
                     <Spacer h={5}/>
                     <strong>Updated column</strong>
                     <TableContainer>
+                    <Box h={'60vh'} overflowY={'scroll'}>
                     <Table>
                         <Thead>
                             <Tr>
@@ -291,16 +337,20 @@ function PatientHistory() {
                             </Tr>
                         </Thead>
                         <Tbody>
-                        
+                            
                             {Array.isArray(preciption) && preciption.length > 0 ? (
                                 preciption.map((data, index) => (
+                                    <>
+                                    <Spacer h={2}/>
                                     <Tr key={index}>
                                     <Td>{data.medicine}</Td>
                                     <Td>{data.morning}</Td>
                                     <Td>{data.lunch}</Td>
                                     <Td>{data.dinner}</Td>
                                     <Td>{data.shift}</Td>
+                                    <IconButton icon={<DeleteIcon/>} colorScheme='red' isRound onClick={()=>handledelete(index)}/>
                                     </Tr>
+                                    </>
                                 ))
                                 ) : (
                                 <Tr>
@@ -310,6 +360,7 @@ function PatientHistory() {
 
                         </Tbody>
                         </Table>
+                        </Box>
                     </TableContainer>
                 </DrawerBody>
                 </DrawerContent>
@@ -405,6 +456,7 @@ function PatientHistory() {
                                     <Td>{data.lunch}</Td>
                                     <Td>{data.dinner}</Td>
                                     <Td>{data.shift}</Td>
+                                    {/* <Td><IconButton /></Td> */}
                                     </Tr>
                                 ))
                                 ) : (

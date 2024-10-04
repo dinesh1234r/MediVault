@@ -13,7 +13,7 @@ const PatientScheme=new mongoose.Schema({
         vitals:{},
         Date:String,
         report:{ type: Object, default: {} } ,
-        preciption:String
+        preciption:[]
     }]
 })
 
