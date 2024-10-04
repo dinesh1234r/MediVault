@@ -70,7 +70,7 @@ route.post('/entrypatient',async(req,res)=>{
                     vitals:vitals,
                     Date:simpleFormattedDate,
                     report:{ placeholder: "to be updated" },
-                    preciption:""
+                    preciption:[]
                 }
             }
         })

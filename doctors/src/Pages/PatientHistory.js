@@ -146,7 +146,7 @@ function PatientHistory() {
     
 
     const [medicines,Setmedicines]=useState([]);
-
+    
     const handlechange=(e)=>{
         Setcurrent((prev)=>({
             ...prev,[e.target.name]:e.target.value
