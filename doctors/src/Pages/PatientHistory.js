@@ -143,11 +143,9 @@ function PatientHistory() {
         shift:""
     })
 
-    const medicines = [
-        { medicine: 'Amoxicillin', morning: '1',lunch:'0' ,dinner:'1',shift:'before' },
-        { medicine: 'Ibuprofen', morning: '1',lunch:'0', dinner:'1',shift:'before'  },
-        { medicine: 'Paracetamol', morning: '1',lunch:'0',dinner:'1',shift:'before'  },
-      ];
+    
+
+    const [medicines,Setmedicines]=useState([]);
 
     const handlechange=(e)=>{
         Setcurrent((prev)=>({
@@ -180,7 +178,7 @@ function PatientHistory() {
       const handlesendprecription=async()=>{
         try{
             const _id=JSON.parse(localStorage.getItem('patient'))._id
-            const response=await axios.post('/https://medivault.onrender.com/patient/updateprecription',{_id,preciption})
+            const response=await axios.post('https://medivault.onrender.com/patient/updateprecription',{_id,preciption})
             if(response.data.msg==="Precription added successfully")
             {
                 toast({
@@ -211,6 +209,12 @@ function PatientHistory() {
         }
       }
 
+      const handlereport=(data)=>{
+        Setmedicines(data);
+        onsecond();
+      }
+      
+
   return (
     <Box h={'100vh'}>
         <HStack ml={20} mr={10} mt={5} mb={2}>
@@ -220,7 +224,7 @@ function PatientHistory() {
             <IconButton aria-label="Logout" color={'red'} bg={'white'} icon={<FiLogOut/>} onClick={()=>handlelogout()}/>
         </HStack>
         <Divider/>
-        <Box overflowY={'scroll'}  >
+        <Box overflowY={'scroll'} h={'90vh'}>
             <Box w={'60%'} mx={'auto'} mt={4}>
             {history.map((data)=>(
                 <>
@@ -247,7 +251,7 @@ function PatientHistory() {
                             <VStack>
                             <Button>Report</Button>
                             {
-                                simpleFormattedDate==data.Date?<Button leftIcon={<AddIcon/>} colorScheme='red' onClick={onfirst}>Prescription</Button>:<Button colorScheme='blue' onClick={onsecond}>Prescription</Button>
+                                simpleFormattedDate==data.Date?<Button leftIcon={<AddIcon/>} colorScheme='red' onClick={onfirst}>Prescription</Button>:<Button colorScheme='blue' onClick={()=>handlereport(data.preciption)}>Prescription</Button>
                             }
                             </VStack>
                         </HStack>
