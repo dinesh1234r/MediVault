@@ -12,6 +12,7 @@ const PatientScheme=new mongoose.Schema({
         notes:String,
         vitals:{},
         Date:String,
+        Doctor:String,
         report:{ type: Object, default: {} } ,
         preciption:[]
     }]

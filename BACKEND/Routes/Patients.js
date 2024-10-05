@@ -69,6 +69,7 @@ route.post('/entrypatient',async(req,res)=>{
                     notes:"",
                     vitals:vitals,
                     Date:simpleFormattedDate,
+                    Doctor:"",
                     report:{ placeholder: "to be updated" },
                     preciption:[]
                 }
@@ -182,14 +183,15 @@ route.post('/updatereport',async(req,res)=>{
 
 route.post('/updateprecription',async(req,res)=>{
     try{
-        const {_id,preciption}=req.body;
+        const {_id,preciption,Doctor}=req.body;
         // const currentDate = new Date().toLocaleDateString();
         const result=await PatientSchemas.findOneAndUpdate({_id,
             'History.Date':simpleFormattedDate
         },
         {
             $set:{
-                'History.$.preciption':preciption
+                'History.$.preciption':preciption,
+                'History.$.Doctor':Doctor
             }
         }
         )
