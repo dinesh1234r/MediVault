@@ -33,6 +33,7 @@ import {
   } from '@chakra-ui/react'
   import { FiLogOut } from 'react-icons/fi';
   import { useNavigate } from 'react-router-dom'
+  import {jwtDecode} from 'jwt-decode';
 // import { Worker, Viewer } from '@react-pdf-viewer/core';
 // import '@react-pdf-viewer/core/lib/styles/index.css';
 // import '@react-pdf-viewer/default-layout/lib/styles/index.css';
@@ -169,6 +170,11 @@ function PatientHistory() {
         onOpen: onreport,
         onClose: onClosereport,
       } = useDisclosure();
+      const {
+        isOpen: ispdf,
+        onOpen: onpdf,
+        onClose: onClosepdf,
+      } = useDisclosure();
 
     const [preciption,Setpreciption]=useState([])
     const [current,Setcurrent]=useState({
@@ -214,7 +220,8 @@ function PatientHistory() {
       const handlesendprecription=async()=>{
         try{
             const _id=JSON.parse(localStorage.getItem('patient'))._id
-            const response=await axios.post('https://medivault.onrender.com/patient/updateprecription',{_id,preciption})
+            const Doctor=jwtDecode(JSON.stringify(localStorage.getItem('Jwt'))).user;
+            const response=await axios.post('https://medivault.onrender.com/patient/updateprecription',{_id,preciption,Doctor})
             if(response.data.msg==="Precription added successfully")
             {
                 toast({
@@ -263,9 +270,11 @@ function PatientHistory() {
         Setpdfdata(data);
       }
 
-      const btnRef = React.useRef()
-      
-      
+    //   const btnRef = React.useRef()
+    const [pdfview,Setpdfview]=useState("");
+    const [pdfname,Setpdfname]=useState("");
+    const [doctorname,Setdoctorname]=useState("");
+    const [datas,Setdatas]=useState({})
 
   return (
     <Box h={'100vh'}>
@@ -303,7 +312,7 @@ function PatientHistory() {
                             <VStack>
                             <Button onClick={()=>{handlereporttoview(data.report);}}>Report</Button>
                             {
-                                simpleFormattedDate==data.Date?<Button leftIcon={<AddIcon/>} colorScheme='red' onClick={()=>{handlereport(data.preciption);onfirst()}}>Prescription</Button>:<Button colorScheme='blue' onClick={()=>{handlereport(data.preciption);onsecond()}}>Prescription</Button>
+                                simpleFormattedDate==data.Date?<Button leftIcon={<AddIcon/>} colorScheme='red' onClick={()=>{handlereport(data.preciption);onfirst()}}>Prescription</Button>:<Button colorScheme='blue' onClick={()=>{handlereport(data.preciption);Setdatas(data);onsecond();}}>Prescription</Button>
                             }
                             </VStack>
                         </HStack>
@@ -366,7 +375,11 @@ function PatientHistory() {
                         </Table>
                     </TableContainer>
                     <Spacer h={5}/>
-                    <strong>Updated column</strong>
+                    <HStack>
+                        <strong>Updated column</strong>
+                        <Spacer/>
+                        <Button>print</Button>
+                    </HStack>
                     <TableContainer>
                     <Box h={'60vh'} overflowY={'scroll'}>
                     <Table>
@@ -459,20 +472,20 @@ function PatientHistory() {
                             <Spacer/>
                             
                             <VStack w={'20%'}>
-                                <strong>Dr.Doctor1</strong>
+                                <strong>{`Dr.${datas.Doctor}`}</strong>
                                 <strong>MBBS, MD..(Med)</strong>
                             </VStack>
                         </HStack>
                         <Divider/>
                         <HStack w={'100%'}>
                             <VStack >
-                                <HStack ml={2}><strong>Name :</strong><Text>Patient</Text></HStack>
+                                <HStack ml={2}><strong>Name :</strong><Text>{JSON.parse(localStorage.getItem("patient")).Name}</Text></HStack>
                                 <HStack ><strong>Gender :</strong><Text>Male</Text></HStack>
                             </VStack>
                             <Spacer/>
                             <VStack >
-                                <HStack ><strong>Date :</strong><Text>10/10/2022</Text></HStack>
-                                <HStack ><strong>Age :</strong><Text>35</Text></HStack>
+                                <HStack ><strong>Date :</strong><Text>{datas.Date}</Text></HStack>
+                                <HStack ><strong>Age :</strong><Text>{age}</Text></HStack>
                             </VStack>
                         </HStack>
                         <Divider/>
@@ -541,13 +554,46 @@ function PatientHistory() {
           <ModalBody>
             <Flex>
             {pdfdata&&Object.entries(pdfdata).map(([key, value]) => (
-                <Button >{key}</Button>
+                <Button onClick={()=>{Setpdfview(value);Setpdfname(key);onpdf()}}>{key+".pdf"}</Button>
             ))}
             </Flex>
           </ModalBody>
 
         </ModalContent>
       </Modal>
+      <Drawer
+        isOpen={ispdf}
+        placement='top'
+        onClose={onClosepdf}
+        size={'full'}
+        // finalFocusRef={btnRef}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>{`${pdfname}.pdf`}</DrawerHeader>
+
+          <DrawerBody>
+            <Box h={'90vh'}>
+            <iframe
+                title="PDF Viewer"
+                src={pdfview}
+                width="100%"
+                height="100%"
+                style={{ border: 'none' }}
+            />
+
+            </Box>
+          </DrawerBody>
+
+          {/* <DrawerFooter>
+            <Button variant='outline' mr={3} onClick={onClosepdf}>
+              Cancel
+            </Button>
+            <Button colorScheme='blue'>Save</Button>
+          </DrawerFooter> */}
+        </DrawerContent>
+      </Drawer>
         </Box>
     </Box>
   )
