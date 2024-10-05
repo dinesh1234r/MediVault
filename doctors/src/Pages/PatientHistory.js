@@ -22,6 +22,15 @@ import {
     TableCaption,
     TableContainer,
   } from '@chakra-ui/react'
+  import {
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+  } from '@chakra-ui/react'
   import { FiLogOut } from 'react-icons/fi';
   import { useNavigate } from 'react-router-dom'
 // import { Worker, Viewer } from '@react-pdf-viewer/core';
@@ -36,6 +45,24 @@ function PatientHistory() {
     const day = String(currentDate.getDate()).padStart(2, '0'); 
     const month = String(currentDate.getMonth() + 1).padStart(2, '0'); 
     const year = currentDate.getFullYear();
+    const [age, setAge] = useState(null);
+    const dob=JSON.parse(localStorage.getItem('patient')).DOB;
+    // console.log(dob)
+    useEffect(() => {
+        calculateAge();
+      }, []); 
+
+    const calculateAge=()=>{
+        const date=new Date();
+        const birth=new Date(dob);
+        let age=date.getFullYear()-birth.getFullYear();
+        let month=date.getMonth()-birth.getMonth();
+        if(month<0||(month===0&&date.getDate()<birth.getDate()))
+        {
+            age--;
+        }
+        setAge(age);
+    }
 
     const simpleFormattedDate = `${day}/${month}/${year}`;
     // console.log(simpleFormattedDate)
@@ -223,15 +250,16 @@ function PatientHistory() {
       }
       const [pdfdata,Setpdfdata]=useState({})
       const handlereporttoview=(data)=>{
-        if(data==undefined)
+        if(data.placeholder)
         {
             toast({
                 title:"Reports not Found",
                 duration:1200,
-                status:"warning",
-
+                status:"warning"
             })
+            return;
         }
+        onreport()
         Setpdfdata(data);
       }
 
@@ -244,7 +272,7 @@ function PatientHistory() {
         <HStack ml={20} mr={10} mt={5} mb={2}>
             <Text fontSize={20}>Name:</Text><Text fontSize={20}>{JSON.parse(localStorage.getItem("patient")).Name}</Text>
             <Spacer/>
-            <Text fontSize={20}>Age:</Text><Text fontSize={20}>35</Text>
+            <Text fontSize={20}>Age:</Text><Text fontSize={20}>{age}</Text>
             <IconButton aria-label="Logout" color={'red'} bg={'white'} icon={<FiLogOut/>} onClick={()=>handlelogout()}/>
         </HStack>
         <Divider/>
@@ -273,7 +301,7 @@ function PatientHistory() {
                             <Textarea value={notes} onChange={(e)=>Setnotes(e.target.value)}/>
                             <Spacer/><Button onClick={()=>savingnotes()}>save</Button></>):(<Textarea value={data.notes} isDisabled/>)}
                             <VStack>
-                            <Button onClick={()=>{handlereporttoview(data.report);onreport()}}>Report</Button>
+                            <Button onClick={()=>{handlereporttoview(data.report);}}>Report</Button>
                             {
                                 simpleFormattedDate==data.Date?<Button leftIcon={<AddIcon/>} colorScheme='red' onClick={()=>{handlereport(data.preciption);onfirst()}}>Prescription</Button>:<Button colorScheme='blue' onClick={()=>{handlereport(data.preciption);onsecond()}}>Prescription</Button>
                             }
@@ -499,35 +527,27 @@ function PatientHistory() {
                 </DrawerBody>
                 </DrawerContent>
                 </Drawer>
-                <Drawer
+                <Modal
         isOpen={isreport}
         placement='right'
         onClose={onClosereport}
         // finalFocusRef={btnRef}
-        size={'full'}
+        size={'md'}
       >
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Your Reports</DrawerHeader>
-
-          <DrawerBody>
-            {/* <Input placeholder='Type here...' /> */}
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Your Reports</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
             <Flex>
             {pdfdata&&Object.entries(pdfdata).map(([key, value]) => (
                 <Button >{key}</Button>
             ))}
             </Flex>
-          </DrawerBody>
+          </ModalBody>
 
-          {/* <DrawerFooter>
-            <Button variant='outline' mr={3} onClick={onClosereport}>
-              Cancel
-            </Button>
-            <Button colorScheme='blue'>Save</Button>
-          </DrawerFooter> */}
-        </DrawerContent>
-      </Drawer>
+        </ModalContent>
+      </Modal>
         </Box>
     </Box>
   )
