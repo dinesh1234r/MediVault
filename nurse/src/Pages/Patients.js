@@ -22,17 +22,89 @@ import {
   DrawerCloseButton,useToast
 } from '@chakra-ui/react'
 import Webcam from "react-webcam";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from '../firebasestorage/firebase';
 import axios from 'axios';
 
 
 
 function Patients() {
     const { isOpen: isModalOneOpen, onOpen: onModalOneOpen, onClose: onModalOneClose } = useDisclosure();
-    const { isOpen: isModalTwoOpen, onOpen: onModalTwoOpen, onClose: onModalTwoClose } = useDisclosure();
   const [username,Setusername]=useState();
   const [password,Setpassword]=useState();
   const toast=useToast()
   const navigate=useNavigate()
+
+  const webcamRef = useRef(null);
+  const [url, setUrl] = useState("");
+
+  // Capture the webcam image
+  const captureImage = () => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    return imageSrc; // Return the base64 image
+  };
+
+  // Upload the image to Firebase and return the download URL
+  const uploadImage = async (image) => {
+    if (!image) return;
+
+    // Convert base64 image to Blob
+    const byteString = atob(image.split(",")[1]);
+    const mimeString = image.split(",")[0].split(":")[1].split(";")[0];
+
+    const arrayBuffer = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
+      arrayBuffer[i] = byteString.charCodeAt(i);
+    }
+
+    const blob = new Blob([arrayBuffer], { type: mimeString });
+    const uniqueFileName = `image-${Date.now()}.jpg`;
+    const storageRef = ref(storage, `images/${uniqueFileName}`);
+
+    // Upload the Blob to Firebase Storage and get the download URL
+    const snapshot = await uploadBytes(storageRef, blob);
+    const downloadUrl = await getDownloadURL(snapshot.ref);
+    setUrl(downloadUrl); // Store the download URL in the state
+    return downloadUrl;
+  };
+
+  // Capture, upload, and submit the image
+  const handleCaptureAndSubmit = async () => {
+    const image = captureImage(); // Capture image from webcam
+    const downloadUrl = await uploadImage(image); // Upload the image and get the URL
+
+    // Submit the image URL to the backend
+    try {
+      const response = await axios.post('http://localhost:5000/patient/login', { image: downloadUrl });
+      if (response.data.msg === "Faces match!") {
+        localStorage.setItem('patient', JSON.stringify(response.data.result));
+        toast({
+          title: response.data.msg,
+          status: "success",
+          position: "top",
+          duration: 1200,
+          onCloseComplete: () => {
+            navigate('/entry');
+          },
+        });
+      } else {
+        toast({
+          title: response.data.msg,
+          status: "error",
+          position: "top",
+          duration: 1200,
+        });
+      }
+    } catch (err) {
+      toast({
+        title: "Error in sending details",
+        status: "error",
+        duration: 1200,
+        position: "top",
+      });
+    }
+  };
+
   const [patient,Setpatient]=useState({name:"",aadhar:"",address:"",phone:"",dob:""});
   const handlesumbit=async()=>{
     const response=await axios.post('https://medivault.onrender.com/patient/login',{Aadhar:username,password:password})
@@ -67,7 +139,7 @@ function Patients() {
       Address:address,
       Aadhar:aadhar,
       Phone_no:phone,
-      Photo:photo,
+      Photo:url1,
       DOB:dob
     })
     if(response.data.msg==="Registration Successfully Done")
@@ -91,74 +163,107 @@ function Patients() {
   const handleDrawerChange=(e)=>{
     Setpatient({...patient,[e.target.name]:e.target.value});
   }
-  const [image, setImage] = useState("");  
-  const webcamRef = useRef("");  
+  const [image1, setImage1] = useState("");
+  const [url1,Seturl1]=useState("")  
+  const webcamRef1 = useRef("");  
   const capture = () => {
-    const imageSrc = webcamRef.current.getScreenshot(); 
-    setImage(imageSrc); 
+    const imageSrc = webcamRef1.current.getScreenshot(); 
+    setImage1(imageSrc); 
   };
 
-  const preset_name="f05bb7m0"
-  const cloud_name="dyv9xgbfx"
-  const [photo,Setphoto]=useState("");
-    const handlephoto=()=>{
-      if(image.length===0)
-      {
-        toast({
-          title:"Choose a photo",
-          status:"error",
-          position:"top",
-        })
-        return;
-      }
-      const formData=new FormData();
-      formData.append("file",image)
-      formData.append("upload_preset",preset_name);
-      // formData.append("transformation", JSON.stringify({ fetch_format: "jpg" }))
-      axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,formData)
-      .then(res=>{
-        toast({
-          title:"Photo Added Successfully",
-          status:"success",
-          position:'top'
-        })
-        Setphoto(res.data.url);
-        console.log(res.data.secure_url);
-        setImage("");
-      })
-      .catch(err=>{
-        console.log(err);
-        toast({
-          title:err,
-          status:'error'
-        })
-      })
+  const handleUpload = () => {
+    if (!image1) return;
+
+    // Convert base64 image to Blob
+    const byteString = atob(image1.split(",")[1]);
+    const mimeString = image1.split(",")[0].split(":")[1].split(";")[0];
+
+    // Write the bytes of the image to an ArrayBuffer
+    const arrayBuffer = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
+      arrayBuffer[i] = byteString.charCodeAt(i);
     }
 
+    const blob = new Blob([arrayBuffer], { type: mimeString });
+
+    // Create a reference to Firebase Storage
+    const uniqueFileName = `image-${Date.now()}.jpg`; // Generate a unique file name
+    const storageRef = ref(storage, `images/${uniqueFileName}`);
+
+    // Upload the Blob to Firebase Storage
+    uploadBytes(storageRef, blob).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((downloadUrl) => {
+        Seturl1(downloadUrl); // Store the download URL in the state
+        console.log("File available at", downloadUrl);
+      });
+    });
+    // handlesumbit()
+  };
+
+  // const preset_name="f05bb7m0"
+  // const cloud_name="dyv9xgbfx"
+  // const [photo,Setphoto]=useState("");
+  //   const handlephoto=()=>{
+  //     if(image.length===0)
+  //     {
+  //       toast({
+  //         title:"Choose a photo",
+  //         status:"error",
+  //         position:"top",
+  //       })
+  //       return;
+  //     }
+  //     const formData=new FormData();
+  //     formData.append("file",image)
+  //     formData.append("upload_preset",preset_name);
+  //     axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,formData)
+  //     .then(res=>{
+  //       toast({
+  //         title:"Photo Added Successfully",
+  //         status:"success",
+  //         position:'top'
+  //       })
+  //       Setphoto(res.data.url);
+  //       console.log(res.data.secure_url);
+  //       setImage("");
+  //     })
+  //     .catch(err=>{
+  //       console.log(err);
+  //       toast({
+  //         title:err,
+  //         status:'error'
+  //       })
+  //     })
+  //   }
+
   return (
-    <Box>
-        <VStack >
+    <>
+    <Box h={'100vh'}>
+        <HStack mt={2} mr={2}>
+            <Spacer/>
             <motion.div whileTap={{scale:0.8}}>
                 
                 <Button leftIcon={<AddIcon />} colorScheme='teal' onClick={onModalOneOpen} size={'lg'}>
                   Sign up 
                 </Button>
             </motion.div>
-            <motion.div whileTap={{scale:0.8}}>
-            <Button leftIcon={<AddIcon />} colorScheme='teal' onClick={onModalTwoOpen} size={'lg'}>
-                   Sign in
-                </Button>
-                
-            </motion.div>
             
-        </VStack>
-        {/* <Box w={300} mx={'auto'}>
-          <Text ml={6} fontSize={25}>Patient Biometric Login</Text>
-          <Spacer h={2}/>
-          <Webcam />
-          <Spacer h={5}/>
-          <Button mx='40%' borderRadius={20} colorScheme='blue'>Capture</Button>
-        </Box> */}
+            
+        </HStack>
+        <Spacer h={'20vh'}/>
+        <HStack ml={'50vh'}>
+        <Webcam
+          audio={false}
+          ref={webcamRef}
+          screenshotFormat="image/jpeg"
+          width={320}
+          height={320}
+          style={{ borderRadius: '50%', overflow: 'hidden'}} 
+        />
+      </HStack>
+      <Button mt={4} ml={'37%'} colorScheme="blue" onClick={handleCaptureAndSubmit}>
+        Capture & Login
+      </Button>
         <Drawer
         isOpen={isModalOneOpen}
         
@@ -204,10 +309,10 @@ function Patients() {
                   <FormLabel>
                     Photo
                   </FormLabel>
-                  <Webcam ref={webcamRef}/>
-                  <Image src={image} alt='photo'/>
+                  <Webcam ref={webcamRef1}/>
+                  <Image src={image1} alt='photo'/>
                   <Button colorScheme='blue' onClick={()=>capture()}>Capture</Button>
-                  <Button onClick={()=>handlephoto()}>Upload</Button>
+                  <Button onClick={()=>handleUpload()}>Upload</Button>
                 </VStack>
                 </HStack>
               </FormControl>
@@ -222,29 +327,8 @@ function Patients() {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      <Modal isOpen={isModalTwoOpen} onClose={onModalTwoClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Sign Up</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            
-          </ModalBody>
-          <FormControl>
-            <FormLabel ml={'5%'}>Aadhar number</FormLabel>
-              <Input w={'80%'} ml={'10%'} value={username} onChange={(e)=>Setusername(e.target.value)}/>
-            <FormLabel ml={'5%'}>password</FormLabel> 
-              <Input w={'80%'} ml={'10%'} value={password} onChange={(e)=>Setpassword(e.target.value)}/>
-          </FormControl>
-          <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onModalTwoClose}>
-              Close
-            </Button>
-            <Button colorScheme='gray' onClick={()=>handlesumbit()}>Sign in</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </Box>
+    </>
   )
 }
 

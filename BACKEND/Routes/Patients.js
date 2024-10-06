@@ -1,9 +1,10 @@
 const express=require('express')
 const route=express.Router();
 const PatientSchemas=require('../Models/PatientsSchema');
-const { findByIdAndUpdate } = require('../Models/NursePatientsScheme');
+// const { findByIdAndUpdate } = require('../Models/NursePatientsScheme');
 const currentDate = new Date();
-
+const qs = require('qs');
+const axios = require('axios');
 const day = String(currentDate.getDate()).padStart(2, '0'); 
 const month = String(currentDate.getMonth() + 1).padStart(2, '0'); 
 const year = currentDate.getFullYear();
@@ -33,21 +34,34 @@ route.post('/register',async(req,res)=>{
 
 route.post('/login',async(req,res)=>{
     try{
-        const {Aadhar,password}=req.body;
-        const check=await PatientSchemas.findOne({Aadhar});
-        if(check&&password==="password")
+        const {image}=req.body;
+        const patients=await PatientSchemas.find();
+        const apiKey = 'Sx_t147Y0IKXA1u8mpdAir9B9MXAQeHd';
+        const apiSecret = 'e3DnUBVx54liPHCvy7yer0_dunF7K_-t';
+        const url = 'https://api-us.faceplusplus.com/facepp/v3/compare';
+        for(let patient of patients)
         {
-            res.json({
-                msg:"Patient login successfully Done",
-                result:check
-            })
+            const formData = {
+                api_key: apiKey,
+                api_secret: apiSecret,
+                image_url1: image,
+                image_url2: patient.Photo,
+              };
+
+              const response = await axios.post(url, qs.stringify(formData), {
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+              });
+        
+              const confidence = response.data.confidence;
+              if (confidence > 80) {
+                return res.json({ msg: 'Faces match!', result: patient });
+              }
         }
-        else
-        {
-            res.json({
-                msg:"Patients login failed"
-            })
-        }
+        return res.json({
+            msg:"No face found"
+        })
     }
     catch(err)
     {

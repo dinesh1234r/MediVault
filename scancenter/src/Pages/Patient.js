@@ -1,90 +1,101 @@
-import React, { useState } from 'react'
-import { HStack,Flex,Box,useToast, Center,Image, FormControl,Input, FormLabel } from '@chakra-ui/react';
-import { motion } from "framer-motion";
+import React, { useRef, useState } from 'react';
+import { HStack, Box, useToast, Button, Image } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,useDisclosure,Button
-} from '@chakra-ui/react'
-import axios from 'axios'
+import Webcam from 'react-webcam';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from '../firebasestorage/firebase';
+import axios from 'axios';
 
 function Patients() {
-  const navigate=useNavigate()
-  const toast=useToast()
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [username,Setusername]=useState();
-  const [password,Setpassword]=useState();
-  const handlesumbit=async()=>{
-    try{
-      const response=await axios.post('https://medivault.onrender.com/patient/login',{Aadhar:username,password:password})
-      if(response.data.msg==="Patient login successfully Done")
-      {
-        localStorage.setItem('patient',JSON.stringify(response.data.result));
-        toast({
-          title:response.data.msg,
-          status:"success",
-          position:"top",
-          duration:1200,
-          onCloseComplete:()=>{
-            navigate('/patient-logged')
-          }
-        })
-      }
-      else
-      {
-        toast({
-          title:response.data.msg,
-          status:"error",
-          position:"top",
-          duration:1200
-        })
-      }
+  const navigate = useNavigate();
+  const toast = useToast();
+  const webcamRef = useRef(null);
+  const [url, setUrl] = useState("");
+
+  // Capture the webcam image
+  const captureImage = () => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    return imageSrc; // Return the base64 image
+  };
+
+  // Upload the image to Firebase and return the download URL
+  const uploadImage = async (image) => {
+    if (!image) return;
+
+    // Convert base64 image to Blob
+    const byteString = atob(image.split(",")[1]);
+    const mimeString = image.split(",")[0].split(":")[1].split(";")[0];
+
+    const arrayBuffer = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
+      arrayBuffer[i] = byteString.charCodeAt(i);
     }
-    catch(err)
-    {
+
+    const blob = new Blob([arrayBuffer], { type: mimeString });
+    const uniqueFileName = `image-${Date.now()}.jpg`;
+    const storageRef = ref(storage, `images/${uniqueFileName}`);
+
+    // Upload the Blob to Firebase Storage and get the download URL
+    const snapshot = await uploadBytes(storageRef, blob);
+    const downloadUrl = await getDownloadURL(snapshot.ref);
+    setUrl(downloadUrl); // Store the download URL in the state
+    return downloadUrl;
+  };
+
+  // Capture, upload, and submit the image
+  const handleCaptureAndSubmit = async () => {
+    const image = captureImage(); // Capture image from webcam
+    const downloadUrl = await uploadImage(image); // Upload the image and get the URL
+
+    // Submit the image URL to the backend
+    try {
+      const response = await axios.post('http://localhost:5000/patient/login', { image: downloadUrl });
+      if (response.data.msg === "Faces match!") {
+        localStorage.setItem('patient', JSON.stringify(response.data.result));
+        toast({
+          title: response.data.msg,
+          status: "success",
+          position: "top",
+          duration: 1200,
+          onCloseComplete: () => {
+            navigate('/patient-logged');
+          },
+        });
+      } else {
+        toast({
+          title: response.data.msg,
+          status: "error",
+          position: "top",
+          duration: 1200,
+        });
+      }
+    } catch (err) {
       toast({
-        title:"Error in sending details",
-        status:"error",
-        duration:1200,
-        position:"top"
-      })
+        title: "Error in sending details",
+        status: "error",
+        duration: 1200,
+        position: "top",
+      });
     }
-  }
+  };
 
   return (
-    <Box>
-      <motion.div whileTap={{scale:0.8}}>
-        <Image src={'https://www.freeiconspng.com/uploads/security-lock-icon-green-15.png'} boxSize={'20%'} mx={'auto'} onClick={onOpen}/>
-      </motion.div>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Login</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            
-          </ModalBody>
-          <FormControl>
-            <FormLabel ml={'5%'}>Aadhar number</FormLabel>
-              <Input w={'80%'} ml={'10%'} value={username} onChange={(e)=>Setusername(e.target.value)}/>
-            <FormLabel ml={'5%'}>password</FormLabel> 
-              <Input w={'80%'} ml={'10%'} value={password} onChange={(e)=>Setpassword(e.target.value)}/>
-          </FormControl>
-          <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant='ghost' onClick={()=>handlesumbit()}>Sign in</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+    <Box ml={'30%'}>
+      <HStack>
+        <Webcam
+          audio={false}
+          ref={webcamRef}
+          screenshotFormat="image/jpeg"
+          width={320}
+          height={320}
+          style={{ borderRadius: '50%', overflow: 'hidden'}} 
+        />
+      </HStack>
+      <Button mt={4} ml={'10%'} colorScheme="blue" onClick={handleCaptureAndSubmit}>
+        Capture & Login
+      </Button>
     </Box>
-  )
+  );
 }
 
-export default Patients
+export default Patients;
