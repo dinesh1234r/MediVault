@@ -114,6 +114,7 @@ function Patients() {
       const formData=new FormData();
       formData.append("file",image)
       formData.append("upload_preset",preset_name);
+      // formData.append("transformation", JSON.stringify({ fetch_format: "jpg" }))
       axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,formData)
       .then(res=>{
         toast({
@@ -122,7 +123,7 @@ function Patients() {
           position:'top'
         })
         Setphoto(res.data.url);
-        console.log(res.data.url);
+        console.log(res.data.secure_url);
         setImage("");
       })
       .catch(err=>{
