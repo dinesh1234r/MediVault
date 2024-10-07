@@ -12,17 +12,14 @@ function Patients() {
   const webcamRef = useRef(null);
   const [url, setUrl] = useState("");
 
-  // Capture the webcam image
   const captureImage = () => {
     const imageSrc = webcamRef.current.getScreenshot();
-    return imageSrc; // Return the base64 image
+    return imageSrc; 
   };
 
-  // Upload the image to Firebase and return the download URL
   const uploadImage = async (image) => {
     if (!image) return;
 
-    // Convert base64 image to Blob
     const byteString = atob(image.split(",")[1]);
     const mimeString = image.split(",")[0].split(":")[1].split(";")[0];
 
@@ -35,21 +32,18 @@ function Patients() {
     const uniqueFileName = `image-${Date.now()}.jpg`;
     const storageRef = ref(storage, `images/${uniqueFileName}`);
 
-    // Upload the Blob to Firebase Storage and get the download URL
     const snapshot = await uploadBytes(storageRef, blob);
     const downloadUrl = await getDownloadURL(snapshot.ref);
-    setUrl(downloadUrl); // Store the download URL in the state
+    setUrl(downloadUrl); 
     return downloadUrl;
   };
 
-  // Capture, upload, and submit the image
   const handleCaptureAndSubmit = async () => {
-    const image = captureImage(); // Capture image from webcam
-    const downloadUrl = await uploadImage(image); // Upload the image and get the URL
+    const image = captureImage(); 
+    const downloadUrl = await uploadImage(image);
 
-    // Submit the image URL to the backend
     try {
-      const response = await axios.post('http://localhost:5000/patient/login', { image: downloadUrl });
+      const response = await axios.post('https://medivault.onrender.com/patient/login', { image: downloadUrl });
       if (response.data.msg === "Faces match!") {
         localStorage.setItem('patient', JSON.stringify(response.data.result));
         toast({

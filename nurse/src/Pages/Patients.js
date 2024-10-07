@@ -38,17 +38,14 @@ function Patients() {
   const webcamRef = useRef(null);
   const [url, setUrl] = useState("");
 
-  // Capture the webcam image
   const captureImage = () => {
     const imageSrc = webcamRef.current.getScreenshot();
-    return imageSrc; // Return the base64 image
+    return imageSrc;
   };
 
-  // Upload the image to Firebase and return the download URL
   const uploadImage = async (image) => {
     if (!image) return;
 
-    // Convert base64 image to Blob
     const byteString = atob(image.split(",")[1]);
     const mimeString = image.split(",")[0].split(":")[1].split(";")[0];
 
@@ -61,21 +58,18 @@ function Patients() {
     const uniqueFileName = `image-${Date.now()}.jpg`;
     const storageRef = ref(storage, `images/${uniqueFileName}`);
 
-    // Upload the Blob to Firebase Storage and get the download URL
     const snapshot = await uploadBytes(storageRef, blob);
     const downloadUrl = await getDownloadURL(snapshot.ref);
-    setUrl(downloadUrl); // Store the download URL in the state
+    setUrl(downloadUrl);
     return downloadUrl;
   };
 
-  // Capture, upload, and submit the image
   const handleCaptureAndSubmit = async () => {
-    const image = captureImage(); // Capture image from webcam
-    const downloadUrl = await uploadImage(image); // Upload the image and get the URL
+    const image = captureImage(); 
+    const downloadUrl = await uploadImage(image); 
 
-    // Submit the image URL to the backend
     try {
-      const response = await axios.post('http://localhost:5000/patient/login', { image: downloadUrl });
+      const response = await axios.post('https://medivault.onrender.com/patient/login', { image: downloadUrl });
       if (response.data.msg === "Faces match!") {
         localStorage.setItem('patient', JSON.stringify(response.data.result));
         toast({
@@ -174,11 +168,9 @@ function Patients() {
   const handleUpload = () => {
     if (!image1) return;
 
-    // Convert base64 image to Blob
     const byteString = atob(image1.split(",")[1]);
     const mimeString = image1.split(",")[0].split(":")[1].split(";")[0];
 
-    // Write the bytes of the image to an ArrayBuffer
     const arrayBuffer = new Uint8Array(byteString.length);
     for (let i = 0; i < byteString.length; i++) {
       arrayBuffer[i] = byteString.charCodeAt(i);
@@ -186,18 +178,15 @@ function Patients() {
 
     const blob = new Blob([arrayBuffer], { type: mimeString });
 
-    // Create a reference to Firebase Storage
-    const uniqueFileName = `image-${Date.now()}.jpg`; // Generate a unique file name
+    const uniqueFileName = `image-${Date.now()}.jpg`; 
     const storageRef = ref(storage, `images/${uniqueFileName}`);
 
-    // Upload the Blob to Firebase Storage
     uploadBytes(storageRef, blob).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((downloadUrl) => {
-        Seturl1(downloadUrl); // Store the download URL in the state
+        Seturl1(downloadUrl); 
         console.log("File available at", downloadUrl);
       });
     });
-    // handlesumbit()
   };
 
   // const preset_name="f05bb7m0"
