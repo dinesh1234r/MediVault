@@ -36,7 +36,7 @@ function Patients() {
   const navigate=useNavigate()
 
   const webcamRef = useRef(null);
-  const [url, setUrl] = useState("");
+  // const [url, setUrl] = useState("");
 
   const captureImage = () => {
     const imageSrc = webcamRef.current.getScreenshot();
@@ -48,7 +48,6 @@ function Patients() {
 
     const byteString = atob(image.split(",")[1]);
     const mimeString = image.split(",")[0].split(":")[1].split(";")[0];
-
     const arrayBuffer = new Uint8Array(byteString.length);
     for (let i = 0; i < byteString.length; i++) {
       arrayBuffer[i] = byteString.charCodeAt(i);
@@ -60,13 +59,14 @@ function Patients() {
 
     const snapshot = await uploadBytes(storageRef, blob);
     const downloadUrl = await getDownloadURL(snapshot.ref);
-    setUrl(downloadUrl);
+    // setUrl(downloadUrl);
     return downloadUrl;
   };
 
   const handleCaptureAndSubmit = async () => {
     const image = captureImage(); 
     const downloadUrl = await uploadImage(image); 
+    console.log(downloadUrl)
 
     try {
       const response = await axios.post('https://medivault.onrender.com/patient/login', { image: downloadUrl });
@@ -100,31 +100,31 @@ function Patients() {
   };
 
   const [patient,Setpatient]=useState({name:"",aadhar:"",address:"",phone:"",dob:""});
-  const handlesumbit=async()=>{
-    const response=await axios.post('https://medivault.onrender.com/patient/login',{Aadhar:username,password:password})
-    if(response.data.msg==="Patient login successfully Done")
-    {
-      toast({
-        title:response.data.msg,
-        status:"success",
-        duration:1200,
-        position:'top',
-        onCloseComplete:()=>{
-          localStorage.setItem('patient',JSON.stringify(response.data.result))
-          navigate('/entry')
-        }
-      })
-    }
-    else
-    {
-      toast({
-        title:response.data.msg,
-        status:"error",
-        duration:1200,
-        position:'top'
-      })
-    }
-  }
+  // const handlesumbit=async()=>{
+  //   const response=await axios.post('https://medivault.onrender.com/patient/login',{Aadhar:username,password:password})
+  //   if(response.data.msg==="Patient login successfully Done")
+  //   {
+  //     toast({
+  //       title:response.data.msg,
+  //       status:"success",
+  //       duration:1200,
+  //       position:'top',
+  //       onCloseComplete:()=>{
+  //         localStorage.setItem('patient',JSON.stringify(response.data.result))
+  //         navigate('/entry')
+  //       }
+  //     })
+  //   }
+  //   else
+  //   {
+  //     toast({
+  //       title:response.data.msg,
+  //       status:"error",
+  //       duration:1200,
+  //       position:'top'
+  //     })
+  //   }
+  // }
 
   const handleSubmitDrawer=async()=>{
     const {name,aadhar,address,phone,dob}=patient
@@ -165,28 +165,47 @@ function Patients() {
     setImage1(imageSrc); 
   };
 
-  const handleUpload = () => {
+  const handleUpload = async() => {
+    // if (!image1) return;
+
+    // const byteString = atob(image1.split(",")[1]);
+    // const mimeString = image1.split(",")[0].split(":")[1].split(";")[0];
+
+    // const arrayBuffer = new Uint8Array(byteString.length);
+    // for (let i = 0; i < byteString.length; i++) {
+    //   arrayBuffer[i] = byteString.charCodeAt(i);
+    // }
+
+    // const blob = new Blob([arrayBuffer], { type: mimeString });
+
+    // const uniqueFileName = `image-${Date.now()}.jpg`; 
+    // const storageRef = ref(storage, `images/${uniqueFileName}`);
+
+    // uploadBytes(storageRef, blob).then((snapshot) => {
+    //   getDownloadURL(snapshot.ref).then((downloadUrl) => {
+    //     Seturl1(downloadUrl); 
+    //     console.log("File available at", downloadUrl);
+    //   });
+    // });
+
     if (!image1) return;
 
     const byteString = atob(image1.split(",")[1]);
     const mimeString = image1.split(",")[0].split(":")[1].split(";")[0];
-
+    
     const arrayBuffer = new Uint8Array(byteString.length);
     for (let i = 0; i < byteString.length; i++) {
       arrayBuffer[i] = byteString.charCodeAt(i);
     }
 
     const blob = new Blob([arrayBuffer], { type: mimeString });
-
-    const uniqueFileName = `image-${Date.now()}.jpg`; 
+    const uniqueFileName = `image-${Date.now()}.jpg`;
     const storageRef = ref(storage, `images/${uniqueFileName}`);
 
-    uploadBytes(storageRef, blob).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((downloadUrl) => {
-        Seturl1(downloadUrl); 
-        console.log("File available at", downloadUrl);
-      });
-    });
+    const snapshot = await uploadBytes(storageRef, blob);
+    const downloadUrl = await getDownloadURL(snapshot.ref);
+    Seturl1(downloadUrl);
+    console.log(downloadUrl)
   };
 
   // const preset_name="f05bb7m0"
@@ -298,7 +317,7 @@ function Patients() {
                   <FormLabel>
                     Photo
                   </FormLabel>
-                  <Webcam ref={webcamRef1}/>
+                  <Webcam ref={webcamRef1} screenshotFormat="image/jpeg"/>
                   <Image src={image1} alt='photo'/>
                   <Button colorScheme='blue' onClick={()=>capture()}>Capture</Button>
                   <Button onClick={()=>handleUpload()}>Upload</Button>
