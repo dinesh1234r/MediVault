@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { HStack,Flex,Box,FormControl,FormLabel,FormErrorMessage,Image,FormHelperText, Heading,Input, Button,Spacer,Text, VStack,Link,Spinner,useToast } from '@chakra-ui/react';
 import  axios  from 'axios'
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +12,13 @@ function Login() {
   const handleChange=(e)=>{
     Setvalues({...values,[e.target.name]:e.target.value})
   }
+
+  useEffect(()=>{
+    if(localStorage.getItem('Jwt')&&localStorage.getItem('Id'))
+    {
+      navigate('/home')
+    }
+  },[])
 
   const handleSubmit=async()=>{
     SetisLoading(true);
