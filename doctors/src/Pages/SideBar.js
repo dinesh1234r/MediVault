@@ -16,8 +16,10 @@ import {
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
 import axios from 'axios';
+import {useNavigate} from 'react-router-dom'
 
 function SideBar() {
+  const navigate=useNavigate()
   const toast=useToast();
   const {colorMode,toggleColorMode}=useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -70,7 +72,7 @@ function SideBar() {
             </Box>
             <Divider/>
             <Box  w={'95%'} h={'48vh'}> 
-              <Text>height</Text>
+              {/* <Text>height</Text> */}
             </Box>
             <Divider/>
             <Box h={'6vh'} w={"100%"}>
@@ -144,7 +146,7 @@ function SideBar() {
                 <PopoverTrigger>
                   <Box>
                     <motion.div whileTap={{scale:0.9}}>
-                      <IconButton icon={<BiLogOut/>} ></IconButton>
+                      <IconButton icon={<BiLogOut/>} onClick={()=>{localStorage.clear();navigate('/')}} ></IconButton>
                     </motion.div>
                   </Box>
                 </PopoverTrigger>
