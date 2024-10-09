@@ -12,7 +12,7 @@ const Middleware=require('../Middleware/middleware')
 const simpleFormattedDate = `${day}/${month}/${year}`; 
 
 
-route.post('/register',async(req,res)=>{
+route.post('/register',Middleware,async(req,res)=>{
     try{
         const {Name,Address,Aadhar,Phone_no,Photo,DOB}=req.body;
         const patient=new PatientSchemas({

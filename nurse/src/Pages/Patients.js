@@ -69,7 +69,12 @@ function Patients() {
     console.log(downloadUrl)
 
     try {
-      const response = await axios.post('https://medivault.onrender.com/patient/login', { image: downloadUrl });
+      const response = await axios.post('https://medivault.onrender.com/patient/login', { image: downloadUrl },{
+        headers:{
+          'Authorization':`Bearer ${localStorage.getItem('Jwt')}`,
+          'Content-Type': 'application/json'
+        }
+      });
       if (response.data.msg === "Faces match!") {
         localStorage.setItem('patient', JSON.stringify(response.data.result));
         toast({
@@ -135,6 +140,11 @@ function Patients() {
       Phone_no:phone,
       Photo:url1,
       DOB:dob
+    },{
+      headers:{
+        'Authorization':`Bearer ${localStorage.getItem('Jwt')}`,
+        'Content-Type': 'application/json'
+      }
     })
     if(response.data.msg==="Registration Successfully Done")
     {

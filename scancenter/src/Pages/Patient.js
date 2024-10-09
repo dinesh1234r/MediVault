@@ -43,7 +43,12 @@ function Patients() {
     const downloadUrl = await uploadImage(image); 
 
     try {
-      const response = await axios.post('https://medivault.onrender.com/patient/login', { image: downloadUrl });
+      const response = await axios.post('https://medivault.onrender.com/patient/login', { image: downloadUrl },{
+        headers:{
+          'Authorization':`Bearer ${localStorage.getItem('Jwt')}`,
+          'Content-Type': 'application/json'
+        }
+      });
       if (response.data.msg === "Faces match!") {
         localStorage.setItem('patient', JSON.stringify(response.data.result));
         toast({
