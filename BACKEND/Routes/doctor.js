@@ -4,6 +4,7 @@ const DoctorPatientsSchema=require('../Models/DoctorPatientsSchema')
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
 const NurseScheme=require('../Models/NurseScheme')
+const Middleware=require('../Middleware/middleware')
 
 route.post('/login',async(req,res)=>{
     try{
@@ -44,7 +45,7 @@ route.post('/login',async(req,res)=>{
     }
 })
 
-route.post('/passchange',async(req,res)=>{
+route.post('/passchange',Middleware,async(req,res)=>{
     try{
         const {oldpass,newpass,objectID}=req.body;
         const doctor=await DoctorPatientsSchema.findById({_id:objectID});

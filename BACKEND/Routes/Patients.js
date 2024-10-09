@@ -8,7 +8,7 @@ const axios = require('axios');
 const day = String(currentDate.getDate()).padStart(2, '0'); 
 const month = String(currentDate.getMonth() + 1).padStart(2, '0'); 
 const year = currentDate.getFullYear();
-
+const Middleware=require('../Middleware/middleware')
 const simpleFormattedDate = `${day}/${month}/${year}`; 
 
 
@@ -32,7 +32,7 @@ route.post('/register',async(req,res)=>{
     }
 })
 
-route.post('/login',async(req,res)=>{
+route.post('/login',Middleware,async(req,res)=>{
     try{
         const {image}=req.body;
         const patients=await PatientSchemas.find();
@@ -71,7 +71,7 @@ route.post('/login',async(req,res)=>{
     }
 })
 
-route.post('/entrypatient',async(req,res)=>{
+route.post('/entrypatient',Middleware,async(req,res)=>{
     try{
         const {_id,vitals,disease}=req.body;
         // const currentDate = new Date().toLocaleDateString();
@@ -110,7 +110,7 @@ route.post('/entrypatient',async(req,res)=>{
     }
 })
 
-route.post('/notesadded',async(req,res)=>{
+route.post('/notesadded',Middleware,async(req,res)=>{
     try{
         const {_id,notes}=req.body;
         // const currentDate = new Date().toLocaleDateString();
@@ -142,7 +142,7 @@ route.post('/notesadded',async(req,res)=>{
     }
 })
 
-route.post('/entryreport',async(req,res)=>{
+route.post('/entryreport',Middleware,async(req,res)=>{
     try{
         const {_id}=req.body;
         // const currentDate = new Date().toLocaleDateString();
@@ -169,7 +169,7 @@ route.post('/entryreport',async(req,res)=>{
         })
     }
 })
-route.post('/updatereport',async(req,res)=>{
+route.post('/updatereport',Middleware,async(req,res)=>{
     try{
         const {report,_id}=req.body;
         // const currentDate = new Date().toLocaleDateString();
@@ -195,7 +195,7 @@ route.post('/updatereport',async(req,res)=>{
     }
 })
 
-route.post('/updateprecription',async(req,res)=>{
+route.post('/updateprecription',Middleware,async(req,res)=>{
     try{
         const {_id,preciption,Doctor}=req.body;
         // const currentDate = new Date().toLocaleDateString();
@@ -230,7 +230,7 @@ route.post('/updateprecription',async(req,res)=>{
     }
 })
 
-route.post('/history',async(req,res)=>{
+route.post('/history',Middleware,async(req,res)=>{
     try{
         const {_id}=req.body;
         const result=await PatientSchemas.findById({_id})
