@@ -375,7 +375,7 @@ const Intro = () => {
     >
       <Flex justify="space-between" align="center" maxWidth="1200px" mx="auto">
         <Text fontSize="sm" color={useColorModeValue('gray.600', 'gray.300')}>
-          © {new Date().getFullYear()} Your Company Name. All rights reserved.
+          © {new Date().getFullYear()} MediVault. All rights reserved.
         </Text>
         <Flex>
           <Link href="/privacy-policy" mx={2} fontSize="sm" color={useColorModeValue('blue.500', 'blue.300')}>
