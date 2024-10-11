@@ -34,11 +34,13 @@ import {
   import { FiLogOut } from 'react-icons/fi';
   import { useNavigate } from 'react-router-dom'
   import {jwtDecode} from 'jwt-decode';
-// import { Worker, Viewer } from '@react-pdf-viewer/core';
-// import '@react-pdf-viewer/core/lib/styles/index.css';
-// import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+  import { addHistory,clearHistory } from '../Redux/Slice';
+ import { useDispatch } from 'react-redux';
+ import { useSelector } from 'react-redux';
 
 function PatientHistory() {
+    const filter=useSelector((state)=>state.history.filter)
+    
     const toast=useToast();
     const navigate=useNavigate()
     const [history,SetHistory]=useState([{}]);
@@ -70,6 +72,7 @@ function PatientHistory() {
 
     // console.log(currentDate)
     const [notes,Setnotes]=useState("")
+    const dispatch=useDispatch()
     useEffect(()=>{
         const fetchhistory=async()=>{
             try{
@@ -83,6 +86,7 @@ function PatientHistory() {
                 if(response.data.msg==="History received")
                 {
                     const result=response.data.result.reverse();
+                    dispatch(addHistory(result))
                     result.map((data)=>{
                         if(data.Date===simpleFormattedDate)
                         {
@@ -90,7 +94,7 @@ function PatientHistory() {
                             Setpreciption(data.preciption)
                         }
                     })
-                    console.log(result)
+                    // console.log(result)
                     SetHistory(result)
                     
                     toast({
@@ -124,7 +128,15 @@ function PatientHistory() {
         
     
     },[])
-
+    const [historyFilter,sethistoryFilter]=useState([])
+    useEffect(() => {
+        if (filter !== '') {
+          const h1 = history.filter((data) => filter === data.disease);
+          sethistoryFilter(h1);
+        } else {
+          sethistoryFilter(history); 
+        }
+      }, [filter, history]); 
     const savingnotes=async()=>{
         try{
             const _id=JSON.parse(localStorage.getItem('patient'))._id;
@@ -219,6 +231,7 @@ function PatientHistory() {
     const handlelogout=()=>{
         navigate('/home')
         localStorage.removeItem('patient');
+        dispatch(clearHistory())
       }
 
       const handledelete=(index)=>{
@@ -302,7 +315,7 @@ function PatientHistory() {
         <Divider/>
         <Box overflowY={'scroll'} h={'90vh'}>
             <Box w={'60%'} mx={'auto'} mt={4}>
-            {history.map((data)=>(
+            {historyFilter.map((data)=>(
                 <>
                 <Card>
                     <CardHeader><HStack><strong>Disease:</strong><Text>{data.disease}</Text><Spacer/><strong>Date:</strong><Text >{data.Date}</Text></HStack></CardHeader>

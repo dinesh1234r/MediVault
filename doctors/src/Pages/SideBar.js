@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { HStack,Flex,Box, VStack,Text,Image,IconButton,useToast, Divider,Button, Heading,Input,useColorMode,useColorModeValue,Center } from '@chakra-ui/react';
+import { HStack,Flex,Box, VStack,Text,Image,Spacer,IconButton,useToast,Card, Divider,Button, Heading,Input,useColorMode,useColorModeValue,Center } from '@chakra-ui/react';
 import {jwtDecode} from 'jwt-decode';
 import { BiLogOut } from "react-icons/bi";
 import { FiSettings } from "react-icons/fi";
@@ -17,8 +17,15 @@ import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom'
+import { useSelector } from 'react-redux';
+import {useDispatch} from 'react-redux'
+import {clearFilter,addFilter} from '../Redux/Slice'
+import { MdRefresh } from 'react-icons/md';
 
 function SideBar() {
+  const dispatch=useDispatch()
+  const history=useSelector((state)=>state.history.history)
+  const disease=[...new Set(history.map((data)=>data.disease))]
   const navigate=useNavigate()
   const toast=useToast();
   const {colorMode,toggleColorMode}=useColorMode();
@@ -66,6 +73,14 @@ function SideBar() {
     }
   const SwitchIcon=useColorModeValue(SunIcon,MoonIcon);
 
+  const filtering=(disease)=>{
+    dispatch(addFilter(disease))
+  }
+
+  const handlerefreshed=()=>{
+    dispatch(clearFilter())
+  }
+
   return (
     <Box bg={'blue.900'} h={'100vh'}>
         <VStack >
@@ -76,8 +91,29 @@ function SideBar() {
               </VStack>
             </Box>
             <Divider/>
-            <Box  w={'95%'} h={'48vh'}> 
-              {/* <Text>height</Text> */}
+            <Box  w={'95%'} h={'48vh'} overflowY={'scroll'} >
+              <HStack mb={4}>
+                  <Text fontSize={'lg'} ml={2} color={'white'}>Disease</Text>
+                  <Spacer/>
+                  <IconButton
+      icon={<MdRefresh />} 
+      aria-label="Refresh"
+      mr={2} 
+      onClick={()=>handlerefreshed()}
+      colorScheme="teal"
+      variant="outline" 
+      size="sm" 
+      isRound
+      _hover={{ bg: "teal.500", color: "white" }} 
+    />
+              </HStack> 
+              <VStack>
+              {disease.length===0?<Text >No Record Found</Text>:
+              disease.map((item)=>(
+                <Button w={'90%'} textAlign={'center'} fontSize={'lg'} mb={4}
+                onClick={()=>filtering(item)}>{item}</Button>
+              ))}
+              </VStack>
             </Box>
             <Divider/>
             <Box h={'6vh'} w={"100%"}>
@@ -88,18 +124,7 @@ function SideBar() {
                 initial={{ opacity: 0.7 }}
                 animate={{ opacity: 1, transition: { duration: 0.4 } }}
               >
-                {/* <Popover trigger="hover">
-                  <PopoverTrigger> */}
                   <IconButton icon={<SwitchIcon/>} onClick={toggleColorMode} borderRadius={"full"}/>
-                  {/* </PopoverTrigger>
-                  <PopoverContent w={"120px"}>
-                    <PopoverArrow/>
-                    <PopoverBody>
-                        <Text>Toogle Mode</Text>
-                    </PopoverBody>
-                  </PopoverContent>
-                </Popover> */}
-                
                 </motion.div>
                 </Center>
                 <Center h={'40px'}>
