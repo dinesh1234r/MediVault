@@ -1,9 +1,11 @@
 import React from 'react'
 import SideBar from './SideBar'
 import Patients from './Patients'
-import { HStack,Flex,Box } from '@chakra-ui/react';
+import { HStack,Flex,Text,Button,Box } from '@chakra-ui/react';
+import {useNavigate} from 'react-router-dom'
 
 function Home() {
+  const navigate=useNavigate()
   if(!localStorage.getItem('Jwt'))
     {
         return (
