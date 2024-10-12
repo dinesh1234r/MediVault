@@ -23,6 +23,28 @@ function Login() {
     SetisLoading(true);
     try{
       const {username,password}=values;
+      if(username.length===0)
+      {
+        toast({
+          title:"Field Should not empty",
+          status:"warning",
+          duration:1200,
+          position:"top"
+        })
+        SetisLoading(false)
+        return;
+      }
+      if(password.length===0)
+      {
+        toast({
+          title:"Field Should not empty",
+          status:"warning",
+          duration:1200,
+          position:"top"
+        })
+        SetisLoading(false)
+        return;
+      }
       await axios.post("https://medivault.onrender.com/doctor/login",{username,password})
       .then((res)=>{
         console.log(res);
@@ -111,7 +133,7 @@ function Login() {
             <FormControl isRequired>
                 <VStack>
                     <FormLabel color={'gray.600'} w={'99%'}>Username</FormLabel>
-                    <Input type='username' name='username' value={values.username} placeholder='Enter your username' bg={'white'} onChange={(e)=>handleChange(e)} />
+                    <Input type='email' name='username' value={values.username} placeholder='Enter your username' bg={'white'} onChange={(e)=>handleChange(e)} />
                     <FormLabel color={'gray.600'} w={'99%'}>Password</FormLabel>
                     <Input type='password' name='password' value={values.password} placeholder='Enter your password' bg={'white'} onChange={(e)=>handleChange(e)} />
                 </VStack>

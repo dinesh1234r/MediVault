@@ -24,6 +24,28 @@ function Login() {
     SetisLoading(true);
     try{
       const {username,password}=values;
+      if(username.length===0)
+        {
+          toast({
+            title:"Field Should not empty",
+            status:"warning",
+            duration:1200,
+            position:"top"
+          })
+          SetisLoading(false)
+          return;
+        }
+        if(password.length===0)
+        {
+          toast({
+            title:"Field Should not empty",
+            status:"warning",
+            duration:1200,
+            position:"top"
+          })
+          SetisLoading(false)
+          return;
+        }
       await axios.post("https://medivault.onrender.com/nurse/login",{username,password})
       .then((res)=>{
         if(res.data.msg==="Username Found")
