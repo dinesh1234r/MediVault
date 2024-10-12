@@ -35,6 +35,28 @@ const LoginForm = () => {
   const toast=useToast();
   const handlesubmit=async()=>{
     SetisLoading(true);
+    if(adminuser.length===0)
+      {
+        toast({
+          title:"Field Should not empty",
+          status:"warning",
+          duration:1200,
+          position:"top"
+        })
+        SetisLoading(false)
+        return;
+      }
+      if(password.length===0)
+        {
+          toast({
+            title:"Field Should not empty",
+            status:"warning",
+            duration:1200,
+            position:"top"
+          })
+          SetisLoading(false)
+          return;
+        }
     const response=await axios.post('https://medivault.onrender.com/admin/login',{adminuser,password});
     if(response.data.msg==='Login successful')
     {
