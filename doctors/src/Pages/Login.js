@@ -28,15 +28,15 @@ function Login() {
         console.log(res);
         if(res.data.msg==="Username Found")
         {
-          toast({
-            isClosable:true,
-            position:"top",
-            duration:1200,
-            onCloseComplete:()=>{
-              navigate('/home');
               localStorage.setItem('Jwt',res.data.jwt);
               localStorage.setItem('Id',res.data.objectID);
               localStorage.setItem('Photo',res.data.photo);
+          toast({
+            isClosable:true,
+            position:"top",
+            duration:1400,
+            onCloseComplete:()=>{
+              navigate('/home');
             },
             render:()=>(
               <Box 

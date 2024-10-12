@@ -39,10 +39,13 @@ import {
  import { useSelector } from 'react-redux';
 
 function PatientHistory() {
+    const navigate=useNavigate()
+    
     const filter=useSelector((state)=>state.history.filter)
     
     const toast=useToast();
-    const navigate=useNavigate()
+    
+    
     const [history,SetHistory]=useState([{}]);
     const currentDate = new Date();
     const day = String(currentDate.getDate()).padStart(2, '0'); 
@@ -54,7 +57,7 @@ function PatientHistory() {
     useEffect(() => {
         calculateAge();
       }, []); 
-
+      
     const calculateAge=()=>{
         const date=new Date();
         const birth=new Date(dob);
