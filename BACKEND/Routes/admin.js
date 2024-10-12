@@ -8,6 +8,7 @@ const Middleware=require('../Middleware/middleware');
 const DoctorPatientsSchema=require('../Models/DoctorPatientsSchema');
 const NurseScheme = require('../Models/NurseScheme');
 const NursePatientsSchema=require('../Models/NursePatientsScheme')
+const ScanCenterSchema=require('../Models/ScanCenter')
 
 route.post('/login',async(req,res)=>{
     try{
@@ -203,5 +204,78 @@ route.post('/deletedetailnurse',Middleware,async(req,res)=>{
     }
 })
 
+route.post('/postforscancenter',async(req,res)=>{
+    try{
+        const {Admin,username,DOB,Gender,Image,Email_Address,Current_Address,Qualifications,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience}=req.body;
+        const currentdatetime=new Date();
+        const currentdate=currentdatetime.toLocaleDateString()
+        const currenttime=currentdatetime.toLocaleTimeString();
+        const num=currentdatetime.getDay();
+        const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const currentday=daysOfWeek[num];
+        const ScanCenter=new ScanCenterSchema({
+            Admin,username,password:Medical_License_Number,Gender,DOB,Image,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Date_Joined:currentdate,
+            Time_Joined:currenttime,Day_Joined:currentday
+        })
+        ScanCenter.save();
+        res.json({
+            msg:"Details added successful"
+        })
+    }
+    catch(err)
+    {
+        res.json({
+            msg:"Error occurred in deleting detail"
+        })
+    }
+})
+
+route.post('/getallScancenter',async(req,res)=>{
+    try{
+        const {Admin}=req.body;
+        const details=await ScanCenterSchema.find({Admin});
+        if(details.length===0)
+        {
+            return res.json({
+                msg:"No records Found"
+            })
+        }
+        res.json({
+            msg:"Details fetched",
+            result:details
+        })
+    }
+    catch(err)
+    {
+        res.json({
+            msg:"Error occurred in deleting detail"
+        })
+    }
+})
+
+route.post('/deletescancenter',async(req,res)=>{
+    try{
+        const {UID}=req.body;
+        const deleted=await ScanCenterSchema.findOneAndDelete({Medical_License_Number:UID});
+        if(deleted)
+        {
+            return res.json({
+                msg:"Account deleted"
+            })
+        }
+        else
+        {
+            return res.json({
+                msg:"Account not found"
+            })
+        }
+    }
+    catch(err)
+    {
+        res.json({
+            msg:"Error occurred in deleting detail"
+        })
+    }
+})
 
 module.exports=route

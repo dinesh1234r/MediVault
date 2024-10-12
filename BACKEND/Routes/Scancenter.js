@@ -1,6 +1,6 @@
 const express=require('express');
 const route=express.Router()
-const NursePatientsSchema=require('../Models/NursePatientsScheme')
+const ScanCenterSchema=require('../Models/ScanCenter')
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
 const Middleware=require('../Middleware/middleware')
@@ -8,7 +8,7 @@ const Middleware=require('../Middleware/middleware')
 route.post('/login',async(req,res)=>{
     try{
         const {username,password}=req.body;
-        const check=await NursePatientsSchema.findOne({email:username});
+        const check=await ScanCenterSchema.findOne({email:username});
         if(!check)
         {
              res.json({
@@ -49,12 +49,12 @@ route.post('/login',async(req,res)=>{
 route.post('/passchange',Middleware,async(req,res)=>{
     try{
         const {oldpass,newpass,objectID}=req.body;
-        const doctor=await NursePatientsSchema.findById({_id:objectID});
+        const doctor=await ScanCenterSchema.findById({_id:objectID});
         const pass=await bcrypt.compare(oldpass,doctor.password);
         if(pass)
         {
             const hashpassword=await bcrypt.hash(newpass,10);
-            const updated=await NursePatientsSchema.findByIdAndUpdate({_id:objectID},{password:hashpassword});
+            const updated=await ScanCenterSchema.findByIdAndUpdate({_id:objectID},{password:hashpassword});
             res.json({
                 msg:"Password change Successfully"
             })
