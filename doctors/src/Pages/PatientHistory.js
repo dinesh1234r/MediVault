@@ -2,6 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { HStack,Flex,Box,Text,Card,CardHeader,CardBody,Image,Input,useToast,Spacer,Divider,Button,VStack,CardFooter,UnorderedList,Textarea,ListItem,useDisclosure, Heading,IconButton } from '@chakra-ui/react';
 import axios from 'axios'
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
+import ReactDOMServer from "react-dom/server";
 import {
     Drawer,
     DrawerBody,
@@ -307,6 +308,54 @@ function PatientHistory() {
     const [doctorname,Setdoctorname]=useState("");
     const [datas,Setdatas]=useState({})
 
+    const generatepdfprint=()=>{
+        const htmlContent = ReactDOMServer.renderToString(
+            <PrintContent datas={datas} age={age} medicines={preciption} />
+          );
+      
+          const printWindow = window.open("", "", "width=1000,height=1000");
+          printWindow.document.open();
+          printWindow.document.write(`
+            <html>
+              <head>
+                <title>Print</title>
+                <style>
+                  @media print {
+                    body * {
+                      visibility: hidden;
+                    }
+                    
+                    .print-area, .print-area * {
+                      visibility: visible;
+                    }
+                    
+                    .print-area {
+                      position: absolute;
+                      left: 0;
+                      top: 0;
+                      width: 100%;
+                    }
+                  }
+                  /* Add additional CSS to style the print content as desired */
+                  body {
+                    font-family: Arial, sans-serif;
+                  }
+                </style>
+              </head>
+              <body>
+                <div class="print-area">${htmlContent}</div>
+                <script>
+                  window.onload = function() {
+                    window.print();
+                    window.close();
+                  };
+                </script>
+              </body>
+            </html>
+          `);
+          printWindow.document.close();
+    }
+
   return (
     <Box h={'100vh'}>
         <HStack ml={20} mr={10} mt={5} mb={2}>
@@ -363,6 +412,7 @@ function PatientHistory() {
                         <Text>PRECRIPTION</Text>
                         <Spacer/>
                         <Button onClick={()=>handlesendprecription()}>Save</Button>
+                        <Button onClick={()=>generatepdfprint()}>print</Button>
                     </HStack>
                 </DrawerHeader>
                 <Divider/>
@@ -409,7 +459,6 @@ function PatientHistory() {
                     <HStack>
                         <strong>Updated column</strong>
                         <Spacer/>
-                        <Button>print</Button>
                     </HStack>
                     <TableContainer>
                     <Box h={'60vh'} overflowY={'scroll'}>
@@ -629,5 +678,102 @@ function PatientHistory() {
     </Box>
   )
 }
+
+const PrintContent = ({ datas, age, medicines }) => (
+    <Box
+      direction="column"
+      justify="center"
+      align="center"
+      width="210mm"
+      borderWidth="1px"
+      borderRadius="md"
+      boxShadow="md"
+      padding="20px"
+      backgroundColor="white"
+      overflow="hidden"
+    >
+      <HStack w="100%">
+        <Image
+          src="https://st4.depositphotos.com/14268534/40301/v/450/depositphotos_403014308-stock-illustration-hospital-logo-initial-letter-logo.jpg"
+          alt="not image"
+          boxSize={40}
+        />
+        <VStack>
+          <Heading>ABC HOSPITAL</Heading>
+          <strong>villooni,eruthempathy-po,chittur,palakkad-678555</strong>
+          <strong>abc@gmail.com,8893456789</strong>
+        </VStack>
+        <Spacer />
+      </HStack>
+      <HStack w="100%">
+        <Text>Consultation: Mon - Sat : 8.00am to 11.00 am</Text>
+        <Spacer />
+        <VStack w="20%">
+          <strong>{`Dr.${datas.Doctor}`}</strong>
+          <strong>MBBS, MD..(Med)</strong>
+        </VStack>
+      </HStack>
+      <Divider />
+      <HStack w="100%">
+        <VStack>
+          <HStack ml={2}>
+            <strong>Name :</strong>
+            <Text>{JSON.parse(localStorage.getItem("patient")).Name}</Text>
+          </HStack>
+          <HStack>
+            <strong>Gender :</strong>
+            <Text>Male</Text>
+          </HStack>
+        </VStack>
+        <Spacer />
+        <VStack>
+          <HStack>
+            <strong>Date :</strong>
+            <Text>{datas.Date}</Text>
+          </HStack>
+          <HStack>
+            <strong>Age :</strong>
+            <Text>{age}</Text>
+          </HStack>
+        </VStack>
+      </HStack>
+      <Divider />
+      <Spacer h={4} />
+      <HStack w="100%">
+        <strong>Medicines</strong>
+      </HStack>
+      <TableContainer>
+        <Table>
+          <Thead>
+            <Tr>
+              <Th>Medicine</Th>
+              <Th>Morning</Th>
+              <Th>Lunch</Th>
+              <Th>Dinner</Th>
+              <Th>Before/After Food</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {Array.isArray(medicines) && medicines.length > 0 ? (
+              medicines.map((data, index) => (
+                <Tr key={index}>
+                  <Td>{data.medicine}</Td>
+                  <Td>{data.morning}</Td>
+                  <Td>{data.lunch}</Td>
+                  <Td>{data.dinner}</Td>
+                  <Td>{data.shift}</Td>
+                </Tr>
+              ))
+            ) : (
+              <Tr>
+                <Td colSpan={5}>No prescriptions available</Td>
+              </Tr>
+            )}
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </Box>
+  );
+  
 
 export default PatientHistory

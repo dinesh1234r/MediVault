@@ -21,7 +21,6 @@ import {useNavigate} from 'react-router-dom'
 function SideBar() {
   const navigate=useNavigate()
   const toast=useToast();
-//   const {colorMode,toggleColorMode}=useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure()
   const username=jwtDecode(JSON.stringify(localStorage.getItem('Jwt'))).user;
   const photo=localStorage.getItem('Photo');
@@ -31,7 +30,7 @@ function SideBar() {
   const handlechangepass=async()=>{
     try{
       const objectID=localStorage.getItem('Id');
-    const response=await axios.post('https://medivault.onrender.com/doctor/passchange',{oldpass,newpass,objectID},{
+    const response=await axios.post('https://medivault.onrender.com/scancenter/passchange',{oldpass,newpass,objectID},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('Jwt')}`,
         'Content-Type': 'application/json'
@@ -88,17 +87,6 @@ function SideBar() {
                 initial={{ opacity: 0.7 }}
                 animate={{ opacity: 1, transition: { duration: 0.4 } }}
               >
-                {/* <Popover trigger="hover">
-                  <PopoverTrigger> */}
-                  {/* <IconButton icon={<SwitchIcon/>} onClick={toggleColorMode} borderRadius={"full"}/> */}
-                  {/* </PopoverTrigger>
-                  <PopoverContent w={"120px"}>
-                    <PopoverArrow/>
-                    <PopoverBody>
-                        <Text>Toogle Mode</Text>
-                    </PopoverBody>
-                  </PopoverContent>
-                </Popover> */}
                 
                 </motion.div>
                 </Center>

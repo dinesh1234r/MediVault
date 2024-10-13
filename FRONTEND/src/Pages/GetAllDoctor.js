@@ -19,14 +19,25 @@ import {Box,Button,Input,Heading,VStack,HStack,Radio, RadioGroup,Stack,Center,To
     PopoverHeader,
     PopoverBody
   } from "@chakra-ui/react";
+  import {
+    Drawer,
+    DrawerBody,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerOverlay,
+    DrawerContent,
+    DrawerCloseButton,
+  } from '@chakra-ui/react'
   
 import axios from 'axios';
 import {jwtDecode} from 'jwt-decode'
 import { color } from 'framer-motion';
 import { Flex } from '@chakra-ui/react';
+import AddDoctors from './AddDoctors';
 
 function GetAllDoctor() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen:isDrawer, onOpen:onDrawer, onClose:onCloseDrawer } = useDisclosure()
   const toast=useToast();
   const [Details,SetDetails] = useState([])
   const [medicalnum,SetMedicalnum]=useState(null);
@@ -101,7 +112,7 @@ function GetAllDoctor() {
 
   return (
     <Box width={'100%'} height={'550px'} p={4} overflowY={'scroll'} boxShadow={'lg'} align='center' >
-      <HStack flexDirection={'row-reverse'}><Button colorScheme='red' onClick={()=>fetchdetails()} >Refresh</Button></HStack>
+      <HStack ><Spacer/><Button onClick={()=>onDrawer()}>Add</Button><Button colorScheme='red' onClick={()=>fetchdetails()} >Refresh</Button></HStack>
       {/* <Flex  > */}
       <VStack divider={<StackDivider />} border={'2px'} borderColor={'gray.100'} borderRadius={'lg'} justify="center" width={'50%'}>
         {Details.map(detail=>(
@@ -143,6 +154,28 @@ function GetAllDoctor() {
           </HStack>
           
         ))}
+        <Drawer
+        isOpen={isDrawer}
+        size={'full'}
+        onClose={onCloseDrawer}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Create your account</DrawerHeader>
+
+          <DrawerBody>
+            <AddDoctors/>
+          </DrawerBody>
+
+          {/* <DrawerFooter>
+            <Button variant='outline' mr={3} onClick={onCloseDrawer}>
+              Cancel
+            </Button>
+            <Button colorScheme='blue'>Save</Button>
+          </DrawerFooter> */}
+        </DrawerContent>
+      </Drawer>
         <Modal isOpen={isOpen} onClose={onClose}>
               <ModalOverlay/>
               <ModalContent>

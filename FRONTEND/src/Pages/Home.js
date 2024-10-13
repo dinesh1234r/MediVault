@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import Toogle from './Toogle'
 import AddNurse from './AddNurse'
 import GetAllNurse from './GetAllNurse'
+import GetAllScanCenter from './GetAllScanCenter'
 
 function Home() {
   const [isLoading,SetisLoading]=useState(false);
@@ -41,17 +42,15 @@ function Home() {
     <Tabs variant='soft-rounded' colorScheme='green' p={2}>  
       <TabList>
         <Tab>Get all Doctors list</Tab>
-        <Tab>Add more Doctor</Tab>
-        <Tab>Add more Nurse</Tab>
         <Tab>Get all Nurse list</Tab>
+        <Tab>Get all ScanCenter list</Tab>
       </TabList>
       <TabPanels>
         <TabPanel>
           <GetAllDoctor/>
-          </TabPanel>
-        <TabPanel><AddDoctors/></TabPanel>
-        <TabPanel><AddNurse/></TabPanel>
+        </TabPanel>
         <TabPanel><GetAllNurse/></TabPanel>
+        <TabPanel><GetAllScanCenter/></TabPanel>
       </TabPanels>
     </Tabs>
     </Box>
