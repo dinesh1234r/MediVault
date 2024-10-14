@@ -60,7 +60,7 @@ function Login() {
               navigate('/home');
               localStorage.setItem('Jwt',res.data.jwt);
               localStorage.setItem('Id',res.data.objectID);
-              localStorage.setItem('Photo',res.data.photo);
+              localStorage.setItem('Photo',res.data.check.Image);
             },
           })
           Setvalues({username:"",password:""});
