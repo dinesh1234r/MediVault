@@ -33,7 +33,7 @@ import axios from 'axios';
 import {jwtDecode} from 'jwt-decode'
 import { color } from 'framer-motion';
 import { Flex } from '@chakra-ui/react';
-import AddDoctors from './AddDoctors';
+import AddScanCenter from './AddScanCenter';
 
 function GetAllScanCenter() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -43,7 +43,7 @@ function GetAllScanCenter() {
   const [medicalnum,SetMedicalnum]=useState(null);
   const fetchdetails=async()=>{
     const Admin=jwtDecode(localStorage.getItem('jwt')).adminuser;
-    const response=await axios.post('https://medivault.onrender.com/admin/getalldetailsofdoctor',{Admin},{
+    const response=await axios.post('https://medivault.onrender.com/admin/getallScancenter',{Admin},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'
@@ -79,7 +79,7 @@ function GetAllScanCenter() {
   }
 
   const handlesubmit=async()=>{
-    const response=await axios.post("https://medivault.onrender.com/admin/deletedetail",{Medical_License_Number:medicalnum},{
+    const response=await axios.post("https://medivault.onrender.com/admin/deletescancenter",{Medical_License_Number:medicalnum},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'
@@ -165,15 +165,10 @@ function GetAllScanCenter() {
           <DrawerHeader>Create your account</DrawerHeader>
 
           <DrawerBody>
-            <AddDoctors/>
+            <AddScanCenter/>
           </DrawerBody>
 
-          {/* <DrawerFooter>
-            <Button variant='outline' mr={3} onClick={onCloseDrawer}>
-              Cancel
-            </Button>
-            <Button colorScheme='blue'>Save</Button>
-          </DrawerFooter> */}
+          
         </DrawerContent>
       </Drawer>
         <Modal isOpen={isOpen} onClose={onClose}>

@@ -206,26 +206,35 @@ route.post('/deletedetailnurse',Middleware,async(req,res)=>{
 
 route.post('/postforscancenter',async(req,res)=>{
     try{
-        const {Admin,username,DOB,Gender,Image,Email_Address,Current_Address,Qualifications,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience}=req.body;
+        const {Admin,Doctor_name,gender,DOB,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,photo}=req.body;
         const currentdatetime=new Date();
         const currentdate=currentdatetime.toLocaleDateString()
         const currenttime=currentdatetime.toLocaleTimeString();
         const num=currentdatetime.getDay();
         const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         const currentday=daysOfWeek[num];
-        const ScanCenter=new ScanCenterSchema({
-            Admin,username,password:Medical_License_Number,Gender,DOB,Image,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Date_Joined:currentdate,
+        const hashpassword=await bcrypt.hash(Medical_License_Number,10);
+        const nurse=new NurseScheme({
+            Admin,Doctor_name,Gender:gender,DOB,Image:photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Date_Joined:currentdate,
             Time_Joined:currenttime,Day_Joined:currentday
         })
-        ScanCenter.save();
+        const newnursepatients=new NursePatientsSchema({
+            email:Email_Address,
+            username:Doctor_name,
+            password:hashpassword,
+            NUID:Medical_License_Number,
+            photo:photo
+        })
+        newnursepatients.save()
+        nurse.save()
         res.json({
-            msg:"Details added successful"
+            msg:"Details are saved successfully"
         })
     }
     catch(err)
     {
         res.json({
-            msg:"Error occurred in deleting detail"
+            msg:"Error occurred in addscan"
         })
     }
 })
