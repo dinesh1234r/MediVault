@@ -16,7 +16,7 @@ route.post('/login',async(req,res)=>{
             })
         }
         else{
-        const pass=await bcrypt.compare(password,check.password);
+        const pass=await bcrypt.compare(password,check.Password);
         
         if(pass)
         {
@@ -41,7 +41,7 @@ route.post('/login',async(req,res)=>{
     catch(err)
     {
         return res.json({
-            msg:"Error in Doctor's Login"
+            msg:"Error in ScanCenter's Login"
         })
     }
 })
