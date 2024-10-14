@@ -8,7 +8,7 @@ const Middleware=require('../Middleware/middleware')
 route.post('/login',async(req,res)=>{
     try{
         const {username,password}=req.body;
-        const check=await ScanCenterSchema.findOne({email:username});
+        const check=await ScanCenterSchema.findOne({Email_Address:username});
         if(!check)
         {
              res.json({
