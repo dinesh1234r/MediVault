@@ -79,7 +79,7 @@ function GetAllScanCenter() {
   }
 
   const handlesubmit=async()=>{
-    const response=await axios.post("https://medivault.onrender.com/admin/deletescancenter",{Medical_License_Number:medicalnum},{
+    const response=await axios.post("https://medivault.onrender.com/admin/deletescancenter",{UID:medicalnum},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'
@@ -120,8 +120,8 @@ function GetAllScanCenter() {
           
           <HStack  spacing={2} p={2} width={'90%'} flexDirection={'row'} >  
             <Image src={detail.Image} boxSize={'50px'} borderRadius="full"/>
-            <h1>{detail.Doctor_name}</h1>
-            {/* <h1>{detail.Medical_License_Number}</h1> */}
+            <h1>{detail.username}</h1>
+            <h1>{detail.Medical_License_Number}</h1>
           <Spacer/>
           <Popover>
           <PopoverTrigger>

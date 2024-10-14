@@ -261,7 +261,7 @@ route.post('/deletescancenter',async(req,res)=>{
         if(deleted)
         {
             return res.json({
-                msg:"Account deleted"
+                msg:"Delete Successfully"
             })
         }
         else
