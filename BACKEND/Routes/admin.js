@@ -242,7 +242,7 @@ route.post('/getallScancenter',async(req,res)=>{
             })
         }
         res.json({
-            msg:"Details fetched",
+            msg:"Details are shown below",
             result:details
         })
     }
