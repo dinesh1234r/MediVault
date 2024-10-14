@@ -57,7 +57,7 @@ function GetAllScanCenter() {
           duration:3000,
           position:'top'
         })
-        SetDetails(response.data.details);
+        SetDetails(response.data.result);
     }
     else{
       toast({
@@ -115,7 +115,7 @@ function GetAllScanCenter() {
       <HStack ><Spacer/><Button onClick={()=>onDrawer()}>Add</Button><Button colorScheme='red' onClick={()=>fetchdetails()} >Refresh</Button></HStack>
       {/* <Flex  > */}
       <VStack divider={<StackDivider />} border={'2px'} borderColor={'gray.100'} borderRadius={'lg'} justify="center" width={'50%'}>
-        {Details.map(detail=>(
+        {Details&&Details.map(detail=>(
           // <Box key={detail.id} _hover={{boxShadow:'lg'}} borderRadius={5} border={'2px'} borderColor={'teal.500'}>
           
           <HStack  spacing={2} p={2} width={'90%'} flexDirection={'row'} >  

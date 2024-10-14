@@ -215,7 +215,7 @@ route.post('/postforscancenter',async(req,res)=>{
         const currentday=daysOfWeek[num];
         const hashpassword=await bcrypt.hash(Medical_License_Number,10);
         const nurse=new ScanCenterSchema({
-            Admin,Doctor_name,Gender:gender,DOB,Image:photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Date_Joined:currentdate,
+            Admin,username:Doctor_name,Password:hashpassword,Gender:gender,DOB,Image:photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Date_Joined:currentdate,
             Time_Joined:currenttime,Day_Joined:currentday
         })
         nurse.save()
