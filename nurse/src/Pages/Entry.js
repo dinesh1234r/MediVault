@@ -126,7 +126,7 @@ function Entry() {
               </CardBody>
             </Card>
             <Spacer/>
-            <Button mr={'10%'} onClick={()=>handledata()}>Click to enalble entry</Button>
+            <Button mr={'10%'} onClick={()=>handledata()}>Entry</Button>
             </HStack>
         </Box>
         
