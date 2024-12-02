@@ -249,7 +249,7 @@ const Intro = () => {
         </Text>
         <Stack spacing={4} width="full"> 
           <Box
-            onClick={() => handleCardClick('https://medivault-admin.onrender.com')}
+            onClick={() => handleCardClick('https://finalyear-phase-1-admin.onrender.com')}
             borderWidth={1}
             borderRadius="md"
             boxShadow="md"
@@ -267,7 +267,7 @@ const Intro = () => {
           </Box>
 
           <Box
-            onClick={() => handleCardClick('https://medivault-doctor.onrender.com')}
+            onClick={() => handleCardClick('https://finalyear-phase-1-doctors.onrender.com')}
             borderWidth={1}
             borderRadius="md"
             boxShadow="md"
@@ -285,7 +285,7 @@ const Intro = () => {
           </Box>
 
           <Box
-            onClick={() => handleCardClick('https://medivault-nurse.onrender.com')}
+            onClick={() => handleCardClick('https://finalyear-phase-1-nurse.onrender.com')}
             borderWidth={1}
             borderRadius="md"
             boxShadow="md"
@@ -303,7 +303,7 @@ const Intro = () => {
           </Box>
 
           <Box
-            onClick={() => handleCardClick('https://medivault-scancenter.onrender.com')}
+            onClick={() => handleCardClick('https://finalyear-phase-1-scancenter.onrender.com')}
             borderWidth={1}
             borderRadius="md"
             boxShadow="md"

@@ -72,9 +72,6 @@ function PatientHistory() {
     }
 
     const simpleFormattedDate = `${day}/${month}/${year}`;
-    // console.log(simpleFormattedDate)
-
-    // console.log(currentDate)
     const [notes,Setnotes]=useState("")
     const dispatch=useDispatch()
     useEffect(()=>{
@@ -302,7 +299,6 @@ function PatientHistory() {
         Setpdfdata(data);
       }
 
-    //   const btnRef = React.useRef()
     const [pdfview,Setpdfview]=useState("");
     const [pdfname,Setpdfname]=useState("");
     const [doctorname,Setdoctorname]=useState("");
