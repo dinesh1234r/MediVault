@@ -90,7 +90,9 @@ const Intro = () => {
           shadow="md"
           borderWidth="1px"
           borderRadius="lg"
-          textAlign="center">
+          textAlign="center"
+          
+          >
         
       <Heading mb={6} textAlign="center">
         Digital Patient Record Management System
@@ -238,6 +240,7 @@ const Intro = () => {
       display="flex"
       alignItems="center"
       justifyContent="center"
+      bgImg={"https://media.consumeraffairs.com/files/news/Hospital_building_JazzIRT_GI.jpg"}
     >
       <VStack spacing={6} width="full" maxWidth="600px"> 
         <Text fontSize="3xl" fontWeight="bold" textAlign="center">
