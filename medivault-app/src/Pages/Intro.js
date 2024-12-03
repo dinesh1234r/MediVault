@@ -246,7 +246,7 @@ const Intro = () => {
         <Text fontSize="3xl" fontWeight="bold" textAlign="center">
           Login Account
         </Text>
-        <Text textAlign="center" maxW="lg">
+        <Text textAlign="center" maxW="lg" color={'white'}>
           The Login Account section details the secure login system integrated into the application. 
           Utilizing advanced facial recognition technology, the system ensures that only authorized hospital personnel can access sensitive patient information.
         </Text>
