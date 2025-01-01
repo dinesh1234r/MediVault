@@ -105,31 +105,7 @@ function Patients() {
   };
 
   const [patient,Setpatient]=useState({name:"",aadhar:"",address:"",phone:"",dob:""});
-  // const handlesumbit=async()=>{
-  //   const response=await axios.post('https://medivault.onrender.com/patient/login',{Aadhar:username,password:password})
-  //   if(response.data.msg==="Patient login successfully Done")
-  //   {
-  //     toast({
-  //       title:response.data.msg,
-  //       status:"success",
-  //       duration:1200,
-  //       position:'top',
-  //       onCloseComplete:()=>{
-  //         localStorage.setItem('patient',JSON.stringify(response.data.result))
-  //         navigate('/entry')
-  //       }
-  //     })
-  //   }
-  //   else
-  //   {
-  //     toast({
-  //       title:response.data.msg,
-  //       status:"error",
-  //       duration:1200,
-  //       position:'top'
-  //     })
-  //   }
-  // }
+  
 
   const handleSubmitDrawer=async()=>{
     const {name,aadhar,address,phone,dob}=patient
@@ -176,27 +152,7 @@ function Patients() {
   };
 
   const handleUpload = async() => {
-    // if (!image1) return;
-
-    // const byteString = atob(image1.split(",")[1]);
-    // const mimeString = image1.split(",")[0].split(":")[1].split(";")[0];
-
-    // const arrayBuffer = new Uint8Array(byteString.length);
-    // for (let i = 0; i < byteString.length; i++) {
-    //   arrayBuffer[i] = byteString.charCodeAt(i);
-    // }
-
-    // const blob = new Blob([arrayBuffer], { type: mimeString });
-
-    // const uniqueFileName = `image-${Date.now()}.jpg`; 
-    // const storageRef = ref(storage, `images/${uniqueFileName}`);
-
-    // uploadBytes(storageRef, blob).then((snapshot) => {
-    //   getDownloadURL(snapshot.ref).then((downloadUrl) => {
-    //     Seturl1(downloadUrl); 
-    //     console.log("File available at", downloadUrl);
-    //   });
-    // });
+    
 
     if (!image1) return;
 
@@ -218,41 +174,6 @@ function Patients() {
     console.log(downloadUrl)
   };
 
-  // const preset_name="f05bb7m0"
-  // const cloud_name="dyv9xgbfx"
-  // const [photo,Setphoto]=useState("");
-  //   const handlephoto=()=>{
-  //     if(image.length===0)
-  //     {
-  //       toast({
-  //         title:"Choose a photo",
-  //         status:"error",
-  //         position:"top",
-  //       })
-  //       return;
-  //     }
-  //     const formData=new FormData();
-  //     formData.append("file",image)
-  //     formData.append("upload_preset",preset_name);
-  //     axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,formData)
-  //     .then(res=>{
-  //       toast({
-  //         title:"Photo Added Successfully",
-  //         status:"success",
-  //         position:'top'
-  //       })
-  //       Setphoto(res.data.url);
-  //       console.log(res.data.secure_url);
-  //       setImage("");
-  //     })
-  //     .catch(err=>{
-  //       console.log(err);
-  //       toast({
-  //         title:err,
-  //         status:'error'
-  //       })
-  //     })
-  //   }
 
   return (
     <>
