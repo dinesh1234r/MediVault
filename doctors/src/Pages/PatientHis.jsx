@@ -12,22 +12,37 @@ import {
   List,
   ListItem,
   useToast,
+  useDisclosure,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerHeader,
+  DrawerBody
 } from "@chakra-ui/react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const PatientHistory = () => {
   const toast = useToast();
   const [patient, setPatient] = useState({
-    name: "John Doe",
-    age: 45,
     diseases: [],
     history: [],
   });
   const [selectedDisease, setSelectedDisease] = useState("");
   const [historyFilter, setHistoryFilter] = useState([]);
   const [notes, setNotes] = useState("");
-  const [prescription, setPrescription] = useState("");
+  // const [prescription, setPrescription] = useState();
   const [history, setHistory] = useState([]);
+
+  const currentDate = new Date();
+  const day = String(currentDate.getDate()).padStart(2, '0'); 
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0'); 
+  const year = currentDate.getFullYear();
+  const [age, setAge] = useState(null);
+  const dob=JSON.parse(localStorage.getItem('patient')).DOB;
+  const [diseases,SetDiseases]=useState([]);
+  const [todayreport,SetTodayReport]=useState({});
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -43,20 +58,34 @@ const PatientHistory = () => {
             },
           }
         );
-
+        console.log(response.data)
         if (response.data.msg === "History received") {
           const result = response.data.result.reverse();
           setHistory(result);
-
+          const arr=[]
           // Check for today's data
-          const today = new Date().toISOString().split("T")[0];
+          // const today = new Date().toISOString().split("T")[0];
           result.forEach((data) => {
-            if (data.Date === today) {
+            if (data.Date === simpleFormattedDate) {
               setNotes(data.notes);
-              setPrescription(data.prescription);
+              // setPrescription(data.prescription);
+              setMedicines(data.preciption)
+              if(data.report.placeholder&& data.report.placeholder === "to be updated")
+              {
+
+              }
+              else
+              {
+                console.log(data.report)
+                SetTodayReport(data.report);
+              }
+            }
+            if(!arr.includes(data.disease))
+            {
+              arr.push(data.disease);
             }
           });
-
+          SetDiseases(arr)
           toast({
             title: response.data.msg,
             status: "success",
@@ -81,8 +110,22 @@ const PatientHistory = () => {
       }
     };
 
+    const calculateAge=()=>{
+        const date=new Date();
+        const birth=new Date(dob);
+        let age=date.getFullYear()-birth.getFullYear();
+        let month=date.getMonth()-birth.getMonth();
+        if(month<0||(month===0&&date.getDate()<birth.getDate()))
+        {
+            age--;
+        }
+        setAge(age);
+    }
+
     fetchHistory();
+    calculateAge();
   }, []);
+  const simpleFormattedDate = `${day}/${month}/${year}`;
 
   useEffect(() => {
     if (selectedDisease !== "") {
@@ -155,25 +198,45 @@ const PatientHistory = () => {
 
   // Save Medicines to Backend
   const saveMedicines = async () => {
-    try {
-      await axios.post("https://medivault.onrender.com/patient/saveMedicines", {
-        patientId: "12345", // Replace with dynamic patient ID
-        medicines,
-      });
+    try{
+      const _id=JSON.parse(localStorage.getItem('patient'))._id
+      const Doctor=jwtDecode(JSON.stringify(localStorage.getItem('Jwt'))).user;
+      console.log(medicines)
+      const response=await axios.post('https://medivault.onrender.com/patient/updateprecription',{_id,preciption:medicines,Doctor},{
+          headers:{
+            'Authorization':`Bearer ${localStorage.getItem('Jwt')}`,
+            'Content-Type': 'application/json'
+          }
+        })
+      if(response.data.msg==="Precription added successfully")
+      {
+          toast({
+              title:response.data.msg,
+              position:"top",
+              duration:1200,
+              status:"success"
+          })
+          // setMedicines([])
+      }
+      else
+      {
+          toast({
+              title:response.data.msg,
+              position:"top",
+              duration:1200,
+              status:"error"
+          })
+      }
+  }
+  catch(err)
+  {
       toast({
-        title: "Medicines saved successfully.",
-        status: "success",
-        duration: 1500,
-        position: "top",
-      });
-    } catch (err) {
-      toast({
-        title: "Error saving medicines.",
-        status: "error",
-        duration: 1500,
-        position: "top",
-      });
-    }
+          title:"Error occured in sending precription",
+          position:"top",
+          duration:1200,
+          status:"error"
+      })
+  }
   };
 
   // Add Medicine to List
@@ -209,7 +272,32 @@ const PatientHistory = () => {
     });
   };
 
-  
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [pdfname,Setpdfname]=useState("");
+  const [selectpdf,Setselectpdf]=useState("");
+  const handleOpenPDF=(pdfname,pdflink)=>{
+    Setselectpdf(pdflink);
+    Setpdfname(pdfname)
+    onOpen()
+  }
+
+  // const items = [
+  //   // Uncomment to test with records
+  //   "Item 1",
+  //   "Item 2",
+  //   "Item 3",
+  //   "Item 4",
+  //   "Item 5",
+  //   "Item 6",
+  //   "Item 7",
+  //   "Item 1",
+  //   "Item 2",
+  //   "Item 3",
+  //   "Item 4",
+  //   "Item 5",
+  //   "Item 6",
+  //   "Item 7",
+  // ];
 
 
 
@@ -218,7 +306,7 @@ const PatientHistory = () => {
       <Box w="full" p={4} bg="teal.700" color="white" position="sticky" top="0" zIndex="10" boxShadow="md">
         <HStack justify="space-between" align="center">
           <Text fontSize="lg" fontWeight="bold">
-            {patient.name}, {patient.age} years
+            {JSON.parse(localStorage.getItem('patient')).Name}, {age} years
           </Text>
           <Button colorScheme="red" onClick={() => alert("Logging out...")}>
             Logout
@@ -232,7 +320,7 @@ const PatientHistory = () => {
             Diseases
           </Heading>
           <List spacing={3}>
-            {patient.diseases.map((disease, index) => (
+            {diseases.map((disease, index) => (
               <Button
                 key={index}
                 variant="ghost"
@@ -338,7 +426,7 @@ const PatientHistory = () => {
                 {medicines.length > 0 ? (
                   medicines.map((medicine, index) => (
                     <ListItem key={index} p={2} border="1px" borderColor="gray.300">
-                      {medicine.name} - {medicine.foodTiming}
+                      {medicine.name} - {medicine.foodTiming} - ({medicine.morning!=false?'morning,':''}{medicine.afternoon!=false?'afternoon,':''}{medicine.dinner!=false?'dinner':''})
                       <Button
                         colorScheme="red"
                         size="sm"
@@ -357,10 +445,98 @@ const PatientHistory = () => {
                 Save Medicines
               </Button>
             </Box>
-
+            <Box w="full" p={4} bg="gray.100" rounded="md" shadow="sm">
+            <Text fontSize="xl" fontWeight="bold">
+                  Reports
+            </Text>
+          
+                {/* Conditional Rendering */}
+                {Object.keys(todayreport).length === 0? (
+                  <Box
+                    w="100%"
+                    bg="red.100"
+                    color="red.500"
+                    p={4}
+                    borderRadius="md"
+                    textAlign="center"
+                    boxShadow="sm"
+                  >
+                    No records found
+                  </Box>
+                ) : (
+                  <Box
+                    w="100%"
+                    h="10vh"
+                    overflowX="auto"
+                    overflowY="hidden"
+                    whiteSpace="nowrap"
+                    p={2}
+                    bg="gray.100"
+                    borderRadius="md"
+                    boxShadow="sm"
+                    display="flex"
+                    alignItems="center"
+                  >
+                    {Object.entries(todayreport).map(([key, value])=> (
+                      <Button
+                        key={key}
+                        display="inline-block"
+                        bg="teal.500"
+                        color="white"
+                        p={2}
+                        m={1}
+                        borderRadius="full"
+                        minW="80px"
+                        textAlign="center"
+                        fontSize="sm"
+                        boxShadow="md"
+                        _hover={{
+                          bg: "teal.600",
+                          transform: "scale(1.05)",
+                          transition: "0.2s",
+                        }}
+                        onClick={()=>handleOpenPDF(key,value)}
+                      >
+                        {key}
+                      </Button>
+                    ))}
+                  </Box>
+                )}
+            </Box>
           </VStack>
+          
         </Box>
       </HStack>
+      <Drawer
+        isOpen={isOpen}
+        placement='top'
+        onClose={onClose}
+        size={'full'}
+        // finalFocusRef={btnRef}
+      >
+        <DrawerOverlay />
+        <DrawerContent mt={-1}>
+          <DrawerCloseButton />
+          <DrawerHeader h={'6vh'} >{`${pdfname}.pdf`}</DrawerHeader>
+
+          <DrawerBody>
+            <Box h={'90vh'}>
+
+            <iframe
+                title="PDF Viewer"
+                src={selectpdf}
+                width="100%"
+                height="100%"
+                style={{ border: 'none' }}
+            />
+
+            </Box>
+          </DrawerBody>
+
+          
+        </DrawerContent>
+      </Drawer>
+      
       <Box w="full" p={4} bg="gray.100" rounded="md" shadow="sm">
               <Heading size="md" color="teal.500" mb={4}>
                 Patient History
@@ -370,6 +546,63 @@ const PatientHistory = () => {
                   <Heading size="sm">{record.disease}</Heading>
                   <Text>Diagnosis Date: {record.date}</Text>
                   <Text>Vitals: {JSON.stringify(record.vitals)}</Text>
+                  <HStack>
+                  <Text>Report:</Text>
+                  {Object.keys(record.report).length === 0||record.report.placeholder||record.report.placeholder==="to be updated"? (
+                  <Box
+                    w="100%"
+                    bg="red.100"
+                    h="6vh"
+                    color="red.500"
+                    p={4}
+                    borderRadius="md"
+                    textAlign="center"
+                    boxShadow="sm"
+                    
+                  >
+                    No records found
+                  </Box>
+                ) : (
+                  <Box
+                    w="100%"
+                    h="6vh"
+                    overflowX="auto"
+                    overflowY="hidden"
+                    whiteSpace="nowrap"
+                    p={2}
+                    // bg="gray.100"
+                    // borderRadius="md"
+                    // boxShadow="sm"
+                    display="flex"
+                    alignItems="center"
+                  >
+                    {Object.entries(record.report).map(([key, value],index)=> (
+                      <Button
+                        key={index}
+                        display="inline-block"
+                        bg="teal.500"
+                        color="white"
+                        p={2}
+                        m={1}
+                        borderRadius="full"
+                        minW="80px"
+                        textAlign="center"
+                        fontSize="sm"
+                        boxShadow="md"
+                        _hover={{
+                          bg: "teal.600",
+                          transform: "scale(1.05)",
+                          transition: "0.2s",
+                        }}
+                        onClick={()=>handleOpenPDF(key,value)}
+                      >
+                        {key}
+                      </Button>
+                    ))}
+                  </Box>
+                )}
+          
+                  </HStack>
                   <Text mt={4} fontStyle="italic">
                     Notes: {record.notes}
                   </Text>

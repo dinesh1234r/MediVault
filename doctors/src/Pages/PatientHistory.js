@@ -245,6 +245,7 @@ function PatientHistory() {
         try{
             const _id=JSON.parse(localStorage.getItem('patient'))._id
             const Doctor=jwtDecode(JSON.stringify(localStorage.getItem('Jwt'))).user;
+            console.log(preciption)
             const response=await axios.post('https://medivault.onrender.com/patient/updateprecription',{_id,preciption,Doctor},{
                 headers:{
                   'Authorization':`Bearer ${localStorage.getItem('Jwt')}`,

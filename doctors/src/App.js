@@ -7,6 +7,7 @@ import {Provider} from 'react-redux'
 import store from './Redux/Store';
 import PatientLogin from './Pages/PatientLogin'
 import PatientHis from './Pages/PatientHis'
+import Bar from './Pages/Bar'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path='/patient-logged' element={<Patientlog/>}/>
           <Route path='/patient-login' element={<PatientLogin/>}/>
           <Route path='/patient-history' element={<PatientHis/>}/>
+          <Route path='/bar' element={<Bar/>}/>
           <Route path='/*' element={<NotFound/>}/>
         </Routes>
     </BrowserRouter>
