@@ -18,10 +18,20 @@ import {
   DrawerContent,
   DrawerCloseButton,
   DrawerHeader,
-  DrawerBody
+  DrawerBody,
+  Divider,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
+  Flex,
+  Spacer,
+  IconButton
 } from "@chakra-ui/react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { MdRefresh } from "react-icons/md";
 
 const PatientHistory = () => {
   const toast = useToast();
@@ -43,6 +53,7 @@ const PatientHistory = () => {
   const dob=JSON.parse(localStorage.getItem('patient')).DOB;
   const [diseases,SetDiseases]=useState([]);
   const [todayreport,SetTodayReport]=useState({});
+  const [todayDisease,setTodayDisease]=useState("");
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -70,6 +81,7 @@ const PatientHistory = () => {
               setNotes(data.notes);
               // setPrescription(data.prescription);
               setMedicines(data.preciption)
+              setTodayDisease(data.disease)
               if(data.report.placeholder&& data.report.placeholder === "to be updated")
               {
 
@@ -299,8 +311,11 @@ const PatientHistory = () => {
   //   "Item 7",
   // ];
 
+  const handlerefreshed=()=>{
+    setSelectedDisease("");
+  }
 
-
+  
   return (
     <VStack align="start" spacing={4} p={8}>
       <Box w="full" p={4} bg="teal.700" color="white" position="sticky" top="0" zIndex="10" boxShadow="md">
@@ -316,9 +331,23 @@ const PatientHistory = () => {
 
       <HStack align="start" spacing={4}>
         <Box w="250px" p={4} bg="teal.700" color="white" rounded="md" shadow="md" position="sticky" top="60px">
+          <HStack>
           <Heading size="md" mb={4}>
             Diseases
           </Heading>
+          <Spacer/>
+          <IconButton
+      icon={<MdRefresh />} 
+      aria-label="Refresh"
+      mr={2} 
+      onClick={()=>handlerefreshed()}
+      colorScheme="teal"
+      variant="outline" 
+      size="sm" 
+      isRound
+      _hover={{ bg: "teal.500", color: "white" }} 
+        />
+          </HStack>
           <List spacing={3}>
             {diseases.map((disease, index) => (
               <Button
@@ -337,7 +366,7 @@ const PatientHistory = () => {
 
         <Box flex="1" p={4} bg="white" shadow="md" rounded="md" w={'1024px'}>
           <VStack spacing={4} align="start">
-            <Box w="full" p={4} bg="gray.100" rounded="md" shadow="sm">
+            {/* <Box w="full" p={4} bg="gray.100" rounded="md" shadow="sm">
               <Heading size="md" color="teal.500" mb={4}>
                 Today's Details
               </Heading>
@@ -353,7 +382,59 @@ const PatientHistory = () => {
                   Save Notes
                 </Button>
               </HStack>
+            </Box> */}
+            <Box w="full" p={4} bg="gray.100" rounded="md" shadow="sm">
+              <Heading size="md" color="teal.500" mb={4}>
+                Today's Details
+              </Heading>
+
+              {/* Disease Field */}
+              <Box mb={4}>
+                <Text fontWeight="bold" color="gray.700" mb={2}>
+                  Disease:
+                </Text>
+                <HStack spacing={4}>
+                  <Input
+                    value={todayDisease}
+                    onChange={(e) => setTodayDisease(e.target.value)}
+                    placeholder="Enter disease"
+                    bg="white"
+                    size="sm"
+                  />
+                  <Button
+                    colorScheme="teal"
+                    size="sm"
+                    // onClick={updateDisease}
+                    _hover={{ bg: "teal.600" }}
+                  >
+                    Update Disease
+                  </Button>
+                </HStack>
+              </Box>
+
+              {/* Notes Section */}
+              <Textarea
+                placeholder="Enter today's notes"
+                mb={4}
+                rows={3}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                bg="white"
+              />
+              <HStack spacing={4}>
+                <Button colorScheme="teal" onClick={saveNotes}>
+                  Save Notes
+                </Button>
+                <Button
+                  colorScheme="purple"
+                  // onClick={handlePrescription}
+                  _hover={{ bg: "purple.600" }}
+                >
+                  Prescription
+                </Button>
+              </HStack>
             </Box>
+
 
             <Box w="full" p={4} bg="gray.100" rounded="md" shadow="sm">
               <Heading size="md" color="teal.500" mb={4}>
@@ -542,71 +623,257 @@ const PatientHistory = () => {
                 Patient History
               </Heading>
               {historyFilter.map((record, index) => (
-                <Box key={index} mb={4} p={4} bg="white" shadow="sm" rounded="md">
-                  <Heading size="sm">{record.disease}</Heading>
-                  <Text>Diagnosis Date: {record.date}</Text>
-                  <Text>Vitals: {JSON.stringify(record.vitals)}</Text>
-                  <HStack>
-                  <Text>Report:</Text>
-                  {Object.keys(record.report).length === 0||record.report.placeholder||record.report.placeholder==="to be updated"? (
-                  <Box
-                    w="100%"
-                    bg="red.100"
-                    h="6vh"
-                    color="red.500"
-                    p={4}
-                    borderRadius="md"
-                    textAlign="center"
-                    boxShadow="sm"
+                // <Box key={index} mb={4} p={4} bg="white" shadow="sm" rounded="md">
+                //   <Heading size="sm">{record.disease}</Heading>
+                //   <Text>Diagnosis Date: {record.date}</Text>
+                //   <Text>Vitals: {JSON.stringify(record.vitals)}</Text>
+                //   <HStack>
+                //   <Text>Report:</Text>
+                //   {Object.keys(record.report).length === 0||record.report.placeholder||record.report.placeholder==="to be updated"? (
+                //   <Box
+                //     w="100%"
+                //     bg="red.100"
+                //     h="6vh"
+                //     color="red.500"
+                //     p={4}
+                //     borderRadius="md"
+                //     textAlign="center"
+                //     boxShadow="sm"
                     
-                  >
-                    No records found
-                  </Box>
-                ) : (
-                  <Box
-                    w="100%"
-                    h="6vh"
-                    overflowX="auto"
-                    overflowY="hidden"
-                    whiteSpace="nowrap"
-                    p={2}
-                    // bg="gray.100"
-                    // borderRadius="md"
-                    // boxShadow="sm"
-                    display="flex"
-                    alignItems="center"
-                  >
-                    {Object.entries(record.report).map(([key, value],index)=> (
-                      <Button
-                        key={index}
-                        display="inline-block"
-                        bg="teal.500"
-                        color="white"
-                        p={2}
-                        m={1}
-                        borderRadius="full"
-                        minW="80px"
-                        textAlign="center"
-                        fontSize="sm"
-                        boxShadow="md"
-                        _hover={{
-                          bg: "teal.600",
-                          transform: "scale(1.05)",
-                          transition: "0.2s",
-                        }}
-                        onClick={()=>handleOpenPDF(key,value)}
-                      >
-                        {key}
-                      </Button>
-                    ))}
-                  </Box>
-                )}
+                //   >
+                //     No records found
+                //   </Box>
+                // ) : (
+                //   <Box
+                //     w="100%"
+                //     h="6vh"
+                //     overflowX="auto"
+                //     overflowY="hidden"
+                //     whiteSpace="nowrap"
+                //     p={2}
+                //     // bg="gray.100"
+                //     // borderRadius="md"
+                //     // boxShadow="sm"
+                //     display="flex"
+                //     alignItems="center"
+                //   >
+                //     {Object.entries(record.report).map(([key, value],index)=> (
+                //       <Button
+                //         key={index}
+                //         display="inline-block"
+                //         bg="teal.500"
+                //         color="white"
+                //         p={2}
+                //         m={1}
+                //         borderRadius="full"
+                //         minW="80px"
+                //         textAlign="center"
+                //         fontSize="sm"
+                //         boxShadow="md"
+                //         _hover={{
+                //           bg: "teal.600",
+                //           transform: "scale(1.05)",
+                //           transition: "0.2s",
+                //         }}
+                //         onClick={()=>handleOpenPDF(key,value)}
+                //       >
+                //         {key}
+                //       </Button>
+                //     ))}
+                //   </Box>
+                // )}
           
-                  </HStack>
-                  <Text mt={4} fontStyle="italic">
-                    Notes: {record.notes}
+                //   </HStack>
+                //   <Text mt={4} fontStyle="italic">
+                //     Notes: {record.notes}
+                //   </Text>
+                // </Box>
+              //   <Box key={index} mb={4} p={4} bg="gray.50" shadow="md" rounded="lg">
+              //   <HStack justifyContent="space-between" alignItems="center">
+              //     <Box>
+              //       <Heading size="sm" color="teal.600">
+              //         {record.disease}
+              //       </Heading>
+              //       <Text fontSize="sm" color="gray.600">
+              //         Diagnosis Date: {record.Date}
+              //       </Text>
+              //     </Box>
+              //     <Box bg="blue.100" p={2} rounded="full" shadow="sm">
+              //       <Text fontWeight="bold" color="blue.600" fontSize="sm">
+              //         {/* {record.disease === "COVID-19" ? "High Alert" : "Stable"} */}
+              //       </Text>
+              //     </Box>
+              //   </HStack>
+
+              //   <Divider my={2} />
+
+              //   <Text fontSize="sm" color="gray.700">
+              //     Vitals:
+              //   </Text>
+              //   <Box
+              //     bg="green.50"
+              //     p={3}
+              //     rounded="md"
+              //     shadow="sm"
+              //     my={2}
+              //     fontSize="sm"
+              //     fontWeight="medium"
+              //   >
+              //     {JSON.stringify(record.vitals)}
+              //   </Box>
+
+              //   <Accordion allowToggle>
+              //     <AccordionItem>
+              //       <AccordionButton>
+              //         <Box flex="1" textAlign="left" fontWeight="bold" color="teal.500">
+              //           Report Details
+              //         </Box>
+              //         <AccordionIcon />
+              //       </AccordionButton>
+              //       <AccordionPanel>
+              //         {Object.keys(record.report).length === 0 ||
+              //         record.report.placeholder === "to be updated" ? (
+              //           <Box
+              //             bg="red.100"
+              //             p={4}
+              //             rounded="md"
+              //             textAlign="center"
+              //             color="red.500"
+              //             shadow="sm"
+              //           >
+              //             No records found
+              //           </Box>
+              //         ) : (
+              //           <Flex wrap="wrap" gap={2} mt={2}>
+              //             {Object.entries(record.report).map(([key, value], index) => (
+              //               <Button
+              //                 key={index}
+              //                 bg="teal.500"
+              //                 color="white"
+              //                 px={4}
+              //                 py={2}
+              //                 rounded="full"
+              //                 fontSize="sm"
+              //                 shadow="md"
+              //                 _hover={{ bg: "teal.600", transform: "scale(1.05)" }}
+              //                 onClick={() => handleOpenPDF(key, value)}
+              //               >
+              //                 {key}
+              //               </Button>
+              //             ))}
+              //           </Flex>
+              //         )}
+              //       </AccordionPanel>
+              //     </AccordionItem>
+              //   </Accordion>
+
+              //   <Text mt={4} fontStyle="italic" color="gray.500">
+              //     Notes: {record.notes}
+              //   </Text>
+              // </Box>
+              <Box key={index} mb={4} p={4} bg="gray.50" shadow="md" rounded="lg">
+              <HStack justifyContent="space-between" alignItems="center">
+                <Box>
+                  <Heading size="sm" color="teal.600">
+                    {record.disease}
+                  </Heading>
+                  <Text fontSize="sm" color="gray.600">
+                    Diagnosis Date: {record.date}
                   </Text>
                 </Box>
+                <Box bg="blue.100" p={2} rounded="full" shadow="sm">
+                  <Text fontWeight="bold" color="blue.600" fontSize="sm">
+                    {record.disease === "COVID-19" ? "High Alert" : "Stable"}
+                  </Text>
+                </Box>
+              </HStack>
+            
+              <Divider my={2} />
+            
+              <Text fontSize="sm" color="gray.700">
+                Vitals:
+              </Text>
+              <Box
+                bg="green.50"
+                p={3}
+                rounded="md"
+                shadow="sm"
+                my={2}
+                fontSize="sm"
+                fontWeight="medium"
+              >
+                {JSON.stringify(record.vitals)}
+              </Box>
+            
+              <Accordion allowToggle>
+                <AccordionItem>
+                  <AccordionButton>
+                    <Box flex="1" textAlign="left" fontWeight="bold" color="teal.500">
+                      Report Details
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                  <AccordionPanel>
+                    {Object.keys(record.report).length === 0 ||
+                    record.report.placeholder === "to be updated" ? (
+                      <Box
+                        bg="red.100"
+                        p={4}
+                        rounded="md"
+                        textAlign="center"
+                        color="red.500"
+                        shadow="sm"
+                      >
+                        No records found
+                      </Box>
+                    ) : (
+                      <Flex wrap="wrap" gap={2} mt={2}>
+                        {Object.entries(record.report).map(([key, value], index) => (
+                          <Button
+                            key={index}
+                            bg="teal.500"
+                            color="white"
+                            px={4}
+                            py={2}
+                            rounded="full"
+                            fontSize="sm"
+                            shadow="md"
+                            _hover={{ bg: "teal.600", transform: "scale(1.05)" }}
+                            onClick={() => handleOpenPDF(key, value)}
+                          >
+                            {key}
+                          </Button>
+                        ))}
+                      </Flex>
+                    )}
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
+            
+              {/* Prescription Button */}
+              <HStack  mt={4}>
+              <Text mt={4} fontStyle="italic" color="gray.500" maxW={'80%'}>
+                Notes: {record.notes}
+              </Text>
+              <Spacer/>
+                <Button
+                  bg="purple.500"
+                  color="white"
+                  px={6}
+                  py={2}
+                  fontSize="sm"
+                  rounded="full"
+                  shadow="md"
+                  _hover={{ bg: "purple.600", transform: "scale(1.05)" }}
+                  // onClick={() => handlePrescription(record)}
+                >
+                  Prescription
+                </Button>
+              </HStack>
+            
+              
+            </Box>
+            
               ))}
             </Box>
     </VStack>
