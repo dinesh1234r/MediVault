@@ -54,6 +54,7 @@ const PatientHistory = () => {
   const [diseases,SetDiseases]=useState([]);
   const [todayreport,SetTodayReport]=useState({});
   const [todayDisease,setTodayDisease]=useState("");
+  const [todayVitals,setTodayVitals]=useState({});
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -80,6 +81,7 @@ const PatientHistory = () => {
             if (data.Date === simpleFormattedDate) {
               setNotes(data.notes);
               // setPrescription(data.prescription);
+              setTodayVitals(data.vitals);
               setMedicines(data.preciption)
               setTodayDisease(data.disease)
               if(data.report.placeholder&& data.report.placeholder === "to be updated")
@@ -293,6 +295,37 @@ const PatientHistory = () => {
     onOpen()
   }
 
+  const updateDisease=async()=>{
+    try{
+      const _id=JSON.parse(localStorage.getItem('patient'))._id
+      const response=await axios.post('https://medivault.onrender.com/patient/updatedisease',{_id,disease:todayDisease},{
+        headers:{
+          'Authorization':`Bearer ${localStorage.getItem('Jwt')}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      if(response.data.msg==="Disease Updated successfully")
+      {
+        toast({
+          title:response.data.msg,
+          status:"success"
+        })
+      }
+      else
+      {
+        toast({
+          title:response.data.msg,
+          status:"warning"
+        })
+      }
+    }
+    catch(err){
+      toast({
+        title:"Error occurred in frontend"
+      })
+    }
+  }
+
   // const items = [
   //   // Uncomment to test with records
   //   "Item 1",
@@ -393,7 +426,7 @@ const PatientHistory = () => {
                 <Text fontWeight="bold" color="gray.700" mb={2}>
                   Disease:
                 </Text>
-                <HStack spacing={4}>
+                <HStack spacing={4} >
                   <Input
                     value={todayDisease}
                     onChange={(e) => setTodayDisease(e.target.value)}
@@ -404,12 +437,21 @@ const PatientHistory = () => {
                   <Button
                     colorScheme="teal"
                     size="sm"
-                    // onClick={updateDisease}
+                    onClick={updateDisease}
                     _hover={{ bg: "teal.600" }}
                   >
                     Update Disease
                   </Button>
                 </HStack>
+              </Box>
+
+              <Box mb={4}>
+                <Text fontWeight="bold" color="gray.700" mb={2}>
+                  Vitals:
+                </Text>
+                {Object.entries(todayVitals).map(([key,value])=>(
+                  <Text color="gray.800">{key}:{value}</Text>
+                ))}
               </Box>
 
               {/* Notes Section */}

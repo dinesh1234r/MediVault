@@ -230,6 +230,39 @@ route.post('/updateprecription',Middleware,async(req,res)=>{
     }
 })
 
+route.post('/updateDisease',Middleware,async(req,res)=>{
+    try{
+        const {_id,disease}=req.body;
+        const result=await PatientSchemas.findOneAndUpdate({_id,
+            'History.Date':simpleFormattedDate
+        },
+        {
+            $set:{
+                'History.$.disease':disease,
+            }
+        }
+        )
+        if(result)
+        {
+            res.json({
+                msg:"Disease Updated successfully"
+            })
+        }
+        else
+        {
+            res.json({
+                msg:"Patient doesn't make entry"
+            })
+        }
+    }
+    catch(err)
+    {
+        res.json({
+            msg:"Error in Update Disease"
+        })
+    }
+})
+
 route.post('/history',Middleware,async(req,res)=>{
     try{
         const {_id}=req.body;
