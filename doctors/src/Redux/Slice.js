@@ -1,33 +1,16 @@
 import {createSlice} from '@reduxjs/toolkit'
 
-const initial={
-    history:[],
-    filter:''
-}
 
 const slice=createSlice({
-    name:'HistorySlice',
-    initialState:initial,
+    name:'PrescriptionSlice',
+    initialState:{},
     reducers:{
-        addHistory(state,action)
+        addPrescriptionDetails(state,action)
         {
-            state.history.push(...action.payload)
-        },
-        addFilter(state,action)
-        {
-            state.filter=action.payload
-        },
-        clearFilter(state,action)
-        {
-            state.filter=''
-        },
-        clearHistory(state,action)
-        {
-            state.history=[]
-            state.filter=''
+            Object.assign(state, action.payload);
         }
     }
 })
 
-export const {addHistory,addFilter,clearFilter,clearHistory}=slice.actions
+export const {addPrescriptionDetails}=slice.actions
 export default slice.reducer;

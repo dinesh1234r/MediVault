@@ -32,9 +32,14 @@ import {
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { MdRefresh } from "react-icons/md";
+import { useDispatch } from 'react-redux';
+import {addPrescriptionDetails} from '../Redux/Slice'
+import { useNavigate } from "react-router-dom";
 
 const PatientHistory = () => {
   const toast = useToast();
+  const dispatch=useDispatch();
+  const navigate=useNavigate();
   const [patient, setPatient] = useState({
     diseases: [],
     history: [],
@@ -348,6 +353,21 @@ const PatientHistory = () => {
     setSelectedDisease("");
   }
 
+  const handlePrescription=(details)=>{
+    if(details)
+    {
+      dispatch(addPrescriptionDetails(details));
+      navigate('/bar');
+    }
+    else
+    {
+      toast({
+        title:"details are not there",
+        status:"warning"
+      })
+    }
+  }
+
   
   return (
     <VStack align="start" spacing={4} p={8}>
@@ -467,13 +487,7 @@ const PatientHistory = () => {
                 <Button colorScheme="teal" onClick={saveNotes}>
                   Save Notes
                 </Button>
-                <Button
-                  colorScheme="purple"
-                  // onClick={handlePrescription}
-                  _hover={{ bg: "purple.600" }}
-                >
-                  Prescription
-                </Button>
+                
               </HStack>
             </Box>
 
@@ -564,9 +578,19 @@ const PatientHistory = () => {
                   <Text>No medicines added yet.</Text>
                 )}
               </List>
+              <HStack>
               <Button colorScheme="blue" onClick={saveMedicines} mt={4}>
                 Save Medicines
               </Button>
+              <Button
+                  colorScheme="purple"
+                  // onClick={handlePrescription}
+                  _hover={{ bg: "purple.600" }}
+                  mt={4}
+                >
+                  Prescription
+                </Button>
+                </HStack>
             </Box>
             <Box w="full" p={4} bg="gray.100" rounded="md" shadow="sm">
             <Text fontSize="xl" fontWeight="bold">
@@ -907,7 +931,7 @@ const PatientHistory = () => {
                   rounded="full"
                   shadow="md"
                   _hover={{ bg: "purple.600", transform: "scale(1.05)" }}
-                  // onClick={() => handlePrescription(record)}
+                  onClick={() => handlePrescription(record)}
                 >
                   Prescription
                 </Button>
