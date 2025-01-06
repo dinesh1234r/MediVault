@@ -13,7 +13,7 @@ const ScanCenterSchema=require('../Models/ScanCenter')
 route.post('/login',async(req,res)=>{
     try{
     const {adminuser,password}=req.body;
-    const Admin=await AdminScheme.findOne({adminuser})
+    const Admin=await AdminScheme.findOne({email:adminuser})
     if(!Admin)
     {
         return res.json({
@@ -21,7 +21,7 @@ route.post('/login',async(req,res)=>{
         })
     }
     const check=await bcrypt.compare(password, Admin.password)
-    const token=jwt.sign({adminuser:adminuser},'this is your secret key to login in bro')
+    const token=jwt.sign({Email:Admin.email},'this is your secret key to login in bro')
     if(check)
     {
         return res.json({

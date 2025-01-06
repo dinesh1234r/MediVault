@@ -78,7 +78,7 @@ const FaceRecognitionPage = () => {
           position: "top",
           duration: 1200,
           onCloseComplete: () => {
-            navigate('/patient-report');
+            navigate('/patient-history');
           },
         });
       } else {

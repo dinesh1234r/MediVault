@@ -15,7 +15,7 @@ function Login() {
   useEffect(()=>{
     if(localStorage.getItem('Jwt')&&localStorage.getItem('Id'))
     {
-      navigate('/home')
+      navigate('/patient-login')
     }
   },[])
   const handleSubmit=async()=>{
@@ -58,7 +58,7 @@ function Login() {
             position:"top",
             duration:1400,
             onCloseComplete:()=>{
-              navigate('/home');
+              navigate('/patient-login');
             },
             render:()=>(
               <Box 

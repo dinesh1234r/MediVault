@@ -8,6 +8,7 @@ const Doctor=require('./Routes/doctor')
 const Nurse=require('./Routes/Nurse')
 const Patient=require('./Routes/Patients')
 const ScanCenter=require('./Routes/Scancenter')
+const HospitalManagement=require('./Routes/HospitalManagement')
 
 app.use(cors());
 
@@ -26,6 +27,7 @@ app.use('/doctor',Doctor)
 app.use('/nurse',Nurse)
 app.use('/patient',Patient)
 app.use('/scancenter',ScanCenter)
+app.use('/hospitalmanagement',HospitalManagement)
 
 app.listen(5000,()=>{
     console.log('Server is started');
