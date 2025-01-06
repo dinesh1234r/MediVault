@@ -50,7 +50,9 @@ const AdminLogin = () => {
       });
 
       if (response.data.msg === "Login successful") {
+        console.log(response.data)
         localStorage.setItem("jwt", response.data.token);
+        localStorage.setItem("ID",response.data.ID);
         toast({
           title: response.data.msg,
           status: "success",

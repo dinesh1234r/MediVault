@@ -26,7 +26,10 @@ route.post('/login',async(req,res)=>{
     {
         return res.json({
             msg:"Login successful",
-            token:token
+            token:token,
+            ID:Admin._id,
+            Image:Admin.logo,
+            HospitalName:Admin.hospitalName
         })
     }
     else
