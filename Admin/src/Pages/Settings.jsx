@@ -84,7 +84,7 @@ const SettingsPage = () => {
   <Flex justify="space-between" align="center" mb={6} >
           <HStack spacing={4}>
             
-            <Heading>Doctors List</Heading>
+            <Heading>Settings</Heading>
             
           </HStack>
           <HStack>
