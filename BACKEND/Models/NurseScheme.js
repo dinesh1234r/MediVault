@@ -2,8 +2,7 @@ const mongoose=require('mongoose')
 
 const NurseScheme=new mongoose.Schema({
     Admin:{
-        type: String,
-        // required: true
+        type: mongoose.Schema.Types.ObjectId
     },
     Doctor_name:{
         type: String,
@@ -21,6 +20,9 @@ const NurseScheme=new mongoose.Schema({
     Email_Address:{
         type: String,
         // required: true
+    },
+    Password:{
+        type:String
     },
     Current_Address:{
         type: String,

@@ -5,7 +5,7 @@ import { HStack,Flex,Box,Image,useToast,Card,CardBody,CardHeader,Text,Spacer,Div
 import axios from 'axios'
 import { AddIcon } from '@chakra-ui/icons'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { storage } from '../firebase';
+import { storage } from '../src/firebase';
 import { DeleteIcon,CheckIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { FiLogOut } from 'react-icons/fi';

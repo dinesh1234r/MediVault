@@ -5,9 +5,9 @@ const AdminScheme=require('../Models/AdminSchema')
 const jwt=require('jsonwebtoken');
 const DoctorScheme=require('../Models/DoctorScheme');
 const Middleware=require('../Middleware/middleware');
-const DoctorPatientsSchema=require('../Models/DoctorPatientsSchema');
+// const DoctorPatientsSchema=require('../Models/DoctorPatientsSchema');
 const NurseScheme = require('../Models/NurseScheme');
-const NursePatientsSchema=require('../Models/NursePatientsScheme')
+// const NursePatientsSchema=require('../Models/NursePatientsScheme')
 const ScanCenterSchema=require('../Models/ScanCenter')
 
 route.post('/login',async(req,res)=>{
@@ -46,7 +46,7 @@ route.post('/login',async(req,res)=>{
     }
 })
 
-route.post('/postbyadmin',Middleware,async(req,res)=>{
+route.post('/postbyadmin',async(req,res)=>{
     const {Admin,Doctor_name,gender,DOB,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Contract_type,photo}=req.body;
     try{
     const currentdatetime=new Date();
@@ -57,17 +57,17 @@ route.post('/postbyadmin',Middleware,async(req,res)=>{
     const currentday=daysOfWeek[num];
     const hashpassword=await bcrypt.hash(Medical_License_Number,10);
     const doctor=new DoctorScheme({
-        Admin,Doctor_name,Gender:gender,DOB,Image:photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Contract_type,Date_Joined:currentdate,
-        Time_Joined:currenttime,Day_Joined:currentday
+        AdminID:Admin,Doctor_name,Gender:gender,DOB,Image:photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Contract_type,Date_Joined:currentdate,
+        Time_Joined:currenttime,Day_Joined:currentday,Password:hashpassword
     })
-    const newdoctorpatients=new DoctorPatientsSchema({
-        email:Email_Address,
-        username:Doctor_name,
-        password:hashpassword,
-        DUID:Medical_License_Number,
-        photo:photo
-    })
-    newdoctorpatients.save()
+    // const newdoctorpatients=new DoctorPatientsSchema({
+    //     email:Email_Address,
+    //     username:Doctor_name,
+    //     password:hashpassword,
+    //     DUID:Medical_License_Number,
+    //     photo:photo
+    // })
+    // newdoctorpatients.save()
     doctor.save()
     res.json({
         msg:"Details are saved successfully"
@@ -92,17 +92,17 @@ route.post('/postbyadminfornurse',async(req,res)=>{
         const currentday=daysOfWeek[num];
         const hashpassword=await bcrypt.hash(Medical_License_Number,10);
         const nurse=new NurseScheme({
-            Admin,Doctor_name,Gender:gender,DOB,Image:photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Date_Joined:currentdate,
-            Time_Joined:currenttime,Day_Joined:currentday
+            AdminID:Admin,Doctor_name,Gender:gender,DOB,Image:photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Date_Joined:currentdate,
+            Time_Joined:currenttime,Day_Joined:currentday,Password:hashpassword
         })
-        const newnursepatients=new NursePatientsSchema({
-            email:Email_Address,
-            username:Doctor_name,
-            password:hashpassword,
-            NUID:Medical_License_Number,
-            photo:photo
-        })
-        newnursepatients.save()
+        // const newnursepatients=new NursePatientsSchema({
+        //     email:Email_Address,
+        //     username:Doctor_name,
+        //     password:hashpassword,
+        //     NUID:Medical_License_Number,
+        //     photo:photo
+        // })
+        // newnursepatients.save()
         nurse.save()
         res.json({
             msg:"Details are saved successfully"
@@ -115,10 +115,10 @@ route.post('/postbyadminfornurse',async(req,res)=>{
         })
     }
 })
-route.post('/getalldetailsofdoctor',Middleware,async(req,res)=>{
+route.post('/getalldetailsofdoctor',async(req,res)=>{
     try{
         const {Admin} =req.body
-        const details=await DoctorScheme.find({Admin});
+        const details=await DoctorScheme.find({AdminID:Admin});
         if(details.length!=0)
         {
             return res.json({
@@ -138,10 +138,10 @@ route.post('/getalldetailsofdoctor',Middleware,async(req,res)=>{
     }
 })
 
-route.post('/getalldetailsofnurse',Middleware,async(req,res)=>{
+route.post('/getalldetailsofnurse',async(req,res)=>{
     try{
         const {Admin} =req.body
-        const details=await NurseScheme.find({Admin});
+        const details=await NurseScheme.find({AdminID:Admin});
         if(details.length!=0)
         {
             return res.json({
@@ -161,12 +161,11 @@ route.post('/getalldetailsofnurse',Middleware,async(req,res)=>{
     }
 })
 
-route.post('/deletedetail',Middleware,async(req,res)=>{
+route.post('/deletedetail',async(req,res)=>{
     try{
         const {Medical_License_Number}=req.body;
-        const check=await DoctorScheme.deleteOne({Medical_License_Number});
-        const verify=await DoctorPatientsSchema.deleteOne({DUID:Medical_License_Number})
-        if(check&&verify)
+        const check=await DoctorScheme.findByIdAndDelete(Medical_License_Number);
+        if(check)
         {
             return res.json({
                 msg:"Delete Successfully"
@@ -184,12 +183,11 @@ route.post('/deletedetail',Middleware,async(req,res)=>{
     }
 })
 
-route.post('/deletedetailnurse',Middleware,async(req,res)=>{
+route.post('/deletedetailnurse',async(req,res)=>{
     try{
         const {Medical_License_Number}=req.body;
-        const check=await NurseScheme.deleteOne({Medical_License_Number});
-        const verify=await NursePatientsSchema.deleteOne({NUID:Medical_License_Number})
-        if(check&&verify)
+        const check=await NurseScheme.findByIdAndDelete(Medical_License_Number);
+        if(check)
         {
             return res.json({
                 msg:"Delete Successfully"
@@ -218,8 +216,7 @@ route.post('/postforscancenter',async(req,res)=>{
         const currentday=daysOfWeek[num];
         const hashpassword=await bcrypt.hash(Medical_License_Number,10);
         const nurse=new ScanCenterSchema({
-            Admin,username:Doctor_name,Password:hashpassword,Gender:gender,DOB,Image:photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Date_Joined:currentdate,
-            Time_Joined:currenttime,Day_Joined:currentday
+            AdminID:Admin,username:Doctor_name,Password:hashpassword,Gender:gender,DOB,Image:photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Date_Joined:currentdate,Time_Joined:currenttime,Day_Joined:currentday,Password:hashpassword
         })
         nurse.save()
         res.json({
@@ -237,7 +234,7 @@ route.post('/postforscancenter',async(req,res)=>{
 route.post('/getallScancenter',async(req,res)=>{
     try{
         const {Admin}=req.body;
-        const details=await ScanCenterSchema.find({Admin});
+        const details=await ScanCenterSchema.find({AdminID:Admin});
         if(details.length===0)
         {
             return res.json({
@@ -260,7 +257,7 @@ route.post('/getallScancenter',async(req,res)=>{
 route.post('/deletescancenter',async(req,res)=>{
     try{
         const {UID}=req.body;
-        const deleted=await ScanCenterSchema.findOneAndDelete({Medical_License_Number:UID});
+        const deleted=await ScanCenterSchema.findByIdAndDelete(UID);
         if(deleted)
         {
             return res.json({

@@ -46,7 +46,7 @@ function Login() {
           SetisLoading(false)
           return;
         }
-      await axios.post("https://medivault.onrender.com/scancenter/login",{username,password})
+      await axios.post("http://localhost:5000/scancenter/login",{username,password})
       .then((res)=>{
         if(res.data.msg==="Username Found")
         {

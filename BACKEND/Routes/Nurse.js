@@ -1,6 +1,6 @@
 const express=require('express');
 const route=express.Router()
-const NursePatientsSchema=require('../Models/NursePatientsScheme')
+const NurseSchema=require('../Models/NurseScheme')
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
 const Middleware=require('../Middleware/middleware')
@@ -8,7 +8,7 @@ const Middleware=require('../Middleware/middleware')
 route.post('/login',async(req,res)=>{
     try{
         const {username,password}=req.body;
-        const check=await NursePatientsSchema.findOne({email:username});
+        const check=await NurseSchema.findOne({Email_Address:username});
         if(!check)
         {
              res.json({
@@ -16,11 +16,11 @@ route.post('/login',async(req,res)=>{
             })
         }
         else{
-        const pass=await bcrypt.compare(password,check.password);
+        const pass=await bcrypt.compare(password,check.Password);
         
         if(pass)
         {
-            const user=check.username
+            const user=check.Email_Address
             const token=jwt.sign({user},'this is your secret key to login in bro');
             return res.json({
                 msg:"Username Found",

@@ -7,6 +7,7 @@ const Admin=require('../Models/AdminSchema')
 route.post('/login',async(req,res)=>{
     try{
         const {email,password}=req.body;
+        console.log(req.body)
         if(email==="hospital.management@gov.in"&&password==="medivault")
         {
             const token=jwt.sign({email},'this is your secret key to login in bro')

@@ -1,6 +1,6 @@
 import React from 'react'
 import SideBar from './SideBar'
-import Patients from './Patients'
+import Patients from '../src/Pages/Patients'
 import { HStack,Flex,Text,Button,Box } from '@chakra-ui/react';
 import {useNavigate} from 'react-router-dom'
 

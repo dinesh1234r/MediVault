@@ -16,7 +16,7 @@ function Login() {
   useEffect(()=>{
     if(localStorage.getItem('Jwt')&&localStorage.getItem('Id'))
     {
-      navigate('/home')
+      navigate('/patient-login')
     }
   },[])
 
@@ -46,7 +46,7 @@ function Login() {
           SetisLoading(false)
           return;
         }
-      await axios.post("https://medivault.onrender.com/nurse/login",{username,password})
+      await axios.post("http://localhost:5000/nurse/login",{username,password})
       .then((res)=>{
         if(res.data.msg==="Username Found")
         {
@@ -58,7 +58,7 @@ function Login() {
             status:"success",
         
           })
-          navigate('/home');
+          navigate('/patient-login');
               localStorage.setItem('Jwt',res.data.jwt);
               localStorage.setItem('Id',res.data.objectID);
               localStorage.setItem('Photo',res.data.photo);

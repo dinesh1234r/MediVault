@@ -38,7 +38,7 @@ const AddScanCenter = () => {
         return;
       }
       const Admin=jwtDecode(localStorage.getItem('jwt')).adminuser;
-      const response = await axios.post('https://medivault.onrender.com/admin/postforscancenter', {
+      const response = await axios.post('http://localhost:5000/admin/postforscancenter', {
         Admin,gender, ...values, photo
       }, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt')}`, 'Content-Type': 'application/json' }
@@ -50,8 +50,10 @@ const AddScanCenter = () => {
         setGender("");
         setPhoto("");
         setImage("");
+        setIsLoading(false);
       } else {
         toast({ title: response.data.msg, status: "error", duration: 1500, isClosable: true});
+        setIsLoading(false);
       }
     } catch (err) {
       toast({ title: "Error submitting form", status: "error", duration: 1500, isClosable: true});

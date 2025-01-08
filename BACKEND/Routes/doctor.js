@@ -1,26 +1,25 @@
 const express=require('express');
 const route=express.Router()
-const DoctorPatientsSchema=require('../Models/DoctorPatientsSchema')
+const DoctorSchema=require('../Models/DoctorScheme')
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
-const NurseScheme=require('../Models/NurseScheme')
 const Middleware=require('../Middleware/middleware')
 
 route.post('/login',async(req,res)=>{
     try{
         const {username,password}=req.body;
-        const check=await DoctorPatientsSchema.findOne({email:username});
+        const check=await DoctorSchema.findOne({Email_Address:username});
         if(!check)
         {
             return res.json({
                 msg:"Username not valid"
             })
         }
-        const pass=await bcrypt.compare(password,check.password);
+        const pass=await bcrypt.compare(password,check.Password);
         
         if(pass)
         {
-            const user=check.username
+            const user=check.Email_Address
             const token=jwt.sign({user},'this is your secret key to login in bro');
             return res.json({
                 msg:"Username Found",

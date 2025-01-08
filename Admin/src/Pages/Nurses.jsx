@@ -103,7 +103,7 @@ const DoctorList = () => {
 
   const fetchdetails=async()=>{
     const Admin=jwtDecode(localStorage.getItem('jwt')).adminuser;
-    const response=await axios.post('https://medivault.onrender.com/admin/getalldetailsofnurse',{Admin},{
+    const response=await axios.post('http://localhost:5000/admin/getalldetailsofnurse',{Admin},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'
@@ -140,7 +140,7 @@ const DoctorList = () => {
   }
 
   const handlesubmit=async()=>{
-    const response=await axios.post("https://medivault.onrender.com/admin/deletedetailnurse",{Medical_License_Number:medicalnum},{
+    const response=await axios.post("http://localhost:5000/admin/deletedetailnurse",{Medical_License_Number:medicalnum},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'
@@ -155,7 +155,7 @@ const DoctorList = () => {
         // position:'top',
       })
       const finaldetails=doctorsData.filter(detail=>{
-        return detail.Medical_License_Number!=medicalnum;
+        return detail._id!=medicalnum;
       })
       SetdoctorsData(finaldetails);
     }
@@ -234,7 +234,7 @@ const DoctorList = () => {
                   variant="outline"
                   size="sm"
                   ml={3}
-                  onClick={()=>handledelete(doctor.Medical_License_Number)}
+                  onClick={()=>handledelete(doctor._id)}
                 />
               </Td>
             </Tr>

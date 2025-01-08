@@ -61,7 +61,7 @@ const ScanCenterList = () => {
     const admin = jwtDecode(localStorage.getItem('jwt')).adminuser;
     try {
       const response = await axios.post(
-        'https://medivault.onrender.com/admin/getallScancenter',
+        'http://localhost:5000/admin/getallScancenter',
         { Admin: admin },
         {
           headers: {
@@ -118,7 +118,7 @@ const ScanCenterList = () => {
   const handleDeleteSubmit = async () => {
     try {
       const response = await axios.post(
-        'https://medivault.onrender.com/admin/deletescancenter',
+        'http://localhost:5000/admin/deletescancenter',
         { UID: licenseToDelete },
         {
           headers: {
@@ -136,7 +136,7 @@ const ScanCenterList = () => {
           // position: 'top',
         });
         const updatedData = scanCentersData.filter(
-          (center) => center.Medical_License_Number !== licenseToDelete
+          (center) => center._id !== licenseToDelete
         );
         setScanCentersData(updatedData);
       } else {
@@ -212,7 +212,7 @@ const ScanCenterList = () => {
                     variant="outline"
                     size="sm"
                     ml={3}
-                    onClick={() => handleDelete(center.Medical_License_Number)}
+                    onClick={() => handleDelete(center._id)}
                   />
                 </Td>
               </Tr>

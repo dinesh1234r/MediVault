@@ -2,8 +2,7 @@ const mongoose=require('mongoose');
 
 const ScanCenterSchema=new mongoose.Schema({
     Admin:{
-        type: String,
-        // required: true
+        type: mongoose.Schema.Types.ObjectId
     },
     username:{
         type: String,
@@ -24,6 +23,9 @@ const ScanCenterSchema=new mongoose.Schema({
     Email_Address:{
         type: String,
         // required: true
+    },
+    Password:{
+        type:String
     },
     Current_Address:{
         type: String,

@@ -53,6 +53,8 @@ const AdminLogin = () => {
         console.log(response.data)
         localStorage.setItem("jwt", response.data.token);
         localStorage.setItem("ID",response.data.ID);
+        localStorage.setItem("HospitalName",response.data.HospitalName);
+        localStorage.setItem("Image",response.data.Image);
         toast({
           title: response.data.msg,
           status: "success",

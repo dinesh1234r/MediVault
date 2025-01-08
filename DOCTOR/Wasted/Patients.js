@@ -3,7 +3,7 @@ import { HStack, Box, useToast, Button, Image } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import Webcam from 'react-webcam';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '../firebasestorage/firebase';
+import { storage } from '../src/firebasestorage/firebase';
 import axios from 'axios';
 
 function Patients() {
@@ -14,7 +14,7 @@ function Patients() {
 
   const captureImage = () => {
     const imageSrc = webcamRef.current.getScreenshot();
-    return imageSrc;
+    return imageSrc; 
   };
 
   const uploadImage = async (image) => {
@@ -40,7 +40,7 @@ function Patients() {
 
   const handleCaptureAndSubmit = async () => {
     const image = captureImage(); 
-    const downloadUrl = await uploadImage(image); 
+    const downloadUrl = await uploadImage(image);
 
     try {
       const response = await axios.post('https://medivault.onrender.com/patient/login', { image: downloadUrl },{
