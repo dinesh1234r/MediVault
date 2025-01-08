@@ -1,6 +1,5 @@
 
 import Login from '../src/Pages/Login'
-import Home from '../src/Pages/Home'
 import NotFound from './Pages/NotFound';
 import { BrowserRouter,Routes,Route } from 'react-router-dom';
 import AdminDashboard from './Pages/Dashboard';
@@ -17,8 +16,6 @@ function App() {
     <BrowserRouter>
         <Routes>
           <Route path='/' element={<Login/>}/>
-          <Route path='/home' element={<Home/>} />
-          <Route path='/*' element={<NotFound/>} />
           <Route path='/dashboard' element={<AdminDashboard/>} />
           <Route path='/doctors' element={<Doctors/>} />
           <Route path='/nurses' element={<Nurses/>} />
@@ -27,6 +24,7 @@ function App() {
           <Route path='/create-nurse' element={<CreateNurse/>} />
           <Route path='/create-scancenter' element={<CreateScancenter/>} />
           <Route path='/settings' element={<Settings/>} />
+          <Route path='/*' element={<NotFound/>} />
         </Routes>
     </BrowserRouter>
   );

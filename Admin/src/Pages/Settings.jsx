@@ -1,179 +1,181 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
-  Box, Button, Input, Heading, VStack, FormControl, FormLabel, useToast, Stack, Divider, IconButton
-} from '@chakra-ui/react';
+  Box,
+  VStack,
+  Heading,
+  Text,
+  Image,
+  Input,
+  Button,
+  FormControl,
+  FormLabel,
+  useToast,
+  Flex,
+  HStack,
+  Avatar,
+
+} from "@chakra-ui/react";
+import Sidebar from "./Sidebar";
+import {jwtDecode} from "jwt-decode";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import {
+  FiMenu,
+  FiHome,
+  FiUsers,
+  FiSettings,
+  FiLogOut,
+  FiUserPlus,
+  FiBriefcase,
+  FiClipboard,
+} from "react-icons/fi";
 import { FaSave, FaLock } from 'react-icons/fa';
-import { BeatLoader } from 'react-spinners';
-import axios from 'axios';
-import Sidebar from './Sidebar';
 
-const AccountSettings = () => {
-  const toast = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  const [values, setValues] = useState({
-    email: "",
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
+const SettingsPage = () => {
+  const navigate=useNavigate()
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
-  const handleChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
-  };
+  const toast=useToast();
 
-  const handleSave = async () => {
-    setIsLoading(true);
-    try {
-      const { email, currentPassword, newPassword, confirmPassword } = values;
-
-      if (!email || !currentPassword || !newPassword || !confirmPassword) {
+  const handleSave = async() => {
+    try{
+      const id=localStorage.getItem("ID");
+      const response=await axios.post("http://localhost:5000/admin/passwordchange",{
+        oldPassword,newPassword,id
+      })
+      if(response.data.msg==="PasswordChanged")
+      {
         toast({
-          title: "All fields are required.",
-          status: "error",
-          position: "top",
-          duration: 1500,
-          isClosable: true,
-        });
-        setIsLoading(false);
-        return;
+          title:"PasswordChanged",
+          status:"success"
+        })
       }
-
-      if (newPassword !== confirmPassword) {
+      else
+      {
         toast({
-          title: "Passwords do not match.",
-          status: "error",
-          position: "top",
-          duration: 1500,
-          isClosable: true,
-        });
-        setIsLoading(false);
-        return;
+          title:response.data.msg,
+          status:"info"
+        })
       }
-
-      // Here, you would typically send the updated data to the backend
-      const response = await axios.put('https://your-api-url.com/update-account', {
-        email,
-        currentPassword,
-        newPassword,
-      }, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
-        },
-      });
-
-      if (response.data.success) {
-        toast({
-          title: "Account updated successfully",
-          status: "success",
-          position: "top",
-          duration: 1500,
-          isClosable: true,
-        });
-        setValues({
-          email: "",
-          currentPassword: "",
-          newPassword: "",
-          confirmPassword: "",
-        });
-      } else {
-        toast({
-          title: response.data.message || "Error updating account",
-          status: "error",
-          position: "top",
-          duration: 1500,
-          isClosable: true,
-        });
-      }
-    } catch (err) {
+    }
+    catch(err)
+    {
       toast({
-        title: "Error updating account",
-        status: "error",
-        position: "top",
-        duration: 1500,
-        isClosable: true,
-      });
-    } finally {
-      setIsLoading(false);
+        title:err,
+        status:"error"
+      })
     }
   };
 
   return (
-    <Box bg="gray.100" p={6} ml={{ base: 0, md: '250px' }} transition="margin-left 0.2s ease" w={'100%'} minH="100vh">
-      <Box width="90%" mx="auto" p={6} bg="white" borderRadius="lg" boxShadow="md">
-        <Heading size="lg" textAlign="center" mb={4}>Account Settings</Heading>
-        <Divider mb={4} />
+    <Box
+      w="full"
+      maxW="600px"
+      mx="auto"
+      mt={8}
+      p={4}
+      boxShadow="lg"
+      borderRadius="md"
+      bg="white"
+      ml={"40%"}
+    >
+      
+  <Flex justify="space-between" align="center" mb={6} >
+          <HStack spacing={4}>
+            
+            <Heading>Doctors List</Heading>
+            
+          </HStack>
+          <HStack>
+            <Avatar name="Admin" size="sm" />
+            <Button
+              colorScheme="teal"
+              variant="outline"
+              leftIcon={<FiLogOut />}
+              onClick={() => {
+                localStorage.clear();
+                navigate('/')
+              }}
+            >
+              Logout
+            </Button>
+          </HStack>
+        </Flex>
+      <VStack spacing={4} align="start">
+        {/* Hospital Image */}
+        <FormControl>
+          <FormLabel>Hospital Image</FormLabel>
+          <Image
+            src={localStorage.getItem("Image")}
+            alt="Hospital"
+            borderRadius="md"
+            boxSize="150px"
+            objectFit="cover"
+          />
+        </FormControl>
 
-        <VStack spacing={4} align="start">
-          <FormControl>
-            <FormLabel>Email</FormLabel>
-            <Input
-              name="email"
-              value={values.email}
-              onChange={handleChange}
-              placeholder="Enter your new email"
-              isRequired
-            />
-          </FormControl>
+        {/* Hospital Name */}
+        <FormControl>
+          <FormLabel>Hospital Name</FormLabel>
+          <Text fontSize="lg" fontWeight="bold">
+            {localStorage.getItem("HospitalName")}
+          </Text>
+        </FormControl>
 
-          <FormControl>
-            <FormLabel>Current Password</FormLabel>
-            <Input
-              type="password"
-              name="currentPassword"
-              value={values.currentPassword}
-              onChange={handleChange}
-              placeholder="Enter your current password"
-              isRequired
-            />
-          </FormControl>
+        {/* Email ID */}
+        <FormControl>
+          <FormLabel>Email ID</FormLabel>
+          <Text fontSize="lg" fontWeight="bold">
+            {jwtDecode(localStorage.getItem("jwt")).Email}
+          </Text>
+        </FormControl>
 
-          <FormControl>
-            <FormLabel>New Password</FormLabel>
-            <Input
-              type="password"
-              name="newPassword"
-              value={values.newPassword}
-              onChange={handleChange}
-              placeholder="Enter a new password"
-              isRequired
-            />
-          </FormControl>
+        {/* Old Password */}
+        <FormControl>
+          <FormLabel>Old Password</FormLabel>
+          <Input
+            type="password"
+            placeholder="Enter your old password"
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+          />
+        </FormControl>
 
-          <FormControl>
-            <FormLabel>Confirm New Password</FormLabel>
-            <Input
-              type="password"
-              name="confirmPassword"
-              value={values.confirmPassword}
-              onChange={handleChange}
-              placeholder="Confirm your new password"
-              isRequired
-            />
-          </FormControl>
+        {/* New Password */}
+        <FormControl>
+          <FormLabel>New Password</FormLabel>
+          <Input
+            type="password"
+            placeholder="Enter your new password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+        </FormControl>
 
-          <Button
-            colorScheme="teal"
-            onClick={handleSave}
-            isLoading={isLoading}
-            spinner={<BeatLoader size={8} color="white" />}
-            leftIcon={<FaSave />}
-            isFullWidth
-          >
-            Save Changes
-          </Button>
-        </VStack>
-      </Box>
+        {/* Save Button */}
+        <Button
+          colorScheme="teal"
+          width="full"
+          onClick={handleSave}
+          isDisabled={!oldPassword || !newPassword}
+          leftIcon={<FaSave />}
+          isFullWidth
+        >
+          Save Changes
+        </Button>
+      </VStack>
     </Box>
   );
 };
 
-const ViewAccountSettings = () => {
+const ViewSettingPage = () => {
   return (
     <Box display="flex" w="100%" minH="100vh">
       <Sidebar />
-      <AccountSettings />
+      <SettingsPage />
     </Box>
   );
 };
 
-export default ViewAccountSettings;
+export default ViewSettingPage;

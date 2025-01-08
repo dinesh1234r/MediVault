@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel,Switch,Divider, Button ,Box,Grid, GridItem, HStack, Container} from '@chakra-ui/react'
 import AddDoctors from './AddDoctors'
-import GetAllDoctor from './GetAllDoctor'
+import GetAllDoctor from '../src/Pages/GetAllDoctor'
 import { useNavigate } from 'react-router-dom'
 import Toogle from './Toogle'
 import AddNurse from './AddNurse'
-import GetAllNurse from './GetAllNurse'
-import GetAllScanCenter from './GetAllScanCenter'
+import GetAllNurse from '../src/Pages/GetAllNurse'
+import GetAllScanCenter from '../src/Pages/GetAllScanCenter'
 
 function Home() {
   const [isLoading,SetisLoading]=useState(false);

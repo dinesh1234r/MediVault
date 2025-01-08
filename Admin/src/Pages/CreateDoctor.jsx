@@ -37,7 +37,7 @@ const AddDoctors = () => {
         setIsLoading(false);
         return;
       }
-      const Admin=jwtDecode(localStorage.getItem('jwt')).adminuser;
+      const Admin=localStorage.getItem('ID');
       const response = await axios.post('http://localhost:5000/admin/postbyadmin', {
         Admin,gender, ...values, photo
       }, {

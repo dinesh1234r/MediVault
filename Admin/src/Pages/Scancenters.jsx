@@ -58,7 +58,7 @@ const ScanCenterList = () => {
 
   // Fetch details from API
   const fetchScanCenters = async () => {
-    const admin = jwtDecode(localStorage.getItem('jwt')).adminuser;
+    const admin = localStorage.getItem('ID');
     try {
       const response = await axios.post(
         'http://localhost:5000/admin/getallScancenter',

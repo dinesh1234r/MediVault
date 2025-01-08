@@ -2,7 +2,7 @@ const mongoose=require('mongoose')
 
 const DoctorScheme=new mongoose.Schema({
     AdminID:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId
     },
     Doctor_name:{
         type: String,

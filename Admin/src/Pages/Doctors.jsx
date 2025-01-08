@@ -102,7 +102,7 @@ const DoctorList = () => {
   // ];
 
   const fetchdetails=async()=>{
-    const Admin=jwtDecode(localStorage.getItem('jwt')).adminuser;
+    const Admin=localStorage.getItem('ID');
     const response=await axios.post('http://localhost:5000/admin/getalldetailsofdoctor',{Admin},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('jwt')}`,

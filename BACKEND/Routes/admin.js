@@ -5,9 +5,7 @@ const AdminScheme=require('../Models/AdminSchema')
 const jwt=require('jsonwebtoken');
 const DoctorScheme=require('../Models/DoctorScheme');
 const Middleware=require('../Middleware/middleware');
-// const DoctorPatientsSchema=require('../Models/DoctorPatientsSchema');
 const NurseScheme = require('../Models/NurseScheme');
-// const NursePatientsSchema=require('../Models/NursePatientsScheme')
 const ScanCenterSchema=require('../Models/ScanCenter')
 
 route.post('/login',async(req,res)=>{
@@ -42,6 +40,63 @@ route.post('/login',async(req,res)=>{
     catch(err){
         return res.json({
             msg:"Error Occured in Admin Login"
+        })
+    }
+})
+
+route.post('/getcount',async(req,res)=>{
+    try{
+        const {id}=req.body;
+        const doctors=await DoctorScheme.find({AdminID:id});
+        const nurses=await NurseScheme.find({AdminID:id});
+        const scancenters=await ScanCenterSchema.find({AdminID:id});
+        res.json({
+            msg:"Count received",
+            Doctors:doctors,
+            Nurses:nurses,
+            Scancenters:scancenters
+        })
+    }
+    catch(err)
+    {
+        res.json({
+            msg:"Error Occurred"
+        })
+    }
+})
+
+route.post('/passwordchange',async(req,res)=>{
+    try{
+        const {oldPassword,newPassword,id}=req.body;
+        const find=await AdminScheme.findById(id);
+        if(find)
+        {
+            const pass=await bcrypt.compare(oldPassword,find.password);
+            if(pass)
+            {
+                const hashpassword=await bcrypt.hash(newPassword,10);
+                await AdminScheme.findByIdAndUpdate({_id:id},{password:hashpassword})
+                return res.json({
+                    msg:"PasswordChanged"
+                })
+            }
+            else
+            {
+                return res.json({
+                    msg:"Password Incorrect"
+                })
+            }
+        }
+        else
+        {
+            res.json({
+                msg:"No User Found"
+            })
+        }
+    }
+    catch(err){
+        res.json({
+            msg:err
         })
     }
 })

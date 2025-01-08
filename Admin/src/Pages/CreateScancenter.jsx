@@ -37,7 +37,7 @@ const AddScanCenter = () => {
         setIsLoading(false);
         return;
       }
-      const Admin=jwtDecode(localStorage.getItem('jwt')).adminuser;
+      const Admin=localStorage.getItem('jwt');
       const response = await axios.post('http://localhost:5000/admin/postforscancenter', {
         Admin,gender, ...values, photo
       }, {
