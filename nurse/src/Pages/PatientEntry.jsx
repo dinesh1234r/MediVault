@@ -69,7 +69,7 @@ const NurseEntryPage = () => {
     try {
       const _id = patient._id;
       const response = await axios.post(
-        "https://medivault.onrender.com/patient/entrypatient",
+        "http://localhost:5000/patient/entrypatient",
         { _id, disease, vitals },
         {
           headers: {
@@ -109,7 +109,7 @@ const NurseEntryPage = () => {
 
   const handlelogout = () => {
     localStorage.removeItem("patient");
-    navigate("/home");
+    navigate("/patient-login");
   };
 
   const bgColor = useColorModeValue("gray.100", "gray.900");

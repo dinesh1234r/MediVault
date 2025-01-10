@@ -66,7 +66,7 @@ const PatientHistory = () => {
       try {
         const _id = JSON.parse(localStorage.getItem("patient"))._id;
         const response = await axios.post(
-          "https://medivault.onrender.com/patient/history",
+          "http://localhost:5000/patient/history",
           { _id },
           {
             headers: {
@@ -161,7 +161,7 @@ const PatientHistory = () => {
     try {
       const _id = JSON.parse(localStorage.getItem("patient"))._id;
       const response = await axios.post(
-        "https://medivault.onrender.com/patient/notesadded",
+        "http://localhost:5000/patient/notesadded",
         { _id, notes },
         {
           headers: {
@@ -221,7 +221,7 @@ const PatientHistory = () => {
       const _id=JSON.parse(localStorage.getItem('patient'))._id
       const Doctor=jwtDecode(JSON.stringify(localStorage.getItem('Jwt'))).user;
       console.log(medicines)
-      const response=await axios.post('https://medivault.onrender.com/patient/updateprecription',{_id,preciption:medicines,Doctor},{
+      const response=await axios.post('http://localhost:5000/patient/updateprecription',{_id,preciption:medicines,Doctor},{
           headers:{
             'Authorization':`Bearer ${localStorage.getItem('Jwt')}`,
             'Content-Type': 'application/json'
@@ -303,7 +303,7 @@ const PatientHistory = () => {
   const updateDisease=async()=>{
     try{
       const _id=JSON.parse(localStorage.getItem('patient'))._id
-      const response=await axios.post('https://medivault.onrender.com/patient/updatedisease',{_id,disease:todayDisease},{
+      const response=await axios.post('http://localhost:5000/patient/updatedisease',{_id,disease:todayDisease},{
         headers:{
           'Authorization':`Bearer ${localStorage.getItem('Jwt')}`,
           'Content-Type': 'application/json'
@@ -376,7 +376,7 @@ const PatientHistory = () => {
           <Text fontSize="lg" fontWeight="bold">
             {JSON.parse(localStorage.getItem('patient')).Name}, {age} years
           </Text>
-          <Button colorScheme="red" onClick={() => alert("Logging out...")}>
+          <Button colorScheme="red" onClick={() =>{localStorage.removeItem("patient");navigate("/patient-login");}}>
             Logout
           </Button>
         </HStack>

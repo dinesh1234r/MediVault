@@ -35,7 +35,7 @@ const PatientDetailsPage = () => {
     const fetchDetails = async () => {
       const _id = JSON.parse(localStorage.getItem("patient"))._id;
       const response = await axios.post(
-        "https://medivault.onrender.com/patient/entryreport",
+        "http://localhost:5000/patient/entryreport",
         { _id },
         {
           headers: {
@@ -127,7 +127,7 @@ const PatientDetailsPage = () => {
     try {
       const _id = JSON.parse(localStorage.getItem("patient"))._id;
       const response = await axios.post(
-        "https://medivault.onrender.com/patient/updatereport",
+        "http://localhost:5000/patient/updatereport",
         { _id, report: saving },
         {
           headers: {
@@ -162,7 +162,7 @@ const PatientDetailsPage = () => {
   };
 
   const handleLogout = () => {
-    navigate("/home");
+    navigate("/patient-login");
     localStorage.removeItem("patient");
   };
 
@@ -207,7 +207,7 @@ const PatientDetailsPage = () => {
 
           {/* Note Box */}
           <Textarea
-            value={today.note || "No notes available."}
+            value={today.notes || "No notes available."}
             isReadOnly
             placeholder="Note"
             bg="gray.100"

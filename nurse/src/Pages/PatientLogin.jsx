@@ -64,7 +64,7 @@ const FaceRecognitionPage = () => {
     const downloadUrl = await uploadImage(image); 
     console.log(downloadUrl)
     try {
-      const response = await axios.post('https://medivault.onrender.com/patient/login', { image: downloadUrl },{
+      const response = await axios.post('http://localhost:5000/patient/login', { image: downloadUrl },{
         headers:{
           'Authorization':`Bearer ${localStorage.getItem('Jwt')}`,
           'Content-Type': 'application/json'
@@ -78,7 +78,7 @@ const FaceRecognitionPage = () => {
           position: "top",
           duration: 1200,
           onCloseComplete: () => {
-            navigate('/patient-report');
+            navigate('/patient-entry');
           },
         });
       } else {
@@ -161,6 +161,7 @@ const FaceRecognitionPage = () => {
         </MenuButton>
         <MenuList>
           <MenuItem>Profile</MenuItem>
+          <MenuItem onClick={()=>navigate('/patient-register')}>Register Patient</MenuItem>
           <MenuItem onClick={()=>{
             localStorage.clear();
             navigate('/')
