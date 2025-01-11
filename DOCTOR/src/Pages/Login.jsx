@@ -82,20 +82,6 @@ function Login() {
           toast({
             isClosable:true,
             position:"top",
-            render:()=>(
-              <Box borderColor={null}
-              // bg="white"
-              // border="1px solid gray.200" 
-              p={3}
-              borderRadius="lg"
-              boxShadow="lg">
-                <HStack ml={'10%'} spacing={30}>
-                  <Image src='/wrong.gif' alt='Not' boxSize={'30px'} borderRadius={'full'}/>
-                  <Text size={'lg'}>{res.data.msg}</Text>
-                </HStack>
-                
-              </Box>
-            )
           })
         }
       })
@@ -106,20 +92,7 @@ function Login() {
         isClosable:true,
         position:"top",
         duration:1200,
-        render:()=>(
-          <Box color="black"
-          bg="white"
-          // border="1px solid gray.200" 
-          p={3}
-          borderRadius="md"
-          boxShadow="lg">
-            <HStack ml={'10%'} spacing={30}>
-              <Image src='/wrong.gif' alt='Not' boxSize={'25px'} borderRadius={'full'}/>
-              <Text size={'lg'}>{err}</Text>
-            </HStack>
-            
-          </Box>
-        )
+        
       })
     }
     

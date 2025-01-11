@@ -52,9 +52,9 @@ route.post('/getcount',async(req,res)=>{
         const scancenters=await ScanCenterSchema.find({AdminID:id});
         res.json({
             msg:"Count received",
-            Doctors:doctors,
-            Nurses:nurses,
-            Scancenters:scancenters
+            Doctors:doctors.length,
+            Nurses:nurses.length,
+            Scancenters:scancenters.length
         })
     }
     catch(err)

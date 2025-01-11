@@ -3,7 +3,8 @@ const route=express.Router()
 const DoctorSchema=require('../Models/DoctorScheme')
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
-const Middleware=require('../Middleware/middleware')
+const Middleware=require('../Middleware/middleware');
+const AdminSchema=require('../Models/AdminSchema');
 
 route.post('/login',async(req,res)=>{
     try{
@@ -19,14 +20,17 @@ route.post('/login',async(req,res)=>{
         
         if(pass)
         {
+            // const admin=await AdminSchema.findById(check.)
             const user=check.Email_Address
             const token=jwt.sign({user},'this is your secret key to login in bro');
+            const admin=await AdminSchema.findById(check.AdminID)
             return res.json({
                 msg:"Username Found",
                 objectID:check._id,
-                photo:check.photo,
+                photo:check.Image,
                 jwt:token,
-                check
+                Hospitalname:admin.hospitalName,
+                HospitalLogo:admin.logo
             })
         }
         else

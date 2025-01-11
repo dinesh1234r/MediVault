@@ -4,6 +4,8 @@ const NurseSchema=require('../Models/NurseScheme')
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
 const Middleware=require('../Middleware/middleware')
+const AdminSchema=require('../Models/AdminSchema');
+const Hospital = require('../Models/AdminSchema');
 
 route.post('/login',async(req,res)=>{
     try{
@@ -20,6 +22,7 @@ route.post('/login',async(req,res)=>{
         
         if(pass)
         {
+            const admin=await AdminSchema.findById(check.AdminID)
             const user=check.Email_Address
             const token=jwt.sign({user},'this is your secret key to login in bro');
             return res.json({
@@ -27,7 +30,8 @@ route.post('/login',async(req,res)=>{
                 objectID:check._id,
                 photo:check.photo,
                 jwt:token,
-                check
+                HospitalName:admin.hospitalName,
+                HospitalLogo:admin.logo
             })
         }
         else
@@ -41,7 +45,7 @@ route.post('/login',async(req,res)=>{
     catch(err)
     {
         return res.json({
-            msg:"Error in Doctor's Login"
+            msg:"Error in Nurse's Login"
         })
     }
 })

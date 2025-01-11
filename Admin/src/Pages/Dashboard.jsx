@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -28,86 +28,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion"; // For animations
 import Sidebar from './Sidebar'
-
-// const Sidebar = () => {
-//   return (
-//     <Box
-//       w={{ base: "full", md: "250px" }}
-//       bg={useBreakpointValue({ base: "teal.500", md: "teal.700" })}
-//       color="white"
-//       h="full"
-//       p={4}
-//       display={{ base: "none", md: "block" }}
-//       position="fixed"
-//     >
-//       <VStack align="start" spacing={6}>
-//         <Link to="/">
-//           <HStack>
-//             <FiHome />
-//             <Text>Dashboard</Text>
-//           </HStack>
-//         </Link>
-
-//         {/* Manage Sections */}
-//         <Heading as="h3" size="sm" mt={4} mb={2} textTransform="uppercase">
-//           Manage
-//         </Heading>
-//         <Link to="/doctors">
-//           <HStack>
-//             <FiUsers />
-//             <Text>Doctors</Text>
-//           </HStack>
-//         </Link>
-//         <Link to="/nurses">
-//           <HStack>
-//             <FiBriefcase />
-//             <Text>Nurses</Text>
-//           </HStack>
-//         </Link>
-//         <Link to="/scancenter">
-//           <HStack>
-//             <FiClipboard />
-//             <Text>Scan Centers</Text>
-//           </HStack>
-//         </Link>
-
-//         {/* Create Sections */}
-//         <Heading as="h3" size="sm" mt={4} mb={2} textTransform="uppercase">
-//           Create
-//         </Heading>
-//         <Link to="/create-doctor">
-//           <HStack>
-//             <FiUserPlus />
-//             <Text>Create Doctor</Text>
-//           </HStack>
-//         </Link>
-//         <Link to="/create-nurse">
-//           <HStack>
-//             <FiUserPlus />
-//             <Text>Create Nurse</Text>
-//           </HStack>
-//         </Link>
-//         <Link to="/create-scancenter">
-//           <HStack>
-//             <FiUserPlus />
-//             <Text>Create Scan Center</Text>
-//           </HStack>
-//         </Link>
-
-//         {/* Settings */}
-//         <Heading as="h3" size="sm" mt={4} mb={2} textTransform="uppercase">
-//           Settings
-//         </Heading>
-//         <Link to="/settings">
-//           <HStack>
-//             <FiSettings />
-//             <Text>Settings</Text>
-//           </HStack>
-//         </Link>
-//       </VStack>
-//     </Box>
-//   );
-// };
+import axios from "axios";
 
 const AdminDashboard = () => {
   const { isOpen, onToggle } = useDisclosure();
@@ -115,10 +36,28 @@ const AdminDashboard = () => {
   const textColor = useColorModeValue("gray.800", "gray.100");
   const navigate = useNavigate();
 
-  // Example Data for Counts
-  const doctorCount = 25; // Example count for doctors
-  const nurseCount = 40; // Example count for nurses
-  const scanCenterCount = 15; // Example count for scan centers
+  const [values,Setvalues]=useState({});
+
+  useEffect(()=>{
+    const fetchcount=async()=>{
+      try{
+        const id=localStorage.getItem('ID')
+        const response=await axios.post("http://localhost:5000/admin/getcount",{id});
+        if(response.data.msg==="Count received")
+        {
+          const doctors=response.data.Doctors;
+          const nurses=response.data.Nurses;
+          const scancenters=response.data.Scancenters;
+          Setvalues({doctors,nurses,scancenters})
+        }
+      }
+      catch(err)
+      {
+        alert("Error...")
+      }
+    }
+    fetchcount();
+  },[])
 
   return (
     <Box minH="100vh" bg={bg} display="flex" direction="column">
@@ -186,7 +125,7 @@ const AdminDashboard = () => {
                 textAlign="center"
                 boxShadow="lg"
               >
-                <Heading size="xl">{doctorCount}</Heading>
+                <Heading size="xl">{values.doctors}</Heading>
                 <Text mt={2} fontSize="lg">
                   Total Doctors
                 </Text>
@@ -206,7 +145,7 @@ const AdminDashboard = () => {
                 textAlign="center"
                 boxShadow="lg"
               >
-                <Heading size="xl">{nurseCount}</Heading>
+                <Heading size="xl">{values.nurses}</Heading>
                 <Text mt={2} fontSize="lg">
                   Total Nurses
                 </Text>
@@ -226,7 +165,7 @@ const AdminDashboard = () => {
                 textAlign="center"
                 boxShadow="lg"
               >
-                <Heading size="xl">{scanCenterCount}</Heading>
+                <Heading size="xl">{values.scancenters}</Heading>
                 <Text mt={2} fontSize="lg">
                   Total Scan Centers
                 </Text>

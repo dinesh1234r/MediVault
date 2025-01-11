@@ -1,7 +1,7 @@
 const mongoose=require('mongoose');
 
 const ScanCenterSchema=new mongoose.Schema({
-    Admin:{
+    AdminID:{
         type: mongoose.Schema.Types.ObjectId
     },
     username:{
