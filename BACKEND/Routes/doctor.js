@@ -76,4 +76,37 @@ route.post('/passchange',Middleware,async(req,res)=>{
     }
 })
 
+route.post('/getdetails',async(req,res)=>{
+    try{
+        const {DoctorID}=req.body;
+        const Doctor=await DoctorSchema.findById(DoctorID);
+        if(Doctor)
+        {
+            const Admin=await AdminSchema.findById(Doctor.AdminID);
+            if(Admin)
+            {
+                
+            }
+            else
+            {
+                res.json({
+                    msg:"Admin Not valid"
+                })
+            }
+        }
+        else
+        {
+            res.json({
+                msg:"Doctor is not valid"
+            })
+        }
+    }
+    catch(err)
+    {
+        res.json({
+            msg:"Error occurred in the server..."
+        })
+    }
+})
+
 module.exports=route

@@ -4,22 +4,19 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
 import { addPrescriptionDetails } from '../Redux/Slice';
+import axios from "axios";
 
 const PrescriptionPage = () => {
   
-//   const dispatch = useDispatch();
-
-// const sampleDetails = {
-//     doctorName: 'Dr. Akshara',
-//     patientId: '11 - OPD6 PATIENT',
-//     medications: [
-//         { name: 'Tab. Abciximab', dosage: '1 Morning', duration: '8 Days' },
-//     ],
-// };
-
-// dispatch(addPrescriptionDetails(sampleDetails));
 const details = useSelector((state) => state.history);
-  console.log(details)
+  const [values,Setvalues]=useState();
+  useEffect(()=>{
+    const fetchdetails=async()=>{
+      console.log(details)
+      // const response=await axios.post()
+    }
+    fetchdetails();
+  },[])
  
   const navigate = useNavigate();
 
