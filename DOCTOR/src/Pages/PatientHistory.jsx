@@ -357,7 +357,7 @@ const PatientHistory = () => {
     if(details)
     {
       dispatch(addPrescriptionDetails(details));
-      navigate('/bar');
+      navigate('/patient-prescription');
     }
     else
     {

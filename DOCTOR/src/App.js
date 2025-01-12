@@ -5,7 +5,7 @@ import {Provider} from 'react-redux'
 import store from './Redux/Store';
 import PatientLogin from './Pages/PatientLogin'
 import PatientHis from './Pages/PatientHistory'
-import Bar from './Pages/Bar'
+import Precription from './Pages/Prescription'
 import DoctorProfile from './Pages/DoctorProfile';
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
           <Route path='/' element={<Login/>}/>
           <Route path='/patient-login' element={<PatientLogin/>}/>
           <Route path='/patient-history' element={<PatientHis/>}/>
-          <Route path='/bar' element={<Bar/>}/>
+          <Route path='/patient-prescription' element={<Precription/>}/>
           <Route path='/doctor-profile' element={<DoctorProfile/>}/>
           <Route path='/*' element={<NotFound/>}/>
         </Routes>
