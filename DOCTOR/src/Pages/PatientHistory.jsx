@@ -844,7 +844,7 @@ const PatientHistory = () => {
                     {record.disease}
                   </Heading>
                   <Text fontSize="sm" color="gray.600">
-                    Diagnosis Date: {record.date}
+                    Diagnosis Date: {record.Date}
                   </Text>
                 </Box>
                 <Box bg="blue.100" p={2} rounded="full" shadow="sm">
