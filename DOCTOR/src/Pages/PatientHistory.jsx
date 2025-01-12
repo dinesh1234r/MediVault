@@ -219,7 +219,7 @@ const PatientHistory = () => {
   const saveMedicines = async () => {
     try{
       const _id=JSON.parse(localStorage.getItem('patient'))._id
-      const Doctor=jwtDecode(JSON.stringify(localStorage.getItem('Jwt'))).user;
+      const Doctor=localStorage.getItem('Id')
       console.log(medicines)
       const response=await axios.post('http://localhost:5000/patient/updateprecription',{_id,preciption:medicines,Doctor},{
           headers:{

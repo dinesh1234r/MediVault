@@ -53,27 +53,15 @@ function Login() {
               localStorage.setItem('Jwt',res.data.jwt);
               localStorage.setItem('Id',res.data.objectID);
               localStorage.setItem('Photo',res.data.photo);
+              localStorage.setItem('Hospitalname',res.data.Hospitalname);
+              localStorage.setItem('HospitalLogo',res.data.HospitalLogo)
           toast({
             isClosable:true,
             position:"top",
             duration:1400,
             onCloseComplete:()=>{
               navigate('/patient-login');
-            },
-            render:()=>(
-              <Box 
-              bg="white"
-              
-              p={3}
-              borderRadius="md"
-              boxShadow="lg">
-                <HStack ml={'10%'} spacing={30}>
-                  <Image src='/tenor.gif' alt='Not' boxSize={'30px'} borderRadius={'full'}/>
-                  <Text size={'lg'}>{res.data.msg}</Text>
-                </HStack>
-                
-              </Box>
-            )
+            }
           })
           Setvalues({username:"",password:""});
         }

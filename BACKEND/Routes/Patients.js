@@ -205,7 +205,7 @@ route.post('/updateprecription',Middleware,async(req,res)=>{
         {
             $set:{
                 'History.$.preciption':preciption,
-                'History.$.Doctor':Doctor
+                'History.$.DoctorID':Doctor
             }
         }
         )
