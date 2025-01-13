@@ -1,7 +1,8 @@
 const express=require('express')
 const route=express.Router();
 const PatientSchemas=require('../Models/PatientsSchema');
-// const { findByIdAndUpdate } = require('../Models/NursePatientsScheme');
+const DoctorSchema=require('../Models/DoctorScheme')
+const AdminSchema=require('../Models/AdminSchema')
 const currentDate = new Date();
 const qs = require('qs');
 const axios = require('axios');
@@ -14,9 +15,9 @@ const simpleFormattedDate = `${day}/${month}/${year}`;
 
 route.post('/register',Middleware,async(req,res)=>{
     try{
-        const {Name,Address,Aadhar,Phone_no,Photo,DOB}=req.body;
+        const {Name,Address,Aadhar,Mobile_no,Photo,DOB}=req.body;
         const patient=new PatientSchemas({
-            Name,Address,Phone_no,Aadhar,Photo,DOB,
+            Name,Address,Mobile_no,Aadhar,Photo,DOB,
             History:[]
         })
         await patient.save();
@@ -198,14 +199,15 @@ route.post('/updatereport',Middleware,async(req,res)=>{
 route.post('/updateprecription',Middleware,async(req,res)=>{
     try{
         const {_id,preciption,Doctor}=req.body;
-        // const currentDate = new Date().toLocaleDateString();
+        const doctor=await DoctorSchema.findById(Doctor);
+        const hospital=await AdminSchema.findById(doctor.AdminID)
         const result=await PatientSchemas.findOneAndUpdate({_id,
             'History.Date':simpleFormattedDate
         },
         {
             $set:{
                 'History.$.preciption':preciption,
-                'History.$.DoctorID':Doctor
+                'History.$.DoctorDetails':{doctor,hospital}
             }
         }
         )

@@ -10,9 +10,9 @@ const PatientScheme=new mongoose.Schema({
     History:[{
         disease:String,
         notes:String,
-        vitals:{},
+        vitals:{type: Object, default: {}},
         Date:String,
-        DoctorID:mongoose.Schema.Types.ObjectId,
+        DoctorDetails:{type: Object, default: {}},
         report:{ type: Object, default: {} } ,
         preciption:[]
     }]

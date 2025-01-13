@@ -109,7 +109,7 @@ const PatientRegistration = () => {
           Name: name,
           Address: address,
           Aadhar: aadhar,
-          Phone_no: phone,
+          Mobile_no: phone,
           Photo: url1,
           DOB: dob,
         },

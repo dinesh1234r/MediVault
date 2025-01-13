@@ -3,7 +3,13 @@ import {createSlice} from '@reduxjs/toolkit'
 
 const slice=createSlice({
     name:'PrescriptionSlice',
-    initialState:{},
+    initialState:{
+        DoctorDetails:{
+            doctor:{
+                Doctor_name:null
+            }
+        }
+    },
     reducers:{
         addPrescriptionDetails(state,action)
         {

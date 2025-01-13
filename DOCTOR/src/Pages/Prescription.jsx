@@ -8,14 +8,12 @@ import axios from "axios";
 
 const PrescriptionPage = () => {
   
-const details = useSelector((state) => state.history);
-  const [values,Setvalues]=useState();
+  const details = useSelector((state) => state.history);
+  console.log(details) 
+  const [medicine,Setmedicine]=useState([])
+
   useEffect(()=>{
-    const fetchdetails=async()=>{
-      console.log(details)
-      // const response=await axios.post()
-    }
-    fetchdetails();
+    Setmedicine(details.preciption);
   },[])
  
   const navigate = useNavigate();
@@ -30,141 +28,115 @@ const details = useSelector((state) => state.history);
 
   return (
     <Box w="full" p={8} bg="white" color="black" rounded="md" shadow="md" border="1px solid gray">
-      {/* Header */}
+    
       <HStack justify="space-between" align="start" mb={4}>
-        {/* Doctor Info */}
         <VStack align="start" spacing={1}>
           <Heading size="md" color="black">
-            Dr. Akshara
+            {'Dr .'+details.DoctorDetails.doctor.Doctor_name}
           </Heading>
-          <Text fontSize="sm">M.S.</Text>
-          <Text fontSize="sm">Reg. No: MMC 2018</Text>
+          <Text fontSize="sm">{details.DoctorDetails.doctor.Qualifications}</Text>
+          <Text fontSize="sm">Reg. No: {details.DoctorDetails.doctor.Medical_License_Number}</Text>
         </VStack>
-        {/* Hospital Info */}
         <VStack align="end" spacing={1}>
           <Heading size="md" color="blue.600">
-            SMS Hospital
+            {details.DoctorDetails.hospital.hospitalName}
           </Heading>
-          <Text fontSize="sm">B/503, Business Center, MG Road, Pune - 411000</Text>
-          <Text fontSize="sm">Ph: 5465647658</Text>
-          <Text fontSize="sm">Timing: 09:00 AM - 01:00 PM, 06:00 PM - 08:00 PM</Text>
-          <Text fontSize="sm">Closed: Sunday</Text>
+          <Text fontSize="sm">{details.DoctorDetails.hospital.address}</Text>
+          <Text fontSize="sm">Ph: {details.DoctorDetails.hospital.phone}</Text>
+          <Text fontSize="sm">Timing: {details.DoctorDetails.hospital.timings}</Text>
+          <Text fontSize="sm">Closed: {details.DoctorDetails.hospital.closedOn}</Text>
         </VStack>
       </HStack>
 
       <Divider mb={4} />
 
-      {/* Patient Info */}
       <Box mb={4}>
         <Text fontSize="sm">
-          <b>ID:</b> 11 - OPD6 PATIENT (M) / 13 Y &nbsp;&nbsp; <b>Mob. No.:</b> 9423380390
+          <b>ID:</b> 11 - OPD6 PATIENT (M) / 13 Y &nbsp;&nbsp; <b>Mob. No.:</b> {JSON.parse(localStorage.getItem('patient')).Mobile_no}
         </Text>
         <Text fontSize="sm">
-          <b>Address:</b> Pune &nbsp;&nbsp;&nbsp; <b>Weight (Kg):</b> 80, <b>Height (Cm):</b> 200 (B.M.I. = 20.00),
+
+          <b>Address:</b> {JSON.parse(localStorage.getItem('patient')).Address} &nbsp;&nbsp;&nbsp; <b>Weight (Kg):</b> 80, <b>Height (Cm):</b> 200 (B.M.I. = 20.00),
           <b> BP:</b> 120/80 mmHg
+          {/* {Object.entries(details.vitals).map(([key, value]) => {
+            <>
+            <b>{key} :</b><Text>{value}</Text>
+            </>
+          })} */}
         </Text>
         <Text fontSize="sm">
-          <b>Date:</b> {new Date().toLocaleDateString()}
+          <b>Date:</b> {details.Date}
         </Text>
       </Box>
 
       <Divider mb={4} />
 
-      {/* Chief Complaints and Clinical Findings */}
-      <HStack align="start" spacing={4} mb={4}>
-        <Box w="50%">
-          <Text fontWeight="bold" mb={2}>
-            Chief Complaints
-          </Text>
-          <Text fontSize="sm">* Fever with chills (4 days)</Text>
-          <Text fontSize="sm">* Headache (2 days)</Text>
-        </Box>
-        <Box w="50%">
-          <Text fontWeight="bold" mb={2}>
-            Clinical Findings
-          </Text>
-          <Text fontSize="sm">* These are test findings for a test patient</Text>
-          <Text fontSize="sm">* Entering sample diagnosis and sample prescription</Text>
-        </Box>
-      </HStack>
 
-      {/* Diagnosis */}
       <Box mb={4}>
         <Text fontWeight="bold" mb={2}>
           Diagnosis:
         </Text>
-        <Text fontSize="sm">* Malaria</Text>
+        <Text fontSize="sm">* {details.disease}</Text>
       </Box>
 
       <Divider mb={4} />
 
-      {/* Medications */}
       <Box mb={4}>
         <Heading size="sm" mb={4}>
           Medications
         </Heading>
+        
         <Table variant="simple" size="sm" border="1px solid gray">
           <Thead>
             <Tr>
               <Td><b>Medicine Name</b></Td>
               <Td><b>Dosage</b></Td>
-              <Td><b>Duration</b></Td>
+              {/* <Td><b>Duration</b></Td> */}
             </Tr>
           </Thead>
           <Tbody>
-            <Tr>
-              <Td>Tab. Abciximab</Td>
-              <Td>1 Morning</Td>
-              <Td>8 Days (Tot: 8 Tab)</Td>
+          {details.preciption.map((item, index) => {
+          const { name, morning, afternoon, dinner, foodTiming, days } = item;
+          const dosage = [
+            morning ? '1 Morning' : null,
+            afternoon ? '1 Afternoon' : null,
+            dinner ? '1 Night' : null,
+          ]
+            .filter(Boolean)
+            .join(', ');
+
+          return (
+            <Tr key={index}>
+              <Td>{name}</Td>
+              <Td>
+                {dosage} ({foodTiming})
+              </Td>
+              {/* <Td>
+                {days} Days (Tot: {days * (morning + afternoon + dinner)} {morning + afternoon + dinner === 1 ? 'Tab' : 'Tabs'})
+              </Td> */}
             </Tr>
-            <Tr>
-              <Td>Tab. Vomilast</Td>
-              <Td>1 Morning, 1 Night (After Food)</Td>
-              <Td>8 Days (Tot: 16 Tab)</Td>
-            </Tr>
-            <Tr>
-              <Td>Cap. Zoclar 500</Td>
-              <Td>1 Morning</Td>
-              <Td>3 Days (Tot: 3 Cap)</Td>
-            </Tr>
-            <Tr>
-              <Td>Tab. Gestakind 10/SR</Td>
-              <Td>1 Night</Td>
-              <Td>4 Days (Tot: 4 Tab)</Td>
-            </Tr>
-          </Tbody>
+          );
+        })}
+        </Tbody>
         </Table>
       </Box>
 
       <Divider mb={4} />
 
-      {/* Advice */}
-      <Box mb={4}>
-        <Text fontWeight="bold" mb={2}>
-          Advice:
-        </Text>
-        <VStack align="start" spacing={1}>
-          <Text fontSize="sm">* Take bed rest</Text>
-          <Text fontSize="sm">* Do not eat outside food</Text>
-          <Text fontSize="sm">* Eat easy-to-digest food like boiled rice with dal</Text>
-        </VStack>
-      </Box>
-
-      <Divider mb={4} />
-
-      {/* Follow-Up */}
       <Box>
-        <Text fontWeight="bold" mb={2}>
-          Follow-Up:
-        </Text>
-        <Text fontSize="sm">04-09-2023</Text>
+          <Heading size="sm" mb={4}>
+              Doctor's Advice
+          </Heading>
+          <Text mx={10}>* {details.notes}</Text>
       </Box>
+      
 
+
+      
       <Text mt={6} fontSize="xs" textAlign="center">
         Substitute with equivalent Generics as required.
       </Text>
 
-      {/* Buttons */}
       <HStack justify="center" spacing={4} mt={6}>
         <Button
           colorScheme="teal"
