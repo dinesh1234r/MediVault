@@ -521,7 +521,7 @@ const PatientHistory = () => {
                   <option value="After Food">After Food</option>
                 </Select>
               </HStack>
-              <HStack mt={2} spacing={4}>
+              <HStack mt={2} spacing={4} flexDir={'row-reverse'}>
                 <Button
                   colorScheme={newMedicine.morning ? "teal" : "gray"}
                   onClick={() =>
@@ -556,9 +556,12 @@ const PatientHistory = () => {
                   Dinner
                 </Button>
               </HStack>
-              <Button colorScheme="teal" mt={4} onClick={addMedicine}>
+              <HStack flexDir={'row-reverse'}>
+              <Button colorScheme="teal" mt={4} onClick={addMedicine} >
                 Add Medicine
               </Button>
+              </HStack>
+              
               <List mt={4}>
                 {medicines.length > 0 ? (
                   medicines.map((medicine, index) => (
@@ -578,18 +581,18 @@ const PatientHistory = () => {
                   <Text>No medicines added yet.</Text>
                 )}
               </List>
-              <HStack>
+              <HStack flexDir={'row-reverse'}>
               <Button colorScheme="blue" onClick={saveMedicines} mt={4}>
                 Save Medicines
               </Button>
-              <Button
+              {/* <Button
                   colorScheme="purple"
                   // onClick={handlePrescription}
                   _hover={{ bg: "purple.600" }}
                   mt={4}
                 >
                   Prescription
-                </Button>
+                </Button> */}
                 </HStack>
             </Box>
             <Box w="full" p={4} bg="gray.100" rounded="md" shadow="sm">

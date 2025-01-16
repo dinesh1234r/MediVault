@@ -57,6 +57,8 @@ function Login() {
               localStorage.setItem('HospitalLogo',res.data.HospitalLogo)
           toast({
             isClosable:true,
+            title:"Access Granted",
+            status:"success",
             position:"top",
             duration:1400,
             onCloseComplete:()=>{
@@ -68,6 +70,7 @@ function Login() {
         else
         {
           toast({
+            title:"Access Denied",
             isClosable:true,
             position:"top",
           })

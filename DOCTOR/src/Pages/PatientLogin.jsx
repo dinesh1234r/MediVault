@@ -161,7 +161,7 @@ const FaceRecognitionPage = () => {
         </MenuButton>
         <MenuList>
           <MenuItem>Profile</MenuItem>
-          <MenuItem onClick={()=>navigate('/patient-register')}>Register Patient</MenuItem>
+          
           <MenuItem onClick={()=>{
             localStorage.clear();
             navigate('/')

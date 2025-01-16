@@ -20,7 +20,6 @@ route.post('/login',async(req,res)=>{
         
         if(pass)
         {
-            // const admin=await AdminSchema.findById(check.)
             const user=check.Email_Address
             const token=jwt.sign({user},'this is your secret key to login in bro');
             const admin=await AdminSchema.findById(check.AdminID)
@@ -30,7 +29,8 @@ route.post('/login',async(req,res)=>{
                 photo:check.Image,
                 jwt:token,
                 Hospitalname:admin.hospitalName,
-                HospitalLogo:admin.logo
+                HospitalLogo:admin.logo,
+                
             })
         }
         else

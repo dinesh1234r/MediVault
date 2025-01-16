@@ -9,7 +9,27 @@ import axios from "axios";
 const PrescriptionPage = () => {
   
   const details = useSelector((state) => state.history);
-  console.log(details) 
+  
+  const dob=JSON.parse(localStorage.getItem('patient')).DOB;
+  const [age, setAge] = useState(null);
+
+  useEffect(()=>{
+    const calculateAge=()=>{
+      const date=new Date();
+      const birth=new Date(dob);
+      let age=date.getFullYear()-birth.getFullYear();
+      let month=date.getMonth()-birth.getMonth();
+      if(month<0||(month===0&&date.getDate()<birth.getDate()))
+      {
+          age--;
+      }
+      setAge(age);
+  }
+  calculateAge();
+  },[])
+
+
+
   const [medicine,Setmedicine]=useState([])
 
   useEffect(()=>{
@@ -49,20 +69,22 @@ const PrescriptionPage = () => {
       </HStack>
 
       <Divider mb={4} />
-
+      <Text fontWeight="bold" mb={2}>
+          Patient Details:
+        </Text>
       <Box mb={4}>
         <Text fontSize="sm">
-          <b>ID:</b> 11 - OPD6 PATIENT (M) / 13 Y &nbsp;&nbsp; <b>Mob. No.:</b> {JSON.parse(localStorage.getItem('patient')).Mobile_no}
+          <b>NAME:</b>{JSON.parse(localStorage.getItem('patient')).Name}/ {age} Y &nbsp;&nbsp; <b>Mob. No.:</b> {JSON.parse(localStorage.getItem('patient')).Mobile_no}
         </Text>
         <Text fontSize="sm">
 
-          <b>Address:</b> {JSON.parse(localStorage.getItem('patient')).Address} &nbsp;&nbsp;&nbsp; <b>Weight (Kg):</b> 80, <b>Height (Cm):</b> 200 (B.M.I. = 20.00),
-          <b> BP:</b> 120/80 mmHg
-          {/* {Object.entries(details.vitals).map(([key, value]) => {
+          <b>Address:</b> {JSON.parse(localStorage.getItem('patient')).Address} &nbsp;&nbsp;&nbsp; 
+          {Object.entries(details.vitals).map(([key, value]) => (
             <>
-            <b>{key} :</b><Text>{value}</Text>
+              <b>{key}:</b> {value}   &nbsp;&nbsp;
             </>
-          })} */}
+        ))}
+          
         </Text>
         <Text fontSize="sm">
           <b>Date:</b> {details.Date}
