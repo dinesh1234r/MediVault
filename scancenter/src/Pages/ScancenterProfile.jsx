@@ -17,7 +17,7 @@ import {
 import { FiHome, FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import axios from "axios";
+import axios from 'axios'
 
 const DoctorProfile = () => {
 
@@ -48,20 +48,20 @@ const DoctorProfile = () => {
 
   const handleChangePassword = async() => {
     try{
-      const objectID=localStorage.getItem('Id')
-      const response=await axios.post("http://localhost:5000/doctor/passchange",{objectID,newpass,oldpass})
-      if(response.data.msg==="Password change Successfully")
-      {
-          alert(response.data.msg);
-      }
-      else
-      {
-          alert(response.data.msg);
-      }
-  }
-  catch(err){
-      alert(err)
-  }
+        const objectID=localStorage.getItem('Id')
+        const response=await axios.post("http://localhost:5000/scancenter/passchange",{objectID,newpass,oldpass})
+        if(response.data.msg==="Password change Successfully")
+        {
+            alert(response.data.msg);
+        }
+        else
+        {
+            alert(response.data.msg);
+        }
+    }
+    catch(err){
+        alert(err)
+    }
   };
 
   const handleLogout = () => {
@@ -113,7 +113,7 @@ const DoctorProfile = () => {
         <VStack align="flex-start" spacing={2}>
           <Heading as="h2" size="lg">{localStorage.getItem('DoctorName')}</Heading>
           <Text fontSize="sm">Age: {age}</Text>
-          <Text fontSize="sm">Email: {jwtDecode(localStorage.getItem('Jwt')).user}</Text>
+          <Text fontSize="sm">Email: {jwtDecode(localStorage.getItem('Jwt')).email}</Text>
         </VStack>
       </Flex>
 

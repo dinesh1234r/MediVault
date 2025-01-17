@@ -23,15 +23,16 @@ route.post('/login',async(req,res)=>{
         if(pass)
         {
             const admin=await AdminSchema.findById(check.AdminID)
-            const user=check.username
-            const token=jwt.sign({user},'this is your secret key to login in bro');
+            const token=jwt.sign({email:username},'this is your secret key to login in bro');
             return res.json({
                 msg:"Username Found",
                 objectID:check._id,
-                photo:check.photo,
+                photo:check.Image,
                 jwt:token,
                 HospitalName:admin.hospitalName,
-                HospitalLogo:admin.logo
+                HospitalLogo:admin.logo,
+                DoctorDOB:check.DOB,
+                DoctorName:check.username
             })
         }
         else
@@ -50,15 +51,15 @@ route.post('/login',async(req,res)=>{
     }
 })
 
-route.post('/passchange',Middleware,async(req,res)=>{
+route.post('/passchange',async(req,res)=>{
     try{
         const {oldpass,newpass,objectID}=req.body;
         const doctor=await ScanCenterSchema.findById({_id:objectID});
-        const pass=await bcrypt.compare(oldpass,doctor.password);
+        const pass=await bcrypt.compare(oldpass,doctor.Password);
         if(pass)
         {
             const hashpassword=await bcrypt.hash(newpass,10);
-            const updated=await ScanCenterSchema.findByIdAndUpdate({_id:objectID},{password:hashpassword});
+            const updated=await ScanCenterSchema.findByIdAndUpdate({_id:objectID},{Password:hashpassword});
             res.json({
                 msg:"Password change Successfully"
             })

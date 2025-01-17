@@ -30,7 +30,8 @@ route.post('/login',async(req,res)=>{
                 jwt:token,
                 Hospitalname:admin.hospitalName,
                 HospitalLogo:admin.logo,
-                
+                DoctorDOB:check.DOB,
+                DoctorName:check.Doctor_name
             })
         }
         else
@@ -48,15 +49,15 @@ route.post('/login',async(req,res)=>{
     }
 })
 
-route.post('/passchange',Middleware,async(req,res)=>{
+route.post('/passchange',async(req,res)=>{
     try{
         const {oldpass,newpass,objectID}=req.body;
-        const doctor=await DoctorPatientsSchema.findById({_id:objectID});
-        const pass=await bcrypt.compare(oldpass,doctor.password);
+        const doctor=await DoctorSchema.findById({_id:objectID});
+        const pass=await bcrypt.compare(oldpass,doctor.Password);
         if(pass)
         {
             const hashpassword=await bcrypt.hash(newpass,10);
-            const updated=await DoctorPatientsSchema.findByIdAndUpdate({_id:objectID},{password:hashpassword});
+            const updated=await DoctorSchema.findByIdAndUpdate({_id:objectID},{Password:hashpassword});
             res.json({
                 msg:"Password change Successfully"
             })

@@ -160,7 +160,8 @@ const FaceRecognitionPage = () => {
           <Avatar name="Nurse" src="https://bit.ly/broken-link" size="md" />
         </MenuButton>
         <MenuList>
-          <MenuItem>Profile</MenuItem>
+          <MenuItem
+          onClick={()=>navigate('/nurse-profile')}>Profile</MenuItem>
           <MenuItem onClick={()=>navigate('/patient-register')}>Register Patient</MenuItem>
           <MenuItem onClick={()=>{
             localStorage.clear();

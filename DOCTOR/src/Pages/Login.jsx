@@ -55,6 +55,8 @@ function Login() {
               localStorage.setItem('Photo',res.data.photo);
               localStorage.setItem('Hospitalname',res.data.Hospitalname);
               localStorage.setItem('HospitalLogo',res.data.HospitalLogo)
+              localStorage.setItem('DoctorName',res.data.DoctorName)
+              localStorage.setItem('DoctorDOB',res.data.DoctorDOB)
           toast({
             isClosable:true,
             title:"Access Granted",

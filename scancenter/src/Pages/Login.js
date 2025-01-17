@@ -50,6 +50,7 @@ function Login() {
       .then((res)=>{
         if(res.data.msg==="Username Found")
         {
+          console.log(res.data)
           toast({
             title:res.data.msg,
             isClosable:true,
@@ -60,7 +61,12 @@ function Login() {
               navigate('/patient-login');
               localStorage.setItem('Jwt',res.data.jwt);
               localStorage.setItem('Id',res.data.objectID);
-              localStorage.setItem('Photo',res.data.check.Image);
+              localStorage.setItem('Photo',res.data.Image);
+              localStorage.setItem('Hospitalname',res.data.HospitalName);
+              localStorage.setItem('HospitalLogo',res.data.HospitalLogo)
+              localStorage.setItem('DoctorName',res.data.DoctorName)
+              localStorage.setItem('DoctorDOB',res.data.DoctorDOB)
+              
             },
           })
           Setvalues({username:"",password:""});

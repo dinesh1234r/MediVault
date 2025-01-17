@@ -28,10 +28,12 @@ route.post('/login',async(req,res)=>{
             return res.json({
                 msg:"Username Found",
                 objectID:check._id,
-                photo:check.photo,
+                photo:check.Image,
                 jwt:token,
                 HospitalName:admin.hospitalName,
-                HospitalLogo:admin.logo
+                HospitalLogo:admin.logo,
+                DoctorDOB:check.DOB,
+                DoctorName:check.Doctor_name
             })
         }
         else
@@ -50,15 +52,15 @@ route.post('/login',async(req,res)=>{
     }
 })
 
-route.post('/passchange',Middleware,async(req,res)=>{
+route.post('/passchange',async(req,res)=>{
     try{
         const {oldpass,newpass,objectID}=req.body;
-        const doctor=await NursePatientsSchema.findById({_id:objectID});
-        const pass=await bcrypt.compare(oldpass,doctor.password);
+        const doctor=await NurseSchema.findById({_id:objectID});
+        const pass=await bcrypt.compare(oldpass,doctor.Password);
         if(pass)
         {
             const hashpassword=await bcrypt.hash(newpass,10);
-            const updated=await NursePatientsSchema.findByIdAndUpdate({_id:objectID},{password:hashpassword});
+            const updated=await NurseSchema.findByIdAndUpdate({_id:objectID},{Password:hashpassword});
             res.json({
                 msg:"Password change Successfully"
             })
