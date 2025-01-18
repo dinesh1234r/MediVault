@@ -51,6 +51,40 @@ route.post('/login',async(req,res)=>{
     }
 })
 
+route.post('/googleauth',async(req,res)=>{
+    try{
+        const {email}=req.body;
+        
+        const check=await ScanCenterSchema.findOne({Email_Address:email});
+        
+        if(!check)
+        {
+            return res.json({
+                msg:"Username not valid"
+            })
+        }
+        const admin=await AdminSchema.findById(check.AdminID)
+        const token=jwt.sign({email},'this is your secret key to login in bro');
+        return res.json({
+            msg:"Username Found",
+            objectID:check._id,
+            photo:check.Image,
+            jwt:token,
+            HospitalName:admin.hospitalName,
+            HospitalLogo:admin.logo,
+            DoctorDOB:check.DOB,
+            DoctorName:check.username
+        })
+        
+    }
+    catch(err)
+    {
+        return res.json({
+            msg:"Error in ScanCenter's Login"
+        })
+    }
+})
+
 route.post('/passchange',async(req,res)=>{
     try{
         const {oldpass,newpass,objectID}=req.body;

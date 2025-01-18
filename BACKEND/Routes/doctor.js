@@ -49,6 +49,40 @@ route.post('/login',async(req,res)=>{
     }
 })
 
+route.post('/googleauth',async(req,res)=>{
+    try{
+        const {email}=req.body;
+        const check=await DoctorSchema.findOne({Email_Address:email});
+        if(!check)
+        {
+            return res.json({
+                msg:"Username not valid"
+            })
+        }
+        
+        const user=check.Email_Address
+        const token=jwt.sign({user},'this is your secret key to login in bro');
+        const admin=await AdminSchema.findById(check.AdminID)
+        return res.json({
+            msg:"Username Found",
+            objectID:check._id,
+            photo:check.Image,
+            jwt:token,
+            Hospitalname:admin.hospitalName,
+            HospitalLogo:admin.logo,
+            DoctorDOB:check.DOB,
+            DoctorName:check.Doctor_name
+        })
+        
+    }
+    catch(err)
+    {
+        res.json({
+            msg:"Error in Doctor's Login"
+        })
+    }
+})
+
 route.post('/passchange',async(req,res)=>{
     try{
         const {oldpass,newpass,objectID}=req.body;
