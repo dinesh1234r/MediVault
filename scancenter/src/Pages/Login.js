@@ -1,7 +1,9 @@
 import React, { useState,useEffect } from 'react'
-import { HStack,Flex,Box,FormControl,FormLabel,FormErrorMessage,Image,FormHelperText, Heading,Input, Button,Spacer,Text, VStack,Link,Spinner,useToast,useColorModeValue } from '@chakra-ui/react';
+import { HStack,Flex,Box,FormControl,FormLabel,Divider,FormErrorMessage,Image,FormHelperText, Heading,Input, Button,Spacer,Text, VStack,Link,Spinner,useToast,useColorModeValue } from '@chakra-ui/react';
 import  axios  from 'axios'
 import { useNavigate } from 'react-router-dom';
+import {getAuth, GoogleAuthProvider, signInWithPopup} from 'firebase/auth'
+import { FcGoogle } from 'react-icons/fc';
 
 function Login() {
     const toast=useToast();
@@ -102,84 +104,98 @@ function Login() {
   }
 }
 
+const auth=getAuth();
+
+const handleGoogleSignIn=async()=>{
+  const provider=new GoogleAuthProvider();
+  provider.setCustomParameters({prompt:"select_account"})
+  try{
+    const result=await signInWithPopup(auth,provider)
+    console.log(result.user.email+" "+result.user.emailVerified)
+  }
+  catch(err)
+  {
+    console.log(err)
+  }
+}
+
+
   return (
-    <Box
-      minH="100vh"
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      bg={useColorModeValue("gray.100", "gray.800")}
-    >
+    <Flex align={'center'} justify={'center'} h={'100vh'} bgGradient="linear(to-r, teal.500, blue.500)">
       <Box
-        w={{ base: "90%", md: "400px" }}
-        bg={useColorModeValue("white", "gray.700")}
-        boxShadow="lg"
-        rounded="lg"
+        w={{ base: '90%', md: '40%' }}
         p={8}
+        borderRadius={10}
+        bg={'white'}
+        boxShadow={'2xl'}
       >
-        <VStack spacing={6} align="center">
-          <Heading size="lg" textTransform="uppercase" color="teal.500">
-            Scan Center Login
-          </Heading>
-          <Text fontSize="sm" color="gray.500">
-            Please enter your credentials to access the portal
+        <VStack spacing={6}>
+          <Heading color={'teal.700'}>Welcome Back</Heading>
+          <Text color={'gray.600'} fontSize={'lg'} textAlign={'center'}>
+            Sign in to your account and manage your patients effortlessly.
           </Text>
-          <FormControl id="email">
-            <FormLabel>Email Address</FormLabel>
-            <Input
-              type="email"
-              name='username'
-              placeholder="Enter your email"
-              focusBorderColor="teal.500"
-              value={values.username}
-              onChange={(e)=>handleChange(e)} 
-            />
+
+          <FormControl isRequired>
+            <VStack spacing={4} w={'100%'}>
+              <Box w={'100%'}>
+                <FormLabel color={'gray.600'}>Username</FormLabel>
+                <Input
+                  type="email"
+                  name="username"
+                  value={values.username}
+                  placeholder="Enter your username"
+                  bg={'gray.100'}
+                  borderColor={'teal.300'}
+                  _hover={{ borderColor: 'teal.500' }}
+                  onChange={handleChange}
+                />
+              </Box>
+
+              <Box w={'100%'}>
+                <FormLabel color={'gray.600'}>Password</FormLabel>
+                <Input
+                  type="password"
+                  name="password"
+                  value={values.password}
+                  placeholder="Enter your password"
+                  bg={'gray.100'}
+                  borderColor={'teal.300'}
+                  _hover={{ borderColor: 'teal.500' }}
+                  onChange={handleChange}
+                />
+              </Box>
+            </VStack>
           </FormControl>
-          <FormControl id="password">
-            <FormLabel>Password</FormLabel>
-            <Input
-              type="password"
-              placeholder="Enter your password"
-              focusBorderColor="teal.500"
-              name='password'
-              value={values.password}
-              onChange={(e)=>handleChange(e)} 
-            />
-          </FormControl>
+
           <Button
+            w={'100%'}
             colorScheme="teal"
-            width="full"
-            mt={4}
-            type="submit"
-            onClick={()=>handleSubmit()}
+            isLoading={isLoading}
+            onClick={handleSubmit}
+            loadingText="Signing In"
           >
-            Login
+            Sign In
           </Button>
-          <Text fontSize="sm" color="gray.500">
-            Forgot your password?{" "}
-            <Link color="teal.500" href="#">
-              Reset it here
-            </Link>
-          </Text>
+
+          <HStack alignItems={'center'} w={'100%'}>
+            <Divider />
+            <Text color={'gray.500'}>or</Text>
+            <Divider />
+          </HStack>
+
+          <Button
+            w={'100%'}
+            variant="outline"
+            leftIcon={<FcGoogle />}
+            onClick={handleGoogleSignIn}
+            _hover={{ bg: 'gray.100' }}
+          >
+            Sign in with Google
+          </Button>
         </VStack>
       </Box>
-    </Box>
-    // <Box w={'40%'} mx={'auto'} align={'center'} mt={'8%'} border={'2px'} borderColor={'gray.200'} borderRadius={10} bg={'#f6f8fa'}>
-    //     <VStack p={8} spacing={4}>
-    //         <Heading color={'gray.600'} >Sign in</Heading>
-    //         <FormControl isRequired>
-    //             <VStack>
-    //                 <FormLabel color={'gray.600'} w={'99%'}>Username</FormLabel>
-    //                 <Input type='username' name='username' value={values.username} placeholder='Enter your username' bg={'white'} onChange={(e)=>handleChange(e)} />
-    //                 <FormLabel color={'gray.600'} w={'99%'}>Password</FormLabel>
-    //                 <Input type='password' name='password' value={values.password} placeholder='Enter your password' bg={'white'} onChange={(e)=>handleChange(e)} />
-    //             </VStack>
-    //         </FormControl>
-    //         <HStack flexDirection={'row-reverse'} w={'100%'}><Link color={'gray.600'}>Forget Password?</Link></HStack>
-    //         <Spacer h={'30px'}/>
-    //         <Button w={'100%'} colorScheme='teal' isLoading={isLoading} onClick={()=>handleSubmit()} loadingText='Signing In'>Sign In</Button>
-    //     </VStack>
-    // </Box>
+    </Flex>
+
   )
 }
 

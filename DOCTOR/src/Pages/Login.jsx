@@ -1,115 +1,190 @@
-import React, { useState,useEffect } from 'react'
-import { HStack,Flex,Box,FormControl,FormLabel,FormErrorMessage,Image,FormHelperText, Heading,Input, Button,Spacer,Text, VStack,Link,Spinner,useToast } from '@chakra-ui/react';
-import  axios  from 'axios'
+import React, { useState, useEffect } from 'react';
+import {
+  Flex,
+  Box,
+  FormControl,
+  FormLabel,
+  Image,
+  Heading,
+  Input,
+  Button,
+  Spacer,
+  HStack,
+  Text,
+  VStack,
+  Divider,
+  useToast,
+} from '@chakra-ui/react';
+import { FcGoogle } from 'react-icons/fc';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import {getAuth, GoogleAuthProvider, signInWithPopup} from 'firebase/auth'
+// import app from '../firebasestorage/firebase';
 
 function Login() {
-  const toast=useToast();
-  const navigate=useNavigate();
-  const [isLoading,SetisLoading]=useState(false);
-  const [values,Setvalues]=useState({username:"",password:""});
+  const toast = useToast();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [values, setValues] = useState({ username: '', password: '' });
 
-  const handleChange=(e)=>{
-    Setvalues({...values,[e.target.name]:e.target.value})
-  }
-  useEffect(()=>{
-    if(localStorage.getItem('Jwt')&&localStorage.getItem('Id'))
-    {
-      navigate('/patient-login')
+  const handleChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem('Jwt') && localStorage.getItem('Id')) {
+      navigate('/patient-login');
     }
-  },[])
-  const handleSubmit=async()=>{
-    console.log(values)
-    SetisLoading(true);
+  }, []);
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    try {
+      const { username, password } = values;
+      if (username.length === 0 || password.length === 0) {
+        toast({
+          title: 'Fields should not be empty',
+          status: 'warning',
+          duration: 1200,
+          position: 'top',
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      const res = await axios.post('http://localhost:5000/doctor/login', { username, password });
+      if (res.data.msg === 'Username Found') {
+        localStorage.setItem('Jwt', res.data.jwt);
+        localStorage.setItem('Id', res.data.objectID);
+        localStorage.setItem('Photo', res.data.photo);
+        localStorage.setItem('Hospitalname', res.data.Hospitalname);
+        localStorage.setItem('HospitalLogo', res.data.HospitalLogo);
+        localStorage.setItem('DoctorName', res.data.DoctorName);
+        localStorage.setItem('DoctorDOB', res.data.DoctorDOB);
+
+        toast({
+          isClosable: true,
+          title: 'Access Granted',
+          status: 'success',
+          position: 'top',
+          duration: 1400,
+          onCloseComplete: () => {
+            navigate('/patient-login');
+          },
+        });
+        setValues({ username: '', password: '' });
+      } else {
+        toast({
+          title: 'Access Denied',
+          isClosable: true,
+          status: 'error',
+          position: 'top',
+        });
+      }
+    } catch (err) {
+      toast({
+        title: 'An error occurred',
+        description: 'Please try again later.',
+        status: 'error',
+        isClosable: true,
+        position: 'top',
+        duration: 1200,
+      });
+    }
+    setIsLoading(false);
+  };
+
+    const auth=getAuth();
+
+  const handleGoogleSignIn=async()=>{
+    const provider=new GoogleAuthProvider();
+    provider.setCustomParameters({prompt:"select_account"})
     try{
-      const {username,password}=values;
-      if(username.length===0)
-      {
-        toast({
-          title:"Field Should not empty",
-          status:"warning",
-          duration:1200,
-          position:"top"
-        })
-        SetisLoading(false)
-        return;
-      }
-      if(password.length===0)
-      {
-        toast({
-          title:"Field Should not empty",
-          status:"warning",
-          duration:1200,
-          position:"top"
-        })
-        SetisLoading(false)
-        return;
-      }
-      await axios.post("http://localhost:5000/doctor/login",{username,password})
-      .then((res)=>{
-        console.log(res);
-        if(res.data.msg==="Username Found")
-        {
-              localStorage.setItem('Jwt',res.data.jwt);
-              localStorage.setItem('Id',res.data.objectID);
-              localStorage.setItem('Photo',res.data.photo);
-              localStorage.setItem('Hospitalname',res.data.Hospitalname);
-              localStorage.setItem('HospitalLogo',res.data.HospitalLogo)
-              localStorage.setItem('DoctorName',res.data.DoctorName)
-              localStorage.setItem('DoctorDOB',res.data.DoctorDOB)
-          toast({
-            isClosable:true,
-            title:"Access Granted",
-            status:"success",
-            position:"top",
-            duration:1400,
-            onCloseComplete:()=>{
-              navigate('/patient-login');
-            }
-          })
-          Setvalues({username:"",password:""});
-        }
-        else
-        {
-          toast({
-            title:"Access Denied",
-            isClosable:true,
-            position:"top",
-          })
-        }
-      })
+      const result=await signInWithPopup(auth,provider)
+      console.log(result.user.email+" "+result.user.emailVerified)
     }
     catch(err)
     {
-      toast({
-        isClosable:true,
-        position:"top",
-        duration:1200,
-        
-      })
+      console.log(err)
     }
-    
-    SetisLoading(false);
   }
 
-  return (  
-    <Box w={'40%'} mx={'auto'} align={'center'} mt={'8%'} border={'2px'} borderColor={'gray.200'} borderRadius={10} bg={'#f6f8fa'}>
-        <VStack p={8} spacing={4}>
-            <Heading color={'gray.600'} >Sign in</Heading>
-            <FormControl isRequired>
-                <VStack>
-                    <FormLabel color={'gray.600'} w={'99%'}>Username</FormLabel>
-                    <Input type='email' name='username' value={values.username} placeholder='Enter your username' bg={'white'} onChange={(e)=>handleChange(e)} />
-                    <FormLabel color={'gray.600'} w={'99%'}>Password</FormLabel>
-                    <Input type='password' name='password' value={values.password} placeholder='Enter your password' bg={'white'} onChange={(e)=>handleChange(e)} />
-                </VStack>
-            </FormControl>
-            <HStack flexDirection={'row-reverse'} w={'100%'}><Link color={'gray.600'}>Forget Password?</Link></HStack>
-            <Spacer h={'30px'}/>
-            <Button w={'100%'} colorScheme='teal' isLoading={isLoading} onClick={()=>handleSubmit()} loadingText='Signing In'>Sign In</Button>
+  return (
+    <Flex align={'center'} justify={'center'} h={'100vh'} bgGradient="linear(to-r, teal.500, blue.500)">
+      <Box
+        w={{ base: '90%', md: '40%' }}
+        p={8}
+        borderRadius={10}
+        bg={'white'}
+        boxShadow={'2xl'}
+      >
+        <VStack spacing={6}>
+          <Heading color={'teal.700'}>Welcome Back</Heading>
+          <Text color={'gray.600'} fontSize={'lg'} textAlign={'center'}>
+            Sign in to your account and manage your patients effortlessly.
+          </Text>
+
+          <FormControl isRequired>
+            <VStack spacing={4} w={'100%'}>
+              <Box w={'100%'}>
+                <FormLabel color={'gray.600'}>Username</FormLabel>
+                <Input
+                  type="email"
+                  name="username"
+                  value={values.username}
+                  placeholder="Enter your username"
+                  bg={'gray.100'}
+                  borderColor={'teal.300'}
+                  _hover={{ borderColor: 'teal.500' }}
+                  onChange={handleChange}
+                />
+              </Box>
+
+              <Box w={'100%'}>
+                <FormLabel color={'gray.600'}>Password</FormLabel>
+                <Input
+                  type="password"
+                  name="password"
+                  value={values.password}
+                  placeholder="Enter your password"
+                  bg={'gray.100'}
+                  borderColor={'teal.300'}
+                  _hover={{ borderColor: 'teal.500' }}
+                  onChange={handleChange}
+                />
+              </Box>
+            </VStack>
+          </FormControl>
+
+          <Button
+            w={'100%'}
+            colorScheme="teal"
+            isLoading={isLoading}
+            onClick={handleSubmit}
+            loadingText="Signing In"
+          >
+            Sign In
+          </Button>
+
+          <HStack alignItems={'center'} w={'100%'}>
+            <Divider />
+            <Text color={'gray.500'}>or</Text>
+            <Divider />
+          </HStack>
+
+          <Button
+            w={'100%'}
+            variant="outline"
+            leftIcon={<FcGoogle />}
+            onClick={handleGoogleSignIn}
+            _hover={{ bg: 'gray.100' }}
+          >
+            Sign in with Google
+          </Button>
         </VStack>
-    </Box>
-  )
+      </Box>
+    </Flex>
+  );
 }
 
-export default Login
+export default Login;
