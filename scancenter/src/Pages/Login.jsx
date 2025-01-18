@@ -111,8 +111,7 @@ const handleGoogleSignIn=async()=>{
   provider.setCustomParameters({prompt:"select_account"})
   try{
     const result=await signInWithPopup(auth,provider)
-    console.log(result.user.email+" "+result.user.emailVerified)
-    await axios.post("http://localhost:5000/scancenter/googleauth",{ email:result.user.email })
+    await axios.post("http://localhost:5000/scancenter/googleauth",{ idToken:result._tokenResponse.idToken  })
       .then((res)=>{
         if(res.data.msg==="Username Found")
         {

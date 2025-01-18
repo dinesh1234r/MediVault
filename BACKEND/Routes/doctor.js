@@ -5,6 +5,7 @@ const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
 const Middleware=require('../Middleware/middleware');
 const AdminSchema=require('../Models/AdminSchema');
+const GoogleVerifyToken=require('../Middleware/GoogleVerifyToken')
 
 route.post('/login',async(req,res)=>{
     try{
@@ -51,7 +52,18 @@ route.post('/login',async(req,res)=>{
 
 route.post('/googleauth',async(req,res)=>{
     try{
-        const {email}=req.body;
+        const idToken = req.body.idToken;
+        if (!idToken) {
+            return res.status(400).json({ success: false, msg: "ID token is required" });
+          }
+        const result = await GoogleVerifyToken(idToken);
+        if(!result.success)
+        {
+            return res.json({
+                msg:"Google verification failed"
+            })
+        }
+        const email=result.decodedToken.email
         const check=await DoctorSchema.findOne({Email_Address:email});
         if(!check)
         {

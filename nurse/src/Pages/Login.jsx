@@ -111,12 +111,10 @@ const auth=getAuth();
     provider.setCustomParameters({prompt:"select_account"})
     try{
       const result=await signInWithPopup(auth,provider)
-      console.log(result.user.email+" "+result.user.emailVerified)
-      await axios.post("http://localhost:5000/nurse/googleauth",{ email:result.user.email })
+      await axios.post("http://localhost:5000/nurse/googleauth",{ idToken:result._tokenResponse.idToken  })
       .then((res)=>{
         if(res.data.msg==="Username Found")
         {
-          console.log(res.data)
           localStorage.setItem('Jwt',res.data.jwt);
           localStorage.setItem('Id',res.data.objectID);
           localStorage.setItem('Photo',res.data.photo);

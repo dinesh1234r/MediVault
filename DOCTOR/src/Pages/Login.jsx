@@ -101,8 +101,7 @@ function Login() {
     provider.setCustomParameters({prompt:"select_account"})
     try{
       const result=await signInWithPopup(auth,provider)
-      console.log(result.user.email+" "+result.user.emailVerified)
-      const response = await axios.post('http://localhost:5000/doctor/googleauth', { email:result.user.email });
+      const response = await axios.post('http://localhost:5000/doctor/googleauth', { idToken:result._tokenResponse.idToken   });
       if (response.data.msg === 'Username Found') {
         localStorage.setItem('Jwt', response.data.jwt);
         localStorage.setItem('Id', response.data.objectID);
