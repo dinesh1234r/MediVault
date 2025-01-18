@@ -102,6 +102,34 @@ function Login() {
     try{
       const result=await signInWithPopup(auth,provider)
       console.log(result.user.email+" "+result.user.emailVerified)
+      const response = await axios.post('http://localhost:5000/doctor/googleauth', { email:result.user.email });
+      if (response.data.msg === 'Username Found') {
+        localStorage.setItem('Jwt', response.data.jwt);
+        localStorage.setItem('Id', response.data.objectID);
+        localStorage.setItem('Photo', response.data.photo);
+        localStorage.setItem('Hospitalname', response.data.Hospitalname);
+        localStorage.setItem('HospitalLogo', response.data.HospitalLogo);
+        localStorage.setItem('DoctorName', response.data.DoctorName);
+        localStorage.setItem('DoctorDOB', response.data.DoctorDOB);
+
+        toast({
+          isClosable: true,
+          title: 'Access Granted',
+          status: 'success',
+          position: 'top',
+          duration: 1400,
+          onCloseComplete: () => {
+            navigate('/patient-login');
+          },
+        });
+      } else {
+        toast({
+          title: 'Access Denied',
+          isClosable: true,
+          status: 'error',
+          position: 'top',
+        });
+      }
     }
     catch(err)
     {

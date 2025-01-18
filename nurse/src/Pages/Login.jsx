@@ -112,6 +112,49 @@ const auth=getAuth();
     try{
       const result=await signInWithPopup(auth,provider)
       console.log(result.user.email+" "+result.user.emailVerified)
+      await axios.post("http://localhost:5000/nurse/googleauth",{ email:result.user.email })
+      .then((res)=>{
+        if(res.data.msg==="Username Found")
+        {
+          console.log(res.data)
+          localStorage.setItem('Jwt',res.data.jwt);
+          localStorage.setItem('Id',res.data.objectID);
+          localStorage.setItem('Photo',res.data.photo);
+          localStorage.setItem('Hospitalname',res.data.HospitalName);
+          localStorage.setItem('HospitalLogo',res.data.HospitalLogo)
+          localStorage.setItem('DoctorName',res.data.DoctorName)
+          localStorage.setItem('DoctorDOB',res.data.DoctorDOB)
+          toast({
+            title:res.data.msg,
+            isClosable:true,
+            position:"top",
+            duration:1200,
+            status:"success",
+        
+          })
+          navigate('/patient-login');
+              
+          Setvalues({username:"",password:""});
+        }
+        else
+        {
+          toast({
+            title:res.data.msg,
+            isClosable:true,
+            position:"top",
+            status:"error"
+          })
+        }
+      })
+      .catch((err=>{
+          toast({
+              title:"Error in Login nurse",
+              isClosable:true,
+              status:"error",
+              position:"top",
+              duration:1200,
+            })
+      }))
     }
     catch(err)
     {
