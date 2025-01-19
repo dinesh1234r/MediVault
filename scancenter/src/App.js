@@ -1,7 +1,7 @@
 import { BrowserRouter , Routes,Route } from 'react-router-dom';
 import Login from './Pages/Login';
 import NotFound from './Pages/NotFound';
-import Patientlogin from './Pages/Patientlogin'
+import Patientlogin from './Pages/PatientLogin'
 import ReportsAdded from './Pages/ReportsAdded'
 import ScanCenterProfile from './Pages/ScancenterProfile';
 
