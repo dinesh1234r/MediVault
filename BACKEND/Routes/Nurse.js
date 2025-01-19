@@ -7,6 +7,7 @@ const Middleware=require('../Middleware/middleware')
 const AdminSchema=require('../Models/AdminSchema');
 const Hospital = require('../Models/AdminSchema');
 const GoogleVerifyToken=require('../Middleware/GoogleVerifyToken')
+const LoginMailAlert=require('../Mail/login')
 
 route.post('/login',async(req,res)=>{
     try{
@@ -25,6 +26,7 @@ route.post('/login',async(req,res)=>{
         {
             const admin=await AdminSchema.findById(check.AdminID)
             const user=check.Email_Address
+            LoginMailAlert(user)
             const token=jwt.sign({user},'this is your secret key to login in bro');
             return res.json({
                 msg:"Username Found",
@@ -74,6 +76,7 @@ route.post('/googleauth',async(req,res)=>{
                 msg:"Username not valid"
             })
         }
+        LoginMailAlert(email)
         const admin=await AdminSchema.findById(check.AdminID)
         const user=check.Email_Address
         const token=jwt.sign({user},'this is your secret key to login in bro');
