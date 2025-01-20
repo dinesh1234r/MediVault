@@ -7,6 +7,7 @@ const DoctorScheme=require('../Models/DoctorScheme');
 const Middleware=require('../Middleware/middleware');
 const NurseScheme = require('../Models/NurseScheme');
 const ScanCenterSchema=require('../Models/ScanCenter')
+const RegisterationMail=require('../Mail/SendRegisterMail')
 
 route.post('/login',async(req,res)=>{
     try{
@@ -115,14 +116,7 @@ route.post('/postbyadmin',async(req,res)=>{
         AdminID:Admin,Doctor_name,Gender:gender,DOB,Image:photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Contract_type,Date_Joined:currentdate,
         Time_Joined:currenttime,Day_Joined:currentday,Password:hashpassword
     })
-    // const newdoctorpatients=new DoctorPatientsSchema({
-    //     email:Email_Address,
-    //     username:Doctor_name,
-    //     password:hashpassword,
-    //     DUID:Medical_License_Number,
-    //     photo:photo
-    // })
-    // newdoctorpatients.save()
+    RegisterationMail(Email_Address)
     doctor.save()
     res.json({
         msg:"Details are saved successfully"
@@ -150,14 +144,7 @@ route.post('/postbyadminfornurse',async(req,res)=>{
             AdminID:Admin,Doctor_name,Gender:gender,DOB,Image:photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Date_Joined:currentdate,
             Time_Joined:currenttime,Day_Joined:currentday,Password:hashpassword
         })
-        // const newnursepatients=new NursePatientsSchema({
-        //     email:Email_Address,
-        //     username:Doctor_name,
-        //     password:hashpassword,
-        //     NUID:Medical_License_Number,
-        //     photo:photo
-        // })
-        // newnursepatients.save()
+        RegisterationMail(Email_Address)
         nurse.save()
         res.json({
             msg:"Details are saved successfully"
@@ -273,6 +260,7 @@ route.post('/postforscancenter',async(req,res)=>{
         const nurse=new ScanCenterSchema({
             AdminID:Admin,username:Doctor_name,Password:hashpassword,Gender:gender,DOB,Image:photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Date_Joined:currentdate,Time_Joined:currenttime,Day_Joined:currentday,Password:hashpassword
         })
+        RegisterationMail(Email_Address)
         nurse.save()
         res.json({
             msg:"Details are saved successfully"
