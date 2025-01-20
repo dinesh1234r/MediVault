@@ -29,6 +29,8 @@ const PatientDetailsPage = () => {
   const [pdf, Setpdf] = useState(null);
   const [saving, Setsaving] = useState({});
   const [pdfFiles, setPdfFiles] = useState([]);
+  const [age, setAge] = useState(null);
+  const dob=JSON.parse(localStorage.getItem('patient')).DOB;
 
   // Fetch patient details on mount
   useEffect(() => {
@@ -64,6 +66,20 @@ const PatientDetailsPage = () => {
       }
     };
     fetchDetails();
+
+    const calculateAge=()=>{
+      const date=new Date();
+      const birth=new Date(dob);
+      let age=date.getFullYear()-birth.getFullYear();
+      let month=date.getMonth()-birth.getMonth();
+      if(month<0||(month===0&&date.getDate()<birth.getDate()))
+      {
+          age--;
+      }
+      setAge(age);
+  }
+
+  calculateAge();
   }, []);
 
   const handleFileChange = (e) => {
@@ -195,7 +211,7 @@ const PatientDetailsPage = () => {
               <strong>Name:</strong> {JSON.parse(localStorage.getItem("patient")).Name}
             </Text>
             <Text>
-              <strong>Age:</strong> {today.age || "N/A"}
+              <strong>Age:</strong> {age || "N/A"}
             </Text>
             <Text>
               <strong>Disease:</strong> {today.disease || "N/A"}
@@ -206,12 +222,12 @@ const PatientDetailsPage = () => {
           </VStack>
 
           {/* Note Box */}
-          <Textarea
+          {/* <Textarea
             value={today.notes || "No notes available."}
             isReadOnly
             placeholder="Note"
             bg="gray.100"
-          />
+          /> */}
 
           {/* File Upload */}
           <HStack>
@@ -255,11 +271,11 @@ const PatientDetailsPage = () => {
 
           {/* Actions */}
           <HStack justifyContent="space-between">
+          <Button colorScheme="red" onClick={handleLogout}>
+              Logout
+            </Button>
             <Button colorScheme="blue" onClick={handleReport}>
               Save Report
-            </Button>
-            <Button colorScheme="red" onClick={handleLogout}>
-              Logout
             </Button>
           </HStack>
         </VStack>

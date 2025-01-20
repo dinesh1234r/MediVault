@@ -226,7 +226,8 @@ const PatientHistory = () => {
             'Authorization':`Bearer ${localStorage.getItem('Jwt')}`,
             'Content-Type': 'application/json'
           }
-        })
+        }
+      )
       if(response.data.msg==="Precription added successfully")
       {
           toast({
@@ -235,7 +236,6 @@ const PatientHistory = () => {
               duration:1200,
               status:"success"
           })
-          // setMedicines([])
       }
       else
       {
@@ -521,7 +521,8 @@ const PatientHistory = () => {
                   <option value="After Food">After Food</option>
                 </Select>
               </HStack>
-              <HStack mt={2} spacing={4} flexDir={'row-reverse'}>
+              <HStack mt={2} spacing={4} >
+                <Spacer/>
                 <Button
                   colorScheme={newMedicine.morning ? "teal" : "gray"}
                   onClick={() =>

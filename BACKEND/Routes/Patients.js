@@ -75,8 +75,6 @@ route.post('/login',Middleware,async(req,res)=>{
 route.post('/entrypatient',Middleware,async(req,res)=>{
     try{
         const {_id,vitals,disease}=req.body;
-        // const currentDate = new Date().toLocaleDateString();
-        // const obj={Empty:empty}
         const result=await PatientSchemas.findByIdAndUpdate(_id,{
             $push:{
                 History:{
@@ -201,6 +199,7 @@ route.post('/updateprecription',Middleware,async(req,res)=>{
         const {_id,preciption,Doctor}=req.body;
         const doctor=await DoctorSchema.findById(Doctor);
         const hospital=await AdminSchema.findById(doctor.AdminID)
+        
         const result=await PatientSchemas.findOneAndUpdate({_id,
             'History.Date':simpleFormattedDate
         },
@@ -211,6 +210,7 @@ route.post('/updateprecription',Middleware,async(req,res)=>{
             }
         }
         )
+        
         if(result)
         {
             res.json({

@@ -15,7 +15,7 @@ import {
   useColorModeValue,
   Flex,
 } from "@chakra-ui/react";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon,AddIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -27,6 +27,8 @@ const NurseEntryPage = () => {
   const [value, Setvalue] = useState("");
   const [vitals, Setvitals] = useState({});
   const [patient, setPatient] = useState({});
+  const dob=JSON.parse(localStorage.getItem('patient')).DOB;
+  const [age, setAge] = useState(null);
 
   useEffect(() => {
     // Fetch patient details after face recognition
@@ -42,6 +44,20 @@ const NurseEntryPage = () => {
       });
       navigate("/home");
     }
+
+    const calculateAge=()=>{
+      const date=new Date();
+      const birth=new Date(dob);
+      let age=date.getFullYear()-birth.getFullYear();
+      let month=date.getMonth()-birth.getMonth();
+      if(month<0||(month===0&&date.getDate()<birth.getDate()))
+      {
+          age--;
+      }
+      setAge(age);
+  }
+
+calculateAge();
   }, [toast, navigate]);
 
   const saving = () => {
@@ -150,7 +166,7 @@ const NurseEntryPage = () => {
               <strong>Name:</strong> {JSON.parse(localStorage.getItem("patient")).Name || "N/A"}
             </Text>
             <Text>
-              <strong>Age:</strong> {patient.age || "N/A"}
+              <strong>Age:</strong> {age || "N/A"}
             </Text>
           </Box>
 
@@ -178,9 +194,14 @@ const NurseEntryPage = () => {
                 value={value}
                 onChange={(e) => Setvalue(e.target.value)}
               />
-              <Button colorScheme="teal" onClick={saving}>
+              <IconButton
+                      colorScheme="teal"
+                      icon={<AddIcon />}
+                      onClick={saving}
+              />
+              {/* <Button colorScheme="teal" onClick={saving}>
                 Add
-              </Button>
+              </Button> */}
             </HStack>
 
             {/* List of Vitals */}
@@ -213,11 +234,11 @@ const NurseEntryPage = () => {
 
           {/* Actions */}
           <HStack justifyContent="space-between">
-            <Button colorScheme="blue" onClick={handledata}>
-              Submit Entry
-            </Button>
             <Button colorScheme="red" onClick={handlelogout}>
               Logout
+            </Button>
+            <Button colorScheme="blue" onClick={handledata}>
+              Submit Entry
             </Button>
           </HStack>
         </VStack>

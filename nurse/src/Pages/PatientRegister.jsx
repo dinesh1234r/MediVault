@@ -16,6 +16,7 @@ import Webcam from "react-webcam";
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../firebasestorage/firebase';
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const PatientRegistration = () => {
   const toast = useToast();
@@ -31,6 +32,8 @@ const PatientRegistration = () => {
   const [image1, setImage1] = useState("");
   const [url1, setUrl1] = useState("");
   const webcamRef1 = useRef(null);
+
+  const navigate=useNavigate()
 
   // Function to handle input changes
   const handleDrawerChange = (e) => {
@@ -261,8 +264,10 @@ const PatientRegistration = () => {
         {/* Submit Form */}
         
         <HStack spacing={4} width="full" >
-        <Button colorScheme="red"  >
-          Cancel 
+        <Button colorScheme="red" onClick={()=>{
+          navigate('/patient-login')
+        }}>
+          Logout 
         </Button>
         <Spacer/>
         <Button colorScheme="green" onClick={handleSubmitDrawer}>
