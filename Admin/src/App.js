@@ -10,6 +10,7 @@ import CreateDoctor from './Pages/CreateDoctor';
 import CreateNurse from './Pages/CreateNurse'
 import CreateScancenter from './Pages/CreateScancenter'
 import Settings from './Pages/Settings'
+import Form from './Pages/Form'
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path='/create-nurse' element={<CreateNurse/>} />
           <Route path='/create-scancenter' element={<CreateScancenter/>} />
           <Route path='/settings' element={<Settings/>} />
+          <Route path='/form' element={<Form/>} />
           <Route path='/*' element={<NotFound/>} />
         </Routes>
     </BrowserRouter>
