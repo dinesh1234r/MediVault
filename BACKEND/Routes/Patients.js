@@ -11,13 +11,13 @@ const month = String(currentDate.getMonth() + 1).padStart(2, '0');
 const year = currentDate.getFullYear();
 const Middleware=require('../Middleware/middleware')
 const simpleFormattedDate = `${day}/${month}/${year}`; 
-
+const GoogleVerifyToken=require('../Middleware/GoogleVerifyToken')
 
 route.post('/register',Middleware,async(req,res)=>{
     try{
-        const {Name,Address,Aadhar,Mobile_no,Photo,DOB}=req.body;
+        const {Name,Address,Aadhar,Mobile_no,Photo,DOB,Email}=req.body;
         const patient=new PatientSchemas({
-            Name,Address,Mobile_no,Aadhar,Photo,DOB,
+            Name,Address,Mobile_no,Aadhar,Photo,DOB,Email,
             History:[]
         })
         await patient.save();
@@ -101,6 +101,37 @@ route.post('/loginforpatient',async(req,res)=>{
         }
         return res.json({
             msg:"No face found"
+        })
+    }
+    catch(err)
+    {
+        res.json({
+            msg:"Error occurred in patients login"
+        })
+    }
+})
+
+route.post('/googleauth',async(req,res)=>{
+    try{
+        const idToken = req.body.idToken;
+        if (!idToken) {
+            return res.status(400).json({ success: false, msg: "ID token is required" });
+        }
+        const result = await GoogleVerifyToken(idToken);
+        if(!result.success)
+        {
+            return res.json({
+                msg:"Google verification failed"
+            })
+        }
+        const email=result.decodedToken.email
+        const patients=await PatientSchemas.find({Email:email}).select('-History');
+        if(patients)
+        {
+            return res.json({ msg: 'Username Found', result: patients });
+        }
+        return res.json({
+            msg:"User Not Found"
         })
     }
     catch(err)

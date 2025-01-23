@@ -58,12 +58,8 @@ const FaceRecognitionPage = () => {
     const downloadUrl = await uploadImage(image); 
     console.log(downloadUrl)
     try {
-      const response = await axios.post('http://localhost:5000/patient/loginforpatient', { image: downloadUrl },{
-        headers:{
-          'Authorization':`Bearer ${localStorage.getItem('Jwt')}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await axios.post('http://localhost:5000/patient/loginforpatient', { image: downloadUrl }
+      );
       if (response.data.msg === "Faces match!") {
         localStorage.setItem('patient', JSON.stringify(response.data.result));
         toast({
@@ -108,17 +104,11 @@ const FaceRecognitionPage = () => {
     provider.setCustomParameters({prompt:"select_account"})
     try{
       const result=await signInWithPopup(auth,provider)
-      await axios.post("http://localhost:5000/nurse/googleauth",{ idToken:result._tokenResponse.idToken  })
+      await axios.post("http://localhost:5000/patient/googleauth",{ idToken:result._tokenResponse.idToken  })
       .then((res)=>{
         if(res.data.msg==="Username Found")
         {
-          localStorage.setItem('Jwt',res.data.jwt);
-          localStorage.setItem('Id',res.data.objectID);
-          localStorage.setItem('Photo',res.data.photo);
-          localStorage.setItem('Hospitalname',res.data.HospitalName);
-          localStorage.setItem('HospitalLogo',res.data.HospitalLogo)
-          localStorage.setItem('DoctorName',res.data.DoctorName)
-          localStorage.setItem('DoctorDOB',res.data.DoctorDOB)
+          localStorage.setItem('patient', JSON.stringify(res.data.result));
           toast({
             title:res.data.msg,
             isClosable:true,
@@ -127,7 +117,7 @@ const FaceRecognitionPage = () => {
             status:"success",
         
           })
-          navigate('/patient-login');
+          navigate('/history');
               
         //   Setvalues({username:"",password:""});
         }

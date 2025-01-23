@@ -27,6 +27,7 @@ const PatientRegistration = () => {
     address: "",
     phone: "",
     dob: "",
+    email:""
   });
 
   const [image1, setImage1] = useState("");
@@ -35,18 +36,15 @@ const PatientRegistration = () => {
 
   const navigate=useNavigate()
 
-  // Function to handle input changes
   const handleDrawerChange = (e) => {
     setPatient({ ...patient, [e.target.name]: e.target.value });
   };
 
-  // Capture image from webcam
   const capture = () => {
     const imageSrc = webcamRef1.current.getScreenshot();
     setImage1(imageSrc);
   };
 
-  // Upload the captured image to Firebase Storage
   const handleUpload = async () => {
     if (!image1) {
       toast({
@@ -93,9 +91,9 @@ const PatientRegistration = () => {
 
   // Submit patient details to the server
   const handleSubmitDrawer = async () => {
-    const { name, aadhar, address, phone, dob } = patient;
+    const { name, aadhar, address, phone, dob ,email} = patient;
 
-    if (!name || !aadhar || !address || !phone || !dob || !url1) {
+    if (!name || !aadhar || !address || !phone || !dob || !url1||!email) {
       toast({
         title: "Please fill all fields and upload the photo.",
         status: "warning",
@@ -115,6 +113,7 @@ const PatientRegistration = () => {
           Mobile_no: phone,
           Photo: url1,
           DOB: dob,
+          Email: email
         },
         {
           headers: {
@@ -193,6 +192,17 @@ const PatientRegistration = () => {
             value={patient.address}
             onChange={handleDrawerChange}
             placeholder="Enter address"
+          />
+        </FormControl>
+
+        <FormControl isRequired>
+          <FormLabel>Email</FormLabel>
+          <Input
+            name="email"
+            value={patient.email}
+            onChange={handleDrawerChange}
+            placeholder="Enter 10-digit phone number"
+            type="tel"
           />
         </FormControl>
 

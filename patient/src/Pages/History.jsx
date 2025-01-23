@@ -196,7 +196,7 @@ const PatientHistory = () => {
     >
       Filter
     </Button>
-          <Button colorScheme="red" onClick={() =>{localStorage.removeItem("patient");navigate("/patient-login");}}>
+          <Button colorScheme="red" onClick={() =>{localStorage.removeItem("patient");navigate("/");}}>
             Logout
           </Button>
         </HStack>

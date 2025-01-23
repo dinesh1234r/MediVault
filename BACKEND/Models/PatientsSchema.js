@@ -5,6 +5,7 @@ const PatientScheme=new mongoose.Schema({
     Aadhar:String,
     Address:String,
     DOB:String,
+    Email:String,
     Mobile_no:String,
     Photo:String,
     History:[{
