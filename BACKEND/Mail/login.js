@@ -35,7 +35,7 @@ const LoginMailAlert=async(email)=>{
         console.log('Email sent successfully:', info.response);
       } catch (error) {
         console.error('Error sending email:', error);
-        res.status(500).json({ error: 'Failed to send email.', details: error.message });
+        // res.json({ msg: 'Failed to send email.', details: error.message });
       }
 }
 

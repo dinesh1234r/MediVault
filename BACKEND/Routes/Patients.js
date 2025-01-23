@@ -72,6 +72,45 @@ route.post('/login',Middleware,async(req,res)=>{
     }
 })
 
+route.post('/loginforpatient',async(req,res)=>{
+    try{
+        const {image}=req.body;
+        const patients=await PatientSchemas.find().select('-History');
+        const apiKey = 'Sx_t147Y0IKXA1u8mpdAir9B9MXAQeHd';
+        const apiSecret = 'e3DnUBVx54liPHCvy7yer0_dunF7K_-t';
+        const url = 'https://api-us.faceplusplus.com/facepp/v3/compare';
+        for(let patient of patients)
+        {
+            const formData = {
+                api_key: apiKey,
+                api_secret: apiSecret,
+                image_url1: image,
+                image_url2: patient.Photo,
+              };
+
+              const response = await axios.post(url, qs.stringify(formData), {
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+              });
+        
+              const confidence = response.data.confidence;
+              if (confidence > 80) {
+                return res.json({ msg: 'Faces match!', result: patient });
+              }
+        }
+        return res.json({
+            msg:"No face found"
+        })
+    }
+    catch(err)
+    {
+        res.json({
+            msg:"Error occurred in patients login"
+        })
+    }
+})
+
 route.post('/entrypatient',Middleware,async(req,res)=>{
     try{
         const {_id,vitals,disease}=req.body;
