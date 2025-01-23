@@ -1,5 +1,5 @@
 {
-  "name": "nurse",
+  "name": "patient",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

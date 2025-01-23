@@ -206,7 +206,7 @@ const PatientHistory = () => {
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Filter by Disease</ModalHeader> {/* Modified name to reflect single disease selection */}
+          <ModalHeader>Filter by Disease</ModalHeader> 
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={4} align="stretch">
