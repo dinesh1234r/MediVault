@@ -58,10 +58,12 @@ const FaceRecognitionPage = () => {
     const downloadUrl = await uploadImage(image); 
     console.log(downloadUrl)
     try {
+      
       const response = await axios.post('http://localhost:5000/patient/loginforpatient', { image: downloadUrl }
       );
       if (response.data.msg === "Faces match!") {
         localStorage.setItem('patient', JSON.stringify(response.data.result));
+        localStorage.setItem('Jwt',response.data.token)
         toast({
           title: response.data.msg,
           status: "success",
@@ -104,11 +106,13 @@ const FaceRecognitionPage = () => {
     provider.setCustomParameters({prompt:"select_account"})
     try{
       const result=await signInWithPopup(auth,provider)
+      console.log(result._tokenResponse.idToken)
       await axios.post("http://localhost:5000/patient/googleauth",{ idToken:result._tokenResponse.idToken  })
       .then((res)=>{
         if(res.data.msg==="Username Found")
         {
           localStorage.setItem('patient', JSON.stringify(res.data.result));
+        localStorage.setItem('Jwt',res.data.token)
           toast({
             title:res.data.msg,
             isClosable:true,
@@ -119,7 +123,6 @@ const FaceRecognitionPage = () => {
           })
           navigate('/history');
               
-        //   Setvalues({username:"",password:""});
         }
         else
         {

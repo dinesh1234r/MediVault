@@ -12,6 +12,7 @@ const year = currentDate.getFullYear();
 const Middleware=require('../Middleware/middleware')
 const simpleFormattedDate = `${day}/${month}/${year}`; 
 const GoogleVerifyToken=require('../Middleware/GoogleVerifyToken')
+const jwt=require('jsonwebtoken');
 
 route.post('/register',Middleware,async(req,res)=>{
     try{
@@ -96,7 +97,8 @@ route.post('/loginforpatient',async(req,res)=>{
         
               const confidence = response.data.confidence;
               if (confidence > 80) {
-                return res.json({ msg: 'Faces match!', result: patient });
+                const token=jwt.sign({email:patient.Email},'this is your secret key to login in bro');
+                return res.json({ msg: 'Faces match!', result: patient ,token});
               }
         }
         return res.json({
@@ -125,10 +127,11 @@ route.post('/googleauth',async(req,res)=>{
             })
         }
         const email=result.decodedToken.email
-        const patients=await PatientSchemas.find({Email:email}).select('-History');
+        const patients=await PatientSchemas.findOne({Email:email}).select('-History');
         if(patients)
         {
-            return res.json({ msg: 'Username Found', result: patients });
+            const token=jwt.sign({email},'this is your secret key to login in bro');
+            return res.json({ msg: 'Username Found', result: patients ,token });
         }
         return res.json({
             msg:"User Not Found"
