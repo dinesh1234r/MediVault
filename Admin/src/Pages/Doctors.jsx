@@ -103,7 +103,7 @@ const DoctorList = () => {
 
   const fetchdetails=async()=>{
     const Admin=localStorage.getItem('ID');
-    const response=await axios.post('http://localhost:5000/admin/getalldetailsofdoctor',{Admin},{
+    const response=await axios.post('https://medivault.onrender.com/admin/getalldetailsofdoctor',{Admin},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'
@@ -141,7 +141,7 @@ const DoctorList = () => {
   }
 
   const handlesubmit=async()=>{
-    const response=await axios.post("http://localhost:5000/admin/deletedetail",{Medical_License_Number:medicalnum},{
+    const response=await axios.post("https://medivault.onrender.com/admin/deletedetail",{Medical_License_Number:medicalnum},{
       headers:{
         'Authorization':`Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'

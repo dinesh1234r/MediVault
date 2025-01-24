@@ -105,7 +105,7 @@ const PatientRegistration = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/patient/register",
+        "https://medivault.onrender.com/patient/register",
         {
           Name: name,
           Address: address,

@@ -85,7 +85,7 @@ const AddHospitalForm = () => {
 
             // Step 4: Send data to the backend
             const response = await axios.post(
-              "http://localhost:5000/hospitalmanagement/addhospitals",
+              "https://medivault.onrender.com/hospitalmanagement/addhospitals",
               updatedFormData
             );
 

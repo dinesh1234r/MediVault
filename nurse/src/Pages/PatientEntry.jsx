@@ -85,7 +85,7 @@ calculateAge();
     try {
       const _id = patient._id;
       const response = await axios.post(
-        "http://localhost:5000/patient/entrypatient",
+        "https://medivault.onrender.com/patient/entrypatient",
         { _id, disease, vitals },
         {
           headers: {

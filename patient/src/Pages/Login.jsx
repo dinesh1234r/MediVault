@@ -59,7 +59,7 @@ const FaceRecognitionPage = () => {
     console.log(downloadUrl)
     try {
       
-      const response = await axios.post('http://localhost:5000/patient/loginforpatient', { image: downloadUrl }
+      const response = await axios.post('https://medivault.onrender.com/patient/loginforpatient', { image: downloadUrl }
       );
       if (response.data.msg === "Faces match!") {
         localStorage.setItem('patient', JSON.stringify(response.data.result));
@@ -107,7 +107,7 @@ const FaceRecognitionPage = () => {
     try{
       const result=await signInWithPopup(auth,provider)
       console.log(result._tokenResponse.idToken)
-      await axios.post("http://localhost:5000/patient/googleauth",{ idToken:result._tokenResponse.idToken  })
+      await axios.post("https://medivault.onrender.com/patient/googleauth",{ idToken:result._tokenResponse.idToken  })
       .then((res)=>{
         if(res.data.msg==="Username Found")
         {

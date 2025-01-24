@@ -37,7 +37,7 @@ const PatientDetailsPage = () => {
     const fetchDetails = async () => {
       const _id = JSON.parse(localStorage.getItem("patient"))._id;
       const response = await axios.post(
-        "http://localhost:5000/patient/entryreport",
+        "https://medivault.onrender.com/patient/entryreport",
         { _id },
         {
           headers: {
@@ -143,7 +143,7 @@ const PatientDetailsPage = () => {
     try {
       const _id = JSON.parse(localStorage.getItem("patient"))._id;
       const response = await axios.post(
-        "http://localhost:5000/patient/updatereport",
+        "https://medivault.onrender.com/patient/updatereport",
         { _id, report: saving },
         {
           headers: {

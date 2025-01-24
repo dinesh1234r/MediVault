@@ -52,7 +52,7 @@ function Login() {
         return;
       }
 
-      const res = await axios.post('http://localhost:5000/doctor/login', { username, password });
+      const res = await axios.post('https://medivault.onrender.com/doctor/login', { username, password });
       if (res.data.msg === 'Username Found') {
         localStorage.setItem('Jwt', res.data.jwt);
         localStorage.setItem('Id', res.data.objectID);
@@ -101,7 +101,7 @@ function Login() {
     provider.setCustomParameters({prompt:"select_account"})
     try{
       const result=await signInWithPopup(auth,provider)
-      const response = await axios.post('http://localhost:5000/doctor/googleauth', { idToken:result._tokenResponse.idToken   });
+      const response = await axios.post('https://medivault.onrender.com/doctor/googleauth', { idToken:result._tokenResponse.idToken   });
       if (response.data.msg === 'Username Found') {
         localStorage.setItem('Jwt', response.data.jwt);
         localStorage.setItem('Id', response.data.objectID);

@@ -66,7 +66,7 @@ const PatientHistory = () => {
       try {
         const _id = JSON.parse(localStorage.getItem("patient"))._id;
         const response = await axios.post(
-          "http://localhost:5000/patient/history",
+          "https://medivault.onrender.com/patient/history",
           { _id },
           {
             headers: {
@@ -161,7 +161,7 @@ const PatientHistory = () => {
     try {
       const _id = JSON.parse(localStorage.getItem("patient"))._id;
       const response = await axios.post(
-        "http://localhost:5000/patient/notesadded",
+        "https://medivault.onrender.com/patient/notesadded",
         { _id, notes },
         {
           headers: {
@@ -221,7 +221,7 @@ const PatientHistory = () => {
       const _id=JSON.parse(localStorage.getItem('patient'))._id
       const Doctor=localStorage.getItem('Id')
       console.log(medicines)
-      const response=await axios.post('http://localhost:5000/patient/updateprecription',{_id,preciption:medicines,Doctor},{
+      const response=await axios.post('https://medivault.onrender.com/patient/updateprecription',{_id,preciption:medicines,Doctor},{
           headers:{
             'Authorization':`Bearer ${localStorage.getItem('Jwt')}`,
             'Content-Type': 'application/json'
@@ -303,7 +303,7 @@ const PatientHistory = () => {
   const updateDisease=async()=>{
     try{
       const _id=JSON.parse(localStorage.getItem('patient'))._id
-      const response=await axios.post('http://localhost:5000/patient/updatedisease',{_id,disease:todayDisease},{
+      const response=await axios.post('https://medivault.onrender.com/patient/updatedisease',{_id,disease:todayDisease},{
         headers:{
           'Authorization':`Bearer ${localStorage.getItem('Jwt')}`,
           'Content-Type': 'application/json'

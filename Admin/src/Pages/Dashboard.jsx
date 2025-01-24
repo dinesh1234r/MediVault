@@ -42,7 +42,7 @@ const AdminDashboard = () => {
     const fetchcount=async()=>{
       try{
         const id=localStorage.getItem('ID')
-        const response=await axios.post("http://localhost:5000/admin/getcount",{id});
+        const response=await axios.post("https://medivault.onrender.com/admin/getcount",{id});
         if(response.data.msg==="Count received")
         {
           const doctors=response.data.Doctors;

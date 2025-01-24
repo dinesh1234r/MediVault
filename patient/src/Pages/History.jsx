@@ -61,7 +61,7 @@ const PatientHistory = () => {
       try {
         const _id = JSON.parse(localStorage.getItem("patient"))._id;
         const response = await axios.post(
-          "http://localhost:5000/patient/history",
+          "https://medivault.onrender.com/patient/history",
           { _id },
           {
             headers: {

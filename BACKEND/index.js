@@ -1,8 +1,8 @@
 const express=require('express')
 const mongoose=require('mongoose')
 const app=express();
-// const URI='mongodb+srv://root1:jocker22.dk@cluster01.watow3c.mongodb.net/';
-const URI="mongodb://localhost:27017/"
+const URI='mongodb+srv://root1:jocker22.dk@cluster01.watow3c.mongodb.net/';
+// const URI="mongodb://localhost:27017/"
 const cors=require('cors');
 const Admin=require('./Routes/admin')
 const Doctor=require('./Routes/doctor')

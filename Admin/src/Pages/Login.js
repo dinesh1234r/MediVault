@@ -49,7 +49,7 @@ const AdminLogin = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5000/admin/login", {
+      const response = await axios.post("https://medivault.onrender.com/admin/login", {
         adminuser: email, // assuming `adminuser` is used as the identifier in your backend
         password,
       });
@@ -98,7 +98,7 @@ const AdminLogin = () => {
     try{
       const result=await signInWithPopup(auth,provider)
       console.log(result._tokenResponse.idToken)
-      const response = await axios.post('http://localhost:5000/admin/googleauth', { idToken:result._tokenResponse.idToken   });
+      const response = await axios.post('https://medivault.onrender.com/admin/googleauth', { idToken:result._tokenResponse.idToken   });
       if (response.data.msg === 'Access Granted') {
         localStorage.setItem("jwt", response.data.token);
         localStorage.setItem("ID",response.data.ID);

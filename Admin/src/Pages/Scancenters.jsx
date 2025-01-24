@@ -61,7 +61,7 @@ const ScanCenterList = () => {
     const admin = localStorage.getItem('ID');
     try {
       const response = await axios.post(
-        'http://localhost:5000/admin/getallScancenter',
+        'https://medivault.onrender.com/admin/getallScancenter',
         { Admin: admin },
         {
           headers: {
@@ -118,7 +118,7 @@ const ScanCenterList = () => {
   const handleDeleteSubmit = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:5000/admin/deletescancenter',
+        'https://medivault.onrender.com/admin/deletescancenter',
         { UID: licenseToDelete },
         {
           headers: {

@@ -49,7 +49,7 @@ const DoctorProfile = () => {
   const handleChangePassword = async() => {
     try{
       const objectID=localStorage.getItem('Id')
-      const response=await axios.post("http://localhost:5000/doctor/passchange",{objectID,newpass,oldpass})
+      const response=await axios.post("https://medivault.onrender.com/doctor/passchange",{objectID,newpass,oldpass})
       if(response.data.msg==="Password change Successfully")
       {
           alert(response.data.msg);

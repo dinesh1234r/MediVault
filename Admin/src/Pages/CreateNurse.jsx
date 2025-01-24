@@ -38,7 +38,7 @@ const AddNurse = () => {
         return;
       }
       const Admin=localStorage.getItem('ID');
-      const response = await axios.post('http://localhost:5000/admin/postbyadminfornurse', {
+      const response = await axios.post('https://medivault.onrender.com/admin/postbyadminfornurse', {
         Admin,gender, ...values, photo
       }, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt')}`, 'Content-Type': 'application/json' }

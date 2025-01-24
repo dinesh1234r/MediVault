@@ -48,7 +48,7 @@ function Login() {
           SetisLoading(false)
           return;
         }
-      await axios.post("http://localhost:5000/nurse/login",{username,password})
+      await axios.post("https://medivault.onrender.com/nurse/login",{username,password})
       .then((res)=>{
         if(res.data.msg==="Username Found")
         {
@@ -111,7 +111,7 @@ const auth=getAuth();
     provider.setCustomParameters({prompt:"select_account"})
     try{
       const result=await signInWithPopup(auth,provider)
-      await axios.post("http://localhost:5000/nurse/googleauth",{ idToken:result._tokenResponse.idToken  })
+      await axios.post("https://medivault.onrender.com/nurse/googleauth",{ idToken:result._tokenResponse.idToken  })
       .then((res)=>{
         if(res.data.msg==="Username Found")
         {

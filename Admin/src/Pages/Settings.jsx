@@ -41,7 +41,7 @@ const SettingsPage = () => {
   const handleSave = async() => {
     try{
       const id=localStorage.getItem("ID");
-      const response=await axios.post("http://localhost:5000/admin/passwordchange",{
+      const response=await axios.post("https://medivault.onrender.com/admin/passwordchange",{
         oldPassword,newPassword,id
       })
       if(response.data.msg==="PasswordChanged")

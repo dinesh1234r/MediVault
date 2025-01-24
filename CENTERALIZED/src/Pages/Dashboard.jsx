@@ -37,7 +37,7 @@ const HospitalTable = () => {
   useEffect(() => {
     const fetchHospitals = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/hospitalmanagement/gethospitals");
+        const response = await axios.get("https://medivault.onrender.com/hospitalmanagement/gethospitals");
         setHospitals(response.data.hospitals); 
         setIsLoading(false);
       } catch (error) {
