@@ -8,6 +8,7 @@ const Middleware=require('../Middleware/middleware');
 const NurseScheme = require('../Models/NurseScheme');
 const ScanCenterSchema=require('../Models/ScanCenter')
 const RegisterationMail=require('../Mail/SendRegisterMail')
+const GoogleVerifyToken=require('../Middleware/GoogleVerifyToken')
 
 route.post('/login',async(req,res)=>{
     try{
@@ -37,6 +38,47 @@ route.post('/login',async(req,res)=>{
             msg:"Wrong Password"
         })
     }
+    }
+    catch(err){
+        return res.json({
+            msg:"Error Occured in Admin Login"
+        })
+    }
+})
+
+
+route.post('/googleauth',async(req,res)=>{
+    try{
+        const idToken = req.body.idToken;
+        if (!idToken) {
+            return res.json({ success: false, msg: "ID token is required" });
+          }
+        const result = await GoogleVerifyToken(idToken);
+        if(!result.success)
+        {
+            return res.json({
+                msg:"Google verification failed"
+            })
+        }
+        const email=result.decodedToken.email
+       
+    const Admin=await AdminScheme.findOne({email})
+     console.log(Admin)
+    if(!Admin)
+    {
+        return res.json({
+            msg:"You are Not Authorized"
+        })
+    }
+    const token=jwt.sign({Email:Admin.email},'this is your secret key to login in bro')
+    
+        return res.json({
+            msg:"Access Granted",
+            token:token,
+            ID:Admin._id,
+            Image:Admin.logo,
+            HospitalName:Admin.hospitalName
+        })
     }
     catch(err){
         return res.json({

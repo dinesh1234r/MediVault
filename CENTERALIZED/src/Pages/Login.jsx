@@ -14,10 +14,14 @@ import {
   useToast,
   Spinner,
   Fade,
-  ScaleFade
+  Divider,
+  ScaleFade,
+  HStack
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { FcGoogle } from 'react-icons/fc';
+import {getAuth, GoogleAuthProvider, signInWithPopup} from 'firebase/auth'
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -80,6 +84,42 @@ const AdminLogin = () => {
       setIsLoading(false);
     }
   };
+
+  const auth=getAuth();
+
+  const handleGoogleSignIn=async()=>{
+    const provider=new GoogleAuthProvider();
+    provider.setCustomParameters({prompt:"select_account"})
+    try{
+      const result=await signInWithPopup(auth,provider)
+      console.log(result._tokenResponse.idToken)
+      const response = await axios.post('http://localhost:5000/hospitalmanagement/googleauth', { idToken:result._tokenResponse.idToken   });
+      if (response.data.msg === 'Access Granted') {
+        localStorage.setItem("jwt", response.data.token);
+        toast({
+          isClosable: true,
+          title: 'Access Granted',
+          status: 'success',
+          position: 'top',
+          duration: 1400,
+          onCloseComplete: () => {
+            navigate('/dashboard');
+          },
+        });
+      } else {
+        toast({
+          title: 'Access Denied',
+          isClosable: true,
+          status: 'error',
+          position: 'top',
+        });
+      }
+    }
+    catch(err)
+    {
+      console.log(err)
+    }
+  }
 
   return (
     <Flex align="center" justify="center" minH="100vh" bgGradient="linear(to-r, teal.400, blue.500)">
@@ -153,14 +193,21 @@ const AdminLogin = () => {
             Login
           </Button>
 
-          {/* <Flex justify="center" mt={4}>
-            <Text fontSize="sm" mr={1}>
-              Forgot your password?
-            </Text>
-            <Link color="teal.500" href="#">
-              Reset it
-            </Link>
-          </Flex> */}
+          <HStack alignItems={'center'} w={'100%'}>
+            <Divider />
+            <Text color={'gray.500'}>or</Text>
+            <Divider />
+          </HStack>
+
+          <Button
+            w={'100%'}
+            variant="outline"
+            leftIcon={<FcGoogle />}
+            onClick={handleGoogleSignIn}
+            _hover={{ bg: 'gray.100' }}
+          >
+            Sign in with Google
+          </Button>
         </Box>
       </ScaleFade>
     </Flex>

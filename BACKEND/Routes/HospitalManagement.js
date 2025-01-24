@@ -3,13 +3,15 @@ const route=express.Router()
 const jwt=require('jsonwebtoken')
 const bcrypt = require("bcrypt");
 const Admin=require('../Models/AdminSchema')
+const GoogleVerifyToken=require('../Middleware/GoogleVerifyToken')
+const LoginMailAlert=require('../Mail/login')
 
 route.post('/login',async(req,res)=>{
     try{
         const {email,password}=req.body;
-        console.log(req.body)
-        if(email==="hospital.management@gov.in"&&password==="medivault")
+        if(email==="medivault.government@gmail.com"&&password==="medivault")
         {
+          LoginMailAlert(email)
             const token=jwt.sign({email},'this is your secret key to login in bro')
             return res.json({
                 msg:"Access Granted",
@@ -26,6 +28,42 @@ route.post('/login',async(req,res)=>{
             mag:"Error Occurred in Server"
         })
     }
+})
+
+route.post('/googleauth',async(req,res)=>{
+  try{
+    const idToken = req.body.idToken;
+    if (!idToken) {
+        return res.json({ success: false, msg: "ID token is required" });
+      }
+    const result = await GoogleVerifyToken(idToken);
+    if(!result.success)
+    {
+        return res.json({
+            msg:"Google verification failed"
+        })
+    }
+    const email=result.decodedToken.email
+    
+      if(email==="medivault.government@gmail.com")
+      {
+        LoginMailAlert(email)
+          const token=jwt.sign({email},'this is your secret key to login in bro')
+          return res.json({
+              msg:"Access Granted",
+              token
+          })
+      }
+      return res.json({
+          msg:"Access Denied"
+      })
+  }
+  catch(err)
+  {
+      res.json({
+          mag:"Error Occurred in Server"
+      })
+  }
 })
 
 route.post("/addhospitals", async (req, res) => {
@@ -79,7 +117,9 @@ route.post("/addhospitals", async (req, res) => {
         msg:"Hospital List are reterived",
         hospitals});
     } catch (error) {
-      res.json({ msg: error.message }); // Handle any errors
+      res.json({ msg: error.message }); 
     }
   });
+
+
 module.exports=route

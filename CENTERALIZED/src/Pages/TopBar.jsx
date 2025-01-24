@@ -35,7 +35,10 @@ const TopBar = () => {
         <Spacer />
 
         {/* Right Side: Logout Button */}
-        <Button colorScheme="red" variant="outline" size="sm">
+        <Button colorScheme="red" variant="outline" size="sm" onClick={()=>{
+          localStorage.clear();
+          navigate('/')
+        }}>
           Logout
         </Button>
       </Flex>
