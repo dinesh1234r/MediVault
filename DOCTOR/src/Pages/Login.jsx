@@ -53,7 +53,9 @@ function Login() {
       }
 
       const res = await axios.post('https://medivault.onrender.com/doctor/login', { username, password });
+      console.log(res.data)
       if (res.data.msg === 'Username Found') {
+        
         localStorage.setItem('Jwt', res.data.jwt);
         localStorage.setItem('Id', res.data.objectID);
         localStorage.setItem('Photo', res.data.photo);
@@ -102,6 +104,7 @@ function Login() {
     try{
       const result=await signInWithPopup(auth,provider)
       const response = await axios.post('https://medivault.onrender.com/doctor/googleauth', { idToken:result._tokenResponse.idToken   });
+      console.log(response.data)
       if (response.data.msg === 'Username Found') {
         localStorage.setItem('Jwt', response.data.jwt);
         localStorage.setItem('Id', response.data.objectID);
