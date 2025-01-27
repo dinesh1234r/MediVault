@@ -22,7 +22,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from 'react-icons/fc';
 import {getAuth, GoogleAuthProvider, signInWithPopup} from 'firebase/auth'
-// import { auth } from '../firebasestorage/firebase'
+import { auth } from '../firebasestorage/firebase'
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
