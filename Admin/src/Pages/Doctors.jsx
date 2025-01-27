@@ -214,7 +214,7 @@ const DoctorList = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {doctorsData.map((doctor, index) => (
+          {doctorsData.length>0?doctorsData.map((doctor, index) => (
             <Tr key={index}>
               <Td>{doctor.Doctor_name}</Td>
               <Td>{doctor.Email_Address}</Td>
@@ -239,7 +239,13 @@ const DoctorList = () => {
                 />
               </Td>
             </Tr>
-          ))}
+          )): (
+                      <Tr>
+                        <Td colSpan={4} textAlign="center">
+                          No Doctor data available.
+                        </Td>
+                      </Tr>
+                    )}
         </Tbody>
       </Table>
 
