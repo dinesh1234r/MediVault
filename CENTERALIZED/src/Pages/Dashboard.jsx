@@ -98,13 +98,13 @@ const HospitalTable = () => {
                         >
                           View Details
                         </Button>
-                        <Button
+                        {/* <Button
                           size="sm"
                           colorScheme="red"
                           onClick={() => handleDeleteHospital(index)}
                         >
                           Delete
-                        </Button>
+                        </Button> */}
                       </HStack>
                     </Td>
                   </Tr>
