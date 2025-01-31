@@ -148,7 +148,7 @@ calculateAge();
       >
         <VStack spacing={6} align="stretch">
           <Heading as="h2" size="lg" textAlign="center" color="teal.500">
-            Nurse Entry
+            Patient Entry
           </Heading>
 
           {/* Patient Details */}

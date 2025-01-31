@@ -75,9 +75,9 @@ const HospitalTable = () => {
                 <Tr>
                   <Th>Logo</Th>
                   <Th>Hospital Name</Th>
-                  <Th>Owner Name</Th>
+                  {/* <Th>Owner Name</Th> */}
                   <Th>Email</Th>
-                  <Th>Actions</Th>
+                  {/* <Th>Actions</Th> */}
                 </Tr>
               </Thead>
               <Tbody>
@@ -87,7 +87,7 @@ const HospitalTable = () => {
                       <img src={hospital.logo || "https://via.placeholder.com/50"} alt="Hospital Logo" width="50" />
                     </Td>
                     <Td>{hospital.hospitalName}</Td>
-                    <Td>{hospital.ownerName}</Td>
+                    {/* <Td>{hospital.ownerName}</Td> */}
                     <Td>{hospital.email}</Td>
                     <Td>
                       <HStack justifyContent="space-between">
