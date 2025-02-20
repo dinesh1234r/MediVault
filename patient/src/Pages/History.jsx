@@ -189,13 +189,17 @@ const PatientHistory = () => {
             {JSON.parse(localStorage.getItem('patient')).Name}, {age} years
           </Text>
           <Spacer/>
+          <Button colorScheme="teal" onClick={()=>navigate("/patient-videocall")}>
+            Video Call
+          </Button>
           <Button 
-      colorScheme="teal"  
-      size="md"
-      onClick={()=>openModal()}
-    >
-      Filter
-    </Button>
+            colorScheme="teal"  
+            size="md"
+            onClick={()=>openModal()}
+          >
+            Filter
+          </Button>
+                
           <Button colorScheme="red" onClick={() =>{localStorage.removeItem("patient");navigate("/");}}>
             Logout
           </Button>
