@@ -28,6 +28,9 @@ const DoctorScheme=new mongoose.Schema({
         type: String,
         // required: true
     },
+    PhoneNo:{
+        type:String
+    },
     Qualifications:{
         type: String,
         // required: true

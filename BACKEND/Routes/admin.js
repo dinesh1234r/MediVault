@@ -145,7 +145,7 @@ route.post('/passwordchange',async(req,res)=>{
 })
 
 route.post('/postbyadmin',async(req,res)=>{
-    const {Admin,Doctor_name,gender,DOB,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Contract_type,photo}=req.body;
+    const {Admin,Doctor_name,gender,DOB,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Contract_type,photo,phoneno}=req.body;
     try{
     const currentdatetime=new Date();
     const currentdate=currentdatetime.toLocaleDateString()
@@ -156,7 +156,7 @@ route.post('/postbyadmin',async(req,res)=>{
     const hashpassword=await bcrypt.hash(Medical_License_Number,10);
     const doctor=new DoctorScheme({
         AdminID:Admin,Doctor_name,Gender:gender,DOB,Image:photo,Email_Address,Current_Address,Qualifications,Specialization,Medical_License_Number,Medical_Council_Registration_Number,Years_of_experience,Contract_type,Date_Joined:currentdate,
-        Time_Joined:currenttime,Day_Joined:currentday,Password:hashpassword
+        Time_Joined:currenttime,Day_Joined:currentday,PhoneNo:phoneno,Password:hashpassword
     })
     RegisterationMail(Email_Address)
     doctor.save()

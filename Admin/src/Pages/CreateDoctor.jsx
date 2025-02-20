@@ -15,7 +15,8 @@ const AddDoctors = () => {
   const [gender, setGender] = useState("");
   const [values, setValues] = useState({
     Doctor_name: "", Email_Address: "", DOB: "", Current_Address: "", Qualifications: "", Specialization: "",
-    Medical_License_Number: "", Medical_Council_Registration_Number: "", Years_of_experience: "", Contract_type: ""
+    Medical_License_Number: "", Medical_Council_Registration_Number: "", Years_of_experience: "", Contract_type: "",
+    phoneno:""
   });
   const [photo, setPhoto] = useState("");
   const [image, setImage] = useState("");
@@ -113,6 +114,10 @@ const AddDoctors = () => {
             <FormControl>
               <FormLabel>Email</FormLabel>
               <Input name="Email_Address" value={values.Email_Address} onChange={handleChange} placeholder="Enter Email" />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Mobile No</FormLabel>
+              <Input name="phoneno" value={values.phoneno} onChange={handleChange} placeholder="Enter Current Address" />
             </FormControl>
             <FormControl>
               <FormLabel>Current Address</FormLabel>
