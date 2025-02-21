@@ -7,6 +7,7 @@ import PatientLogin from './Pages/PatientLogin'
 import PatientHis from './Pages/PatientHistory'
 import Precription from './Pages/Prescription'
 import DoctorProfile from './Pages/DoctorProfile';
+import DoctorVideoCall from './Pages/DoctorVideoCall'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path='/patient-history' element={<PatientHis/>}/>
           <Route path='/patient-prescription' element={<Precription/>}/>
           <Route path='/doctor-profile' element={<DoctorProfile/>}/>
+          <Route path='/doctor-videocall' element={<DoctorVideoCall/>}/>
           <Route path='/*' element={<NotFound/>}/>
         </Routes>
     </BrowserRouter>

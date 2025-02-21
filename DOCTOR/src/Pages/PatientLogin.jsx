@@ -164,7 +164,10 @@ const FaceRecognitionPage = () => {
           onClick={()=>{
             navigate('/doctor-profile')
           }}>Profile</MenuItem>
-          
+          <MenuItem
+          onClick={()=>{
+            navigate('/doctor-videocall')
+          }}>Video Call</MenuItem>
           <MenuItem onClick={()=>{
             localStorage.clear();
             navigate('/')

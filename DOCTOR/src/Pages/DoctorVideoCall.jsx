@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ChakraProvider, Box, VStack, HStack, Input, Button, IconButton, Text } from "@chakra-ui/react";
+import { ChakraProvider, Box, VStack, HStack, Input, Button, IconButton, Text, useToast } from "@chakra-ui/react";
 import { FaMicrophone, FaMicrophoneSlash, FaPhone, FaVideo, FaVideoSlash } from "react-icons/fa";
-import { Peer } from "peerjs";
-import { useNavigate } from "react-router-dom";
 import { FiHome } from "react-icons/fi";
+import { Peer } from "peerjs";
+import { useNavigate } from 'react-router-dom';
 
 const VideoCall = () => {
   const [peerId, setPeerId] = useState("");
@@ -15,6 +15,7 @@ const VideoCall = () => {
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
   const localStreamRef = useRef(null);
+  const toast=useToast();
   const navigate=useNavigate();
 
   useEffect(() => {
@@ -101,9 +102,24 @@ const VideoCall = () => {
     }
   };
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(peerId)
+      .then(() => {
+        toast({
+          title: "Copied!",
+          description: "Your Peer ID has been copied to clipboard.",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+      })
+      .catch((err) => console.error("Failed to copy:", err));
+  };
+
+
   return (
     <ChakraProvider>
-      <Box w="100vw" h="100vh" color="white" display="flex" flexDirection="column" alignItems="center">
+      <Box w="100vw" h="100vh" color="white" display="flex" flexDirection="column" alignItems="center" >
         {/* Video Section */}
         <HStack w="80%" h="70%" spacing={4} justify="center">
           <Box flex="1" bg="black" position="relative" borderRadius="lg" overflow="hidden">
@@ -120,28 +136,16 @@ const VideoCall = () => {
           </Box>
         </HStack>
         {/* Input and Call Button */}
-        <VStack spacing={3} mb={4}>
-          <HStack>
-            <Input
-              placeholder="Enter remote peer ID"
-              value={remotePeerId}
-              onChange={(e) => setRemotePeerId(e.target.value)}
-              bg="gray.700"
-              color="white"
-              border="none"
-              _placeholder={{ color: "gray.400" }}
-            />
-            <Button colorScheme="blue" onClick={() => callPeer(remotePeerId)} isDisabled={calling}>
-              Call
-            </Button>
-          </HStack>
-        </VStack>
+        <HStack spacing={3} mt={4} mb={4} color={'black'}>
+          <Text>Your ID: {peerId}</Text>
+          <Button size="sm" colorScheme="blue" onClick={copyToClipboard}>Copy</Button>
+        </HStack>
         {/* Control Buttons */}
         <HStack position="absolute" bottom="4" bg="teal" p={4} borderRadius="md" spacing={4}>
           <IconButton icon={isMuted ? <FaMicrophoneSlash /> : <FaMicrophone />} onClick={toggleMute} aria-label="Mute" colorScheme="gray" />
           <IconButton icon={isVideoOn ? <FaVideo /> : <FaVideoSlash />} onClick={toggleVideo} aria-label="Toggle Video" colorScheme="gray" />
           <IconButton icon={<FaPhone />} onClick={endCall} aria-label="End Call" colorScheme="red" />
-          <IconButton icon={<FiHome />} onClick={()=>navigate('/history')} aria-label="Home Navigate" colorScheme="red" />
+          <IconButton icon={<FiHome />} onClick={()=>navigate('/patient-login')} aria-label="Home Navigate" colorScheme="red" />
         </HStack>
       </Box>
     </ChakraProvider>
