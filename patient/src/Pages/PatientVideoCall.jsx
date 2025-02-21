@@ -98,6 +98,7 @@ const VideoCall = () => {
       localStreamRef.current.getTracks().forEach((track) => track.stop());
       localVideoRef.current.srcObject = null;
       remoteVideoRef.current.srcObject = null;
+      setCalling(false)
     }
   };
 
