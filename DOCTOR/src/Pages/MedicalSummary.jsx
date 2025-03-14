@@ -44,7 +44,7 @@ const MedicalSummary = () => {
 
   const fetchSummary = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/ai/summarize", patientRecords);
+      const response = await axios.post("https://medivault.onrender.com/ai/summarize", patientRecords);
       setSummary(response.data.summary);
     } catch (error) {
       console.error("Error fetching summary:", error);
