@@ -1,24 +1,27 @@
-const express=require('express');
-const route=express.Router()
+const express = require("express");
+const route = express.Router();
 const Groq = require("groq-sdk");
 const groq = new Groq({ apiKey: "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" });
+const Patient = require("../Models/PatientsSchema");
 
-route.post("/summarize",async(req,res)=>{
-    const patientRecords = req.body.patientRecords; // Array of patient records
-  console.log(req.body)
-  
-  if (!Array.isArray(patientRecords) || patientRecords.length === 0) {
-    return res.status(400).json({ error: "Invalid or empty patient records." });
-  }
-
-  // Format records into a readable string for better summarization
-  const formattedRecords = patientRecords
-    .map((record, index) => 
-      `#${index + 1}:\nDate: ${record.date}\nDiagnosis: ${record.diagnosis}\nPrescription: ${record.prescription}\nNotes: ${record.notes}`
-    )
-    .join("\n\n");
+route.post("/summarize", async (req, res) => {
+  console.log(req.body);
 
   try {
+    const patientRecords = await Patient.findById(req.body.id).select("History");
+
+    // Check if patientRecords exist and has a History field
+    if (!patientRecords || !Array.isArray(patientRecords.History) || patientRecords.History.length === 0) {
+      return res.status(400).json({ error: "Invalid or empty patient records." });
+    }
+
+    // Format records into a readable string for better summarization
+    const formattedRecords = patientRecords.History
+      .map((record, index) => 
+        `#${index + 1}:\nDate: ${record.date}\nDiagnosis: ${record.disease}\nPrescription: ${record.prescription}\nNotes: ${record.notes}`
+      )
+      .join("\n\n");
+
     const chatCompletion = await groq.chat.completions.create({
       model: "llama3-8b-8192", // Use a Groq-supported model
       messages: [
@@ -47,7 +50,7 @@ route.post("/summarize",async(req,res)=>{
           - **Surgical History:**
             - [Procedure] (Performed on: [Date])
           
-          If no major issues exist, return: "No significant past health issues detected.`,
+          If no major issues exist, return: "No significant past health issues detected."`,
         },
         {
           role: "user",
@@ -56,11 +59,13 @@ route.post("/summarize",async(req,res)=>{
       ],
     });
 
+    console.log(chatCompletion.choices[0].message.content);
+
     res.json({ summary: chatCompletion.choices[0].message.content });
   } catch (error) {
-    console.error("Error calling Groq API:", error.response ? error.response.data : error.message);
+    console.error("Error calling Groq API:", error?.response?.data || error.message);
     res.status(500).json({ error: "Failed to generate summaries" });
   }
-})
+});
 
-module.exports=route
+module.exports = route;

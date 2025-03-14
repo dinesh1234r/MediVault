@@ -14,18 +14,6 @@ import axios from "axios";
 import { FiRefreshCw, FiArrowLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
-const patientRecords = {
-  patientRecords: [
-    { date: "2024-02-15", diagnosis: "Fever", prescription: ["Paracetamol", "Hydration"], notes: "Mild fever, should resolve in 2-3 days." },
-    { date: "2023-12-10", diagnosis: "Diabetes Type 2", prescription: ["Metformin", "Insulin"], notes: "Requires regular blood sugar monitoring." },
-    { date: "2021-07-22", diagnosis: "Heart Attack", prescription: ["Aspirin", "Beta-blockers"], notes: "Patient underwent angioplasty." },
-    { date: "2019-05-14", diagnosis: "Hypertension", prescription: ["Amlodipine", "Low-salt diet"], notes: "Regular BP monitoring advised." },
-    { date: "2018-11-30", diagnosis: "Pneumonia", prescription: ["Antibiotics", "Oxygen therapy"], notes: "Recovered but had severe respiratory distress." },
-    { date: "2022-06-10", diagnosis: "Bypass Surgery", prescription: ["Post-op care", "Blood thinners"], notes: "Patient had major artery blockage." },
-    { date: "2023-09-05", diagnosis: "Cough", prescription: ["Cough Syrup", "Rest"], notes: "Mild, no major complications." }
-  ]
-};
-
 const MedicalSummary = () => {
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(true);
@@ -44,7 +32,8 @@ const MedicalSummary = () => {
 
   const fetchSummary = async () => {
     try {
-      const response = await axios.post("https://medivault.onrender.com/ai/summarize", patientRecords);
+        
+      const response = await axios.post("http://localhost:5000/ai/summarize", {id:JSON.parse(localStorage.getItem("patient"))._id});
       setSummary(response.data.summary);
     } catch (error) {
       console.error("Error fetching summary:", error);
