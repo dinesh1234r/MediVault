@@ -34,6 +34,7 @@ import { jwtDecode } from "jwt-decode";
 import { MdRefresh } from "react-icons/md";
 import { useDispatch } from 'react-redux';
 import {addPrescriptionDetails} from '../Redux/Slice'
+import { FiLogOut, FiFileText } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 const PatientHistory = () => {
@@ -376,9 +377,22 @@ const PatientHistory = () => {
           <Text fontSize="lg" fontWeight="bold">
             {JSON.parse(localStorage.getItem('patient')).Name}, {age} years
           </Text>
+          <HStack spacing={4}>
+          {/* Summarize Button */}
+          <Button
+            colorScheme="blue"
+            leftIcon={<FiFileText />}
+            onClick={() => navigate("/patient-medicalsummary")}
+          >
+            Summarize
+          </Button>
+
+          {/* Logout Button */}
           <Button colorScheme="red" onClick={() =>{localStorage.removeItem("patient");navigate("/patient-login");}}>
             Logout
           </Button>
+        </HStack>
+          
         </HStack>
       </Box>
 

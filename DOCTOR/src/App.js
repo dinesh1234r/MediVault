@@ -8,6 +8,7 @@ import PatientHis from './Pages/PatientHistory'
 import Precription from './Pages/Prescription'
 import DoctorProfile from './Pages/DoctorProfile';
 import DoctorVideoCall from './Pages/DoctorVideoCall'
+import MedicalSummary from './Pages/MedicalSummary';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path='/patient-prescription' element={<Precription/>}/>
           <Route path='/doctor-profile' element={<DoctorProfile/>}/>
           <Route path='/doctor-videocall' element={<DoctorVideoCall/>}/>
+          <Route path='/patient-medicalsummary' element={<MedicalSummary/>}/>
           <Route path='/*' element={<NotFound/>}/>
         </Routes>
     </BrowserRouter>
