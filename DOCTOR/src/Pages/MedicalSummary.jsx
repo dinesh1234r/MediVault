@@ -62,9 +62,9 @@ const MedicalSummary = () => {
           </Box>
         )}
       </VStack>
-      <HStack>
+      <HStack mt={4}>
         <Spacer/>
-        <Button colorScheme="gray" leftIcon={<FiArrowLeft />} onClick={() => navigate(-1)}>
+        <Button colorScheme="blue" leftIcon={<FiArrowLeft />} onClick={() => navigate(-1)}>
           Back
         </Button>
       </HStack>
