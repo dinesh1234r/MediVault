@@ -18,7 +18,7 @@ route.post("/summarize", async (req, res) => {
     // Format records into a readable string for better summarization
     const formattedRecords = patientRecords.History
       .map((record, index) => 
-        `#${index + 1}:\nDate: ${record.date}\nDiagnosis: ${record.disease}\nPrescription: ${record.prescription}\nNotes: ${record.notes}`
+        `#${index + 1}:\nDate: ${record.Date}\nDiagnosis: ${record.disease}\nPrescription: ${record.preciption}\nNotes: ${record.notes}`
       )
       .join("\n\n");
 
@@ -42,13 +42,13 @@ route.post("/summarize", async (req, res) => {
           
           **Patient’s Major Medical History:**
           - **Life-threatening Diseases:**
-            - [Disease] (First recorded: [Date], Last recorded: [Date])
+            - [Disease] (Dates:[Date 1,Date 2,...,Date n])
           - **Chronic Conditions:**
-            - [Disease] (First recorded: [Date], Last recorded: [Date])
+            - [Disease] (Dates:[Date 1,Date 2,...,Date n])
           - **Infectious Diseases:**
-            - [Disease] (First recorded: [Date], Last recorded: [Date])
+            - [Disease] (Dates:[Date 1,Date 2,...,Date n])
           - **Surgical History:**
-            - [Procedure] (Performed on: [Date])
+            - [Procedure] (Dates:[Date 1,Date 2,...,Date n])
           
           If no major issues exist, return: "No significant past health issues detected."`,
         },
