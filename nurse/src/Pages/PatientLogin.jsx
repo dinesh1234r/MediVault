@@ -27,6 +27,7 @@ import { FiChevronDown } from "react-icons/fi";
 
 const FaceRecognitionPage = () => {
   const [cameraOn, setCameraOn] = useState(false);
+  const [loading,setLoading]=useState(false);
   // const videoRef = useRef(null);
   const navigate = useNavigate();
   const toast = useToast();
@@ -60,6 +61,7 @@ const FaceRecognitionPage = () => {
   };
 
   const handleCaptureAndSubmit = async () => {
+    setLoading(true);
     const image = captureImage(); 
     const downloadUrl = await uploadImage(image); 
     console.log(downloadUrl)
@@ -99,6 +101,7 @@ const FaceRecognitionPage = () => {
         position: "top",
       });
     }
+    setLoading(false);
   };
 
 
@@ -217,7 +220,7 @@ const FaceRecognitionPage = () => {
           </Button>
 
           {cameraOn && (
-            <Button colorScheme="green" onClick={handleCaptureAndSubmit} size="lg">
+            <Button colorScheme="green" onClick={handleCaptureAndSubmit} size="lg" isLoading={loading} loadingText="Logging In">
               Login to Patient Account
             </Button>
           )}
