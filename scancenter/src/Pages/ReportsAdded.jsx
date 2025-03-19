@@ -34,6 +34,10 @@ const PatientDetailsPage = () => {
 
   // Fetch patient details on mount
   useEffect(() => {
+    if(localStorage.getItem("patient")==undefined)
+    {
+      navigate("/patient-login")
+    }
     const fetchDetails = async () => {
       const _id = JSON.parse(localStorage.getItem("patient"))._id;
       const response = await axios.post(

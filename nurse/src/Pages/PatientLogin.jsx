@@ -24,6 +24,7 @@ import {
   // Box,
 } from "@chakra-ui/react";
 import { FiChevronDown } from "react-icons/fi";
+import { useEffect } from "react";
 
 const FaceRecognitionPage = () => {
   const [cameraOn, setCameraOn] = useState(false);
@@ -33,6 +34,13 @@ const FaceRecognitionPage = () => {
   const toast = useToast();
   const webcamRef = useRef(null);
   const [url, setUrl] = useState("");
+
+  useEffect(()=>{
+    if(localStorage.getItem("Jwt")==undefined)
+      {
+        navigate("/")
+      }
+  })
 
   const captureImage = () => {
     const imageSrc = webcamRef.current.getScreenshot();

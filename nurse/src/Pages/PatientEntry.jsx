@@ -31,6 +31,14 @@ const NurseEntryPage = () => {
   const [age, setAge] = useState(null);
 
   useEffect(() => {
+    if(localStorage.getItem("Jwt")==undefined)
+    {
+      navigate("/")
+    }
+    if(localStorage.getItem("patient")==undefined)
+    {
+      navigate("//patient-login")
+    }
     // Fetch patient details after face recognition
     const patientData = JSON.parse(localStorage.getItem("patient"));
     if (patientData) {

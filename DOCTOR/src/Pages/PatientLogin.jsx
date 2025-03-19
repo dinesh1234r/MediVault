@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -33,6 +33,13 @@ const FaceRecognitionPage = () => {
   const toast = useToast();
   const webcamRef = useRef(null);
   const [url, setUrl] = useState("");
+
+    useEffect(()=>{
+      if(localStorage.getItem("Jwt")==undefined)
+      {
+        navigate('/');
+      }
+    })
 
   const captureImage = () => {
     const imageSrc = webcamRef.current.getScreenshot();

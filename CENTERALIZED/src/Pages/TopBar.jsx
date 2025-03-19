@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Flex, Heading, Button, Spacer, HStack, Link,Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 const TopBar = () => {
     const navigate=useNavigate();
+    useEffect(()=>{
+      if(localStorage.getItem("jwt")==undefined)
+      {
+        navigate('/');
+      }
+    })
   return (
     <Box
       as="header"

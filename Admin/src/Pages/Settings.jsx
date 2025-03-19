@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   VStack,
@@ -33,6 +33,7 @@ import { FaSave, FaLock } from 'react-icons/fa';
 
 const SettingsPage = () => {
   const navigate=useNavigate()
+  
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
@@ -170,6 +171,7 @@ const SettingsPage = () => {
 };
 
 const ViewSettingPage = () => {
+  
   return (
     <Box display="flex" w="100%" minH="100vh">
       <Sidebar />

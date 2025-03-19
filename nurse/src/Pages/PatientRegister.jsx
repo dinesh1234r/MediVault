@@ -17,6 +17,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../firebasestorage/firebase';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const PatientRegistration = () => {
   const toast = useToast();
@@ -35,6 +36,13 @@ const PatientRegistration = () => {
   const webcamRef1 = useRef(null);
 
   const navigate=useNavigate()
+
+  useEffect(()=>{
+    if(localStorage.getItem("Jwt")==undefined)
+      {
+        navigate("/")
+      }
+  })
 
   const handleDrawerChange = (e) => {
     setPatient({ ...patient, [e.target.name]: e.target.value });

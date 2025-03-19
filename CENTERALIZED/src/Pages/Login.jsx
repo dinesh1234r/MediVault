@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -29,6 +29,13 @@ const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
+
+    useEffect(()=>{
+      if(localStorage.getItem("jwt"))
+      {
+        navigate('/dashboard');
+      }
+    })
 
   const bgColor = useColorModeValue("gray.50", "gray.800");
   const cardBgColor = useColorModeValue("white", "gray.700");

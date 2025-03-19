@@ -57,6 +57,10 @@ const PatientHistory = () => {
   const { isOpen: isModalOpen, onOpen: openModal, onClose: closeModal } = useDisclosure(); 
 
   useEffect(() => {
+    if(localStorage.getItem("Jwt")==undefined)
+    {
+      navigate("/")
+    }
     const fetchHistory = async () => {
       try {
         const _id = JSON.parse(localStorage.getItem("patient"))._id;

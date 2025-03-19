@@ -17,6 +17,7 @@ import { storage } from '../firebasestorage/firebase';
 import { useNavigate } from "react-router-dom";
 import {getAuth, GoogleAuthProvider, signInWithPopup} from 'firebase/auth'
 import axios from "axios";
+import { useEffect } from "react";
 
 const FaceRecognitionPage = () => {
   const [cameraOn, setCameraOn] = useState(false);
@@ -30,6 +31,13 @@ const FaceRecognitionPage = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     return imageSrc;
   };
+
+  useEffect(()=>{
+    if(localStorage.getItem("Jwt")&&localStorage.getItem("patient"))
+    {
+      navigate('/history')
+    }
+  },[])
 
   const uploadImage = async (image) => {
     if (!image) return;

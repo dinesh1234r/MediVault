@@ -21,6 +21,10 @@ const MedicalSummary = () => {
   const navigate=useNavigate()
 
   useEffect(() => {
+    if(localStorage.getItem("patient")==undefined)
+      {
+        navigate('/patient-login')
+      }
     let dotCount = 0;
     const interval = setInterval(() => {
       dotCount = (dotCount + 1) % 4;

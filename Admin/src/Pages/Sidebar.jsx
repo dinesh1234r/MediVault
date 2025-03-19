@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Flex,
@@ -29,6 +29,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion"; // For animations
 
 const Sidebar = () => {
+  const navigate=useNavigate();
+  useEffect(()=>{
+    if(localStorage.getItem("jwt")==undefined)
+    {
+      navigate('/');
+    }
+  })
+
   return (
     <Box
       w={{ base: "full", md: "250px" }}

@@ -19,6 +19,10 @@ const VideoCall = () => {
   const navigate=useNavigate();
 
   useEffect(() => {
+    if(localStorage.getItem("Jwt")==undefined)
+      {
+        navigate("/")
+      }
     const newPeer = new Peer();
     setPeer(newPeer);
 

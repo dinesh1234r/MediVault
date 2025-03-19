@@ -32,6 +32,10 @@ const DoctorProfile = () => {
   const [newpass,Setnewpass]=useState();
 
   useEffect(()=>{
+    if(localStorage.getItem("Jwt")==undefined)
+    {
+      navigate("/")
+    }
     const calculateAge=()=>{
       const date=new Date();
       const birth=new Date(dob);

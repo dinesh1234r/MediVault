@@ -63,6 +63,10 @@ const PatientHistory = () => {
   const [todayVitals,setTodayVitals]=useState({});
 
   useEffect(() => {
+    if(localStorage.getItem("patient")==undefined)
+    {
+      navigate('/patient-login')
+    }
     const fetchHistory = async () => {
       try {
         const _id = JSON.parse(localStorage.getItem("patient"))._id;
