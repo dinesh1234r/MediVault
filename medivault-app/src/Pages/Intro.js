@@ -1,4 +1,4 @@
-import React,{useRef} from "react";
+import React, { useRef } from "react";
 import {
   Box,
   Container,
@@ -6,390 +6,730 @@ import {
   Text,
   SimpleGrid,
   Icon,
-  VStack,Button,
-  HStack,useColorModeValue,Stack,
-  Image,Flex, Link,FormControl,
+  VStack,
+  Button,
+  HStack,
+  useColorModeValue,
+  Stack,
+  Image,
+  Flex,
+  Link,
+  FormControl,
   FormLabel,
   Input,
   Textarea,
   Spacer,
+  Fade,
+  ScaleFade,
+  SlideFade,
+  useDisclosure,
+  usePrefersReducedMotion,
 } from "@chakra-ui/react";
 import { FaHospital, FaUserNurse, FaUserMd, FaFileAlt } from "react-icons/fa";
 import { MdAdminPanelSettings, MdPerson, MdLocalHospital, MdAssignment } from 'react-icons/md';
-import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'; 
+import { motion } from 'framer-motion';
+import { FaUser } from 'react-icons/fa';
+import { MdDashboard } from 'react-icons/md';
+import { FaRobot } from 'react-icons/fa';
+
+const MotionBox = motion(Box);
+const MotionVStack = motion(VStack);
+const MotionText = motion(Text);
+const MotionHeading = motion(Heading);
 
 const Intro = () => {
-    const overviewRef = useRef(null);
-    const contactRef = useRef(null);
-    const techRef = useRef(null);
-    const loginRef = useRef(null);
+  const overviewRef = useRef(null);
+  const contactRef = useRef(null);
+  const techRef = useRef(null);
+  const loginRef = useRef(null);
   
-    const scrollToSection = (ref) => {
-      ref.current.scrollIntoView({ behavior: "smooth" });
-    };
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const { isOpen: isFormOpen, onToggle: onFormToggle } = useDisclosure();
 
-    const handleCardClick = (url) => {
-        window.open(url, '_blank');
-    };
+  const scrollToSection = (ref) => {
+    ref.current.scrollIntoView({ behavior: "smooth" });
+  };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        alert('Form submitted!');
-    };
+  const handleCardClick = (url) => {
+    window.open(url, '_blank');
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    alert('Form submitted!');
+  };
+
+  // Animation styles
+  const floatAnimation = prefersReducedMotion 
+    ? undefined 
+    : {
+        y: [0, -10, 0],
+        transition: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+      };
+
+  const pulseAnimation = prefersReducedMotion 
+    ? undefined 
+    : {
+        scale: [1, 1.05, 1],
+        transition: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+      };
 
   return (
-    <Box w={'100%'}>
-         <Box
-      position="sticky"
-      top="0"
-      zIndex="1000"
-      bg={useColorModeValue('teal.500', 'teal.700')}
-      p={4}
-      boxShadow="md"
-      w={'100%'}
-    >
-      <Flex justify="center" gap={10}>
-        <Spacer/>
-        <Link
-          color="white"
-          fontWeight="semibold"
-          _hover={{ textDecoration: 'underline', color: 'teal.200' }} 
-          onClick={() => scrollToSection(overviewRef)}
-        >
-          Overview
-        </Link>
-        <Link
-          color="white"
-          fontWeight="semibold"
-          _hover={{ textDecoration: 'underline', color: 'teal.200' }}
-          onClick={() => scrollToSection(techRef)}
-        >
-          Tech Used
-        </Link>
-        <Link
-          color="white"
-          fontWeight="semibold"
-          _hover={{ textDecoration: 'underline', color: 'teal.200' }}
-          onClick={() => scrollToSection(loginRef)}
-        >
-          Login Account
-        </Link>
-        <Link
-          color="white"
-          fontWeight="semibold"
-          _hover={{ textDecoration: 'underline', color: 'teal.200' }} 
-          onClick={() => scrollToSection(contactRef)}
-        >
-          Contact
-        </Link>
-      </Flex>
-    </Box>
-      <Box  
-          ref={overviewRef}
-          p={5}
-          shadow="md"
-          borderWidth="1px"
-          borderRadius="lg"
-          textAlign="center"
-          
+    <Box w={'100%'} overflowX="hidden">
+      {/* Animated Navbar */}
+      <MotionBox
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
+        position="sticky"
+        top="0"
+        zIndex="1000"
+        bgGradient="linear(to-r, teal.500, blue.500)"
+        p={4}
+        boxShadow="lg"
+        w={'100%'}
+      >
+        <Flex justify="center" gap={10}>
+          <Spacer/>
+          <Link
+            color="white"
+            fontWeight="semibold"
+            _hover={{ 
+              textDecoration: 'none',
+              transform: 'scale(1.1)',
+              transition: 'all 0.3s ease'
+            }} 
+            onClick={() => scrollToSection(overviewRef)}
           >
-        
-      <Heading mb={6} textAlign="center">
-        Digital Patient Record Management System
-      </Heading>
-
-      <SimpleGrid columns={[1, 2, 3]} spacing={10} mb={10}>
-
-        
-        <Box
-          p={5}
-          shadow="md"
-          borderWidth="1px"
-          borderRadius="lg"
-          textAlign="center"
-        >
-          <VStack>
-            <Icon as={FaHospital} w={10} h={10} color="teal.500" />
-            <Heading size="md">Multiple Hospitals</Heading>
-            <Text>
-              Secure access across multiple hospitals, ensuring patient data
-              management in private and government facilities.
-            </Text>
-          </VStack>
-        </Box>
-
-        <Box
-          p={5}
-          shadow="md"
-          borderWidth="1px"
-          borderRadius="lg"
-          textAlign="center"
-        >
-          <VStack>
-            <Icon as={FaUserNurse} w={10} h={10} color="teal.500" />
-            <Heading size="md">Nurse Role</Heading>
-            <Text>
-              Nurses create patient IDs and manage vitals entry, ensuring accurate data tracking.
-            </Text>
-          </VStack>
-        </Box>
-
-        <Box
-          p={5}
-          shadow="md"
-          borderWidth="1px"
-          borderRadius="lg"
-          textAlign="center"
-        >
-          <VStack>
-            <Icon as={FaUserMd} w={10} h={10} color="teal.500" />
-            <Heading size="md">Doctor Role</Heading>
-            <Text>
-              Doctors access patient records, prescribe medicines, and manage treatment history.
-            </Text>
-          </VStack>
-        </Box>
-
-        <Box
-          p={5}
-          shadow="md"
-          borderWidth="1px"
-          borderRadius="lg"
-          textAlign="center"
-        >
-          <VStack>
-            <Icon as={FaFileAlt} w={10} h={10} color="teal.500" />
-            <Heading size="md">Scan Center</Heading>
-            <Text>
-              Scan centers upload patient reports, securely handling all imaging and reports.
-            </Text>
-          </VStack>
-        </Box>
-
-        <Box
-          p={5}
-          shadow="md"
-          borderWidth="1px"
-          borderRadius="lg"
-          textAlign="center"
-        >
-          <VStack>
-          <Image
-              src="https://1.bp.blogspot.com/-Ckn1SCIrp1o/YBaxJGUZ53I/AAAAAAAABcY/E_i9t7zt1S4f8tVuSN73yPnp6gweKNWYACLcBGAsYHQ/s886/Firebase%2B%255Bbagilogo.com%255D.png"
-              alt="Cloud Storage"
-              boxSize="60px"
-              objectFit="cover"
-            />
-            <Heading size="md">Secure Storage</Heading>
-            <Text>
-              Utilized Cloudinary and Firebase for secure and efficient storage
-              of patient data and images.
-            </Text>
-          </VStack>
-        </Box>
-        <Box
-          p={5}
-          shadow="md"
-          borderWidth="1px"
-          borderRadius="lg"
-          textAlign="center"
-        >
-          <VStack>
-            <Image
-              src="https://freeappsforme.com/wp-content/uploads/2019/08/3xLOGIC-Facial-Recognition-logo-1024x1024.jpg"
-              alt="Facial Recognition"
-              boxSize="60px"
-              objectFit="cover"
-            />
-            <Heading size="md">Facial Recognition</Heading>
-            <Text>
-              Implemented facial recognition for secure access to patient
-              records, enhancing privacy and security.
-            </Text>
-          </VStack>
-        </Box>
-        
-      </SimpleGrid>
-      </Box>
-      <Box ref={techRef} p={10} bg="gray.50" minH="100vh">
-        <Text fontSize="3xl" fontWeight="bold">Tech Used</Text>
-        <Text mt={4}>
-            The Tech Used section highlights the various technologies implemented in the development of this project, showcasing a blend of modern frameworks and tools to create a robust digital patient record management system.
-        </Text>
-        <Text mt={4}>
-            <strong>Frontend Development:</strong> On the frontend, we utilized <strong>React</strong>, a powerful JavaScript library known for its ability to create dynamic and responsive user interfaces. React's component-based architecture allows for efficient code reuse and organization, making it an ideal choice for building complex applications. To enhance the user experience further, we integrated <strong>Chakra UI</strong>, a modern component library that provides a set of accessible, reusable, and customizable UI components. With Chakra UI, we ensured that our application is not only visually appealing but also responsive across various devices and screen sizes, facilitating a seamless experience for users interacting with the system.
-        </Text>
-        <Text mt={4}>
-            <strong>Backend Development:</strong> The backend is powered by <strong>Node.js</strong> and <strong>Express.js</strong>, which form a robust foundation for handling API requests efficiently. Node.js allows for building scalable network applications, leveraging an event-driven architecture that handles multiple connections simultaneously. Express.js, a minimal and flexible Node.js web application framework, simplifies the process of building RESTful APIs, providing essential features for web and mobile applications. This combination enables our system to process user requests quickly and reliably, ensuring smooth interactions with the database.
-        </Text>
-        <Text mt={4}>
-            <strong>Database Management:</strong> For data storage, we chose <strong>MongoDB</strong>, a NoSQL database known for its flexibility and scalability. MongoDB's document-based structure allows for the easy storage and retrieval of complex patient records without rigid schemas. This is particularly beneficial in a healthcare environment where patient data can vary significantly. By using MongoDB, we can efficiently manage and query large volumes of data, ensuring quick access to essential information for healthcare professionals.
-        </Text>
-        <Text mt={4}>
-            <strong>Authentication and Security:</strong> The authentication process employs <strong>facial recognition technology</strong>, a cutting-edge solution that guarantees secure access to the system. This innovative approach enhances patient data protection by ensuring that only authorized personnel can access sensitive information. By leveraging machine learning algorithms, the facial recognition system can accurately verify user identities, reducing the risk of unauthorized access and ensuring compliance with healthcare regulations.
-        </Text>
-        <Text mt={4}>
-            <strong>Image and Report Handling:</strong> To manage images and medical reports, we utilized <strong>Cloudinary</strong> and <strong>Firebase Storage</strong>. Cloudinary is a powerful cloud-based image and video management service that allows for efficient image storage, optimization, and delivery. It supports various image formats and provides features like automatic image resizing and transformation. Firebase Storage, part of the Firebase suite, offers robust and secure file storage solutions, making it easy to store and serve large files. By integrating these technologies, we ensure that our system can handle the storage and retrieval of images and reports reliably and at scale, meeting the demands of a modern healthcare environment.
-        </Text>
-        </Box>
-        <Box
-      p={10}
-      bg={useColorModeValue('gray.100', 'gray.800')}
-      minH="100vh"
-      ref={loginRef}
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      bgImg={"https://media.consumeraffairs.com/files/news/Hospital_building_JazzIRT_GI.jpg"}
-    >
-      <VStack spacing={6} width="full" maxWidth="600px"> 
-        <Text fontSize="3xl" fontWeight="bold" textAlign="center">
-          Login Account
-        </Text>
-        <Text textAlign="center" maxW="lg" color={'white'}>
-          The Login Account section details the secure login system integrated into the application. 
-          Utilizing advanced facial recognition technology, the system ensures that only authorized hospital personnel can access sensitive patient information.
-        </Text>
-        <Stack spacing={4} width="full"> 
-          <Box
-            onClick={() => handleCardClick('https://finalyear-phase-1-admin.onrender.com')}
-            borderWidth={1}
-            borderRadius="md"
-            boxShadow="md"
-            bg={useColorModeValue('white', 'gray.700')}
-            p={5}
-            textAlign="center"
-            cursor="pointer"
-            transition="0.3s"
-            _hover={{ boxShadow: 'lg', transform: 'scale(1.02)' }} 
-          >
-            <HStack spacing={4}> 
-              <Icon as={MdAdminPanelSettings} boxSize={8} color="teal.500" />
-              <Text fontSize="xl" fontWeight="semibold">Hospital Admin</Text>
-            </HStack>
-          </Box>
-
-          <Box
-            onClick={() => handleCardClick('https://finalyear-phase-1-doctors.onrender.com')}
-            borderWidth={1}
-            borderRadius="md"
-            boxShadow="md"
-            bg={useColorModeValue('white', 'gray.700')}
-            p={5}
-            textAlign="center"
-            cursor="pointer"
-            transition="0.3s"
-            _hover={{ boxShadow: 'lg', transform: 'scale(1.02)' }}
-          >
-            <HStack spacing={4}>
-              <Icon as={MdPerson} boxSize={8} color="teal.500" />
-              <Text fontSize="xl" fontWeight="semibold">Doctors</Text>
-            </HStack>
-          </Box>
-
-          <Box
-            onClick={() => handleCardClick('https://finalyear-phase-1-nurse.onrender.com')}
-            borderWidth={1}
-            borderRadius="md"
-            boxShadow="md"
-            bg={useColorModeValue('white', 'gray.700')}
-            p={5}
-            textAlign="center"
-            cursor="pointer"
-            transition="0.3s"
-            _hover={{ boxShadow: 'lg', transform: 'scale(1.02)' }}
-          >
-            <HStack spacing={4}>
-              <Icon as={MdLocalHospital} boxSize={8} color="teal.500" />
-              <Text fontSize="xl" fontWeight="semibold">Nurses</Text>
-            </HStack>
-          </Box>
-
-          <Box
-            onClick={() => handleCardClick('https://finalyear-phase-1-scancenter.onrender.com')}
-            borderWidth={1}
-            borderRadius="md"
-            boxShadow="md"
-            bg={useColorModeValue('white', 'gray.700')}
-            p={5}
-            textAlign="center"
-            cursor="pointer"
-            transition="0.3s"
-            _hover={{ boxShadow: 'lg', transform: 'scale(1.02)' }} 
-          >
-            <HStack spacing={4}>
-              <Icon as={MdAssignment} boxSize={8} color="teal.500" />
-              <Text fontSize="xl" fontWeight="semibold">Scan Center</Text>
-            </HStack>
-          </Box>
-        </Stack>
-      </VStack>
-    </Box>
-    <Box
-      p={8}
-      bg={useColorModeValue('white', 'gray.700')}
-      ref={contactRef}
-      borderWidth={1}
-      borderRadius="md"
-      boxShadow="md"
-      maxWidth="500px"
-      mb={'10%'}
-      mx="auto" 
-      mt={10} 
-    >
-      <Text fontSize="2xl" fontWeight="bold" mb={4} textAlign="center">
-        Contact Us
-      </Text>
-      <form onSubmit={handleSubmit}>
-        <VStack spacing={4} align="stretch">
-          <FormControl id="name" isRequired>
-            <FormLabel>Name</FormLabel>
-            <Input type="text" placeholder="Your Name" />
-          </FormControl>
-          <FormControl id="email" isRequired>
-            <FormLabel>Email</FormLabel>
-            <Input type="email" placeholder="Your Email" />
-          </FormControl>
-          <FormControl id="message" isRequired>
-            <FormLabel>Message</FormLabel>
-            <Textarea placeholder="Your Message" />
-          </FormControl>
-          <Button
-            type="submit"
-            colorScheme="teal"
-            size="lg"
-            mt={4} 
-          >
-            Send Message
-          </Button>
-        </VStack>
-      </form>
-    </Box>
-    <Box
-      as="footer"
-      position="fixed"
-      bottom={0}
-      left={0}
-      right={0}
-      bg={useColorModeValue('gray.100', 'gray.800')}
-      p={4}
-      boxShadow="md"
-      zIndex={10}
-    >
-      <Flex justify="space-between" align="center" maxWidth="1200px" mx="auto">
-        <Text fontSize="sm" color={useColorModeValue('gray.600', 'gray.300')}>
-          © {new Date().getFullYear()} MediVault. All rights reserved.
-        </Text>
-        <Flex>
-          <Link href="/privacy-policy" mx={2} fontSize="sm" color={useColorModeValue('blue.500', 'blue.300')}>
-            Privacy Policy
+            Overview
           </Link>
-          <Link href="/terms-of-service" mx={2} fontSize="sm" color={useColorModeValue('blue.500', 'blue.300')}>
-            Terms of Service
+          <Link
+            color="white"
+            fontWeight="semibold"
+            _hover={{ 
+              textDecoration: 'none',
+              transform: 'scale(1.1)',
+              transition: 'all 0.3s ease'
+            }}
+            onClick={() => scrollToSection(techRef)}
+          >
+            Tech Used
+          </Link>
+          <Link
+            color="white"
+            fontWeight="semibold"
+            _hover={{ 
+              textDecoration: 'none',
+              transform: 'scale(1.1)',
+              transition: 'all 0.3s ease'
+            }}
+            onClick={() => scrollToSection(loginRef)}
+          >
+            Login Account
+          </Link>
+          <Link
+            color="white"
+            fontWeight="semibold"
+            _hover={{ 
+              textDecoration: 'none',
+              transform: 'scale(1.1)',
+              transition: 'all 0.3s ease'
+            }} 
+            onClick={() => scrollToSection(contactRef)}
+          >
+            Contact
           </Link>
         </Flex>
-      </Flex>
-    </Box>
+      </MotionBox>
+
+      {/* Hero Section */}
+      <Box 
+        ref={overviewRef}
+        p={10}
+        bgGradient="linear(to-b, teal.50, blue.50)"
+        position="relative"
+        overflow="hidden"
+      >
+        <MotionBox 
+          position="absolute"
+          top="-50px"
+          right="-50px"
+          w="200px"
+          h="200px"
+          borderRadius="50%"
+          bg="teal.100"
+          opacity="0.3"
+          animate={floatAnimation}
+        />
+        <MotionBox 
+          position="absolute"
+          bottom="-30px"
+          left="-30px"
+          w="150px"
+          h="150px"
+          borderRadius="50%"
+          bg="blue.100"
+          opacity="0.3"
+          animate={{
+            y: [0, -15, 0],
+            transition: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+          }}
+        />
+        
+        <MotionVStack
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          spacing={6}
+          textAlign="center"
+        >
+          <MotionHeading 
+            size="2xl" 
+            bgGradient="linear(to-r, teal.500, blue.600)"
+            bgClip="text"
+            initial={{ y: -20 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Digital Patient Record Management System
+          </MotionHeading>
+          <MotionText
+            fontSize="xl"
+            maxW="2xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 1 }}
+          >
+            Revolutionizing healthcare with secure, efficient, and accessible patient record management
+          </MotionText>
+        </MotionVStack>
+
+        {/* Features Grid */}
+        <SimpleGrid columns={[1, 2, 3]} spacing={10} mt={16} mb={10}>
+          {[
+            {
+              icon: FaHospital,
+              title: "Multiple Hospitals",
+              description: "Secure access across multiple hospitals, ensuring patient data management in private and government facilities."
+            },
+            {
+              icon: MdAdminPanelSettings,
+              title: "Admin Portal",
+              description: "Comprehensive administrative controls for managing hospitals, users, and system configurations."
+            },
+            {
+              icon: FaUserNurse,
+              title: "Nurse Role",
+              description: "Nurses create patient IDs and manage vitals entry, ensuring accurate data tracking."
+            },
+            {
+              icon: FaUserMd,
+              title: "Doctor Role",
+              description: "Doctors access patient records, prescribe medicines, and manage treatment history."
+            },
+            {
+              icon: FaFileAlt,
+              title: "Scan Center",
+              description: "Scan centers upload patient reports, securely handling all imaging and reports."
+            },
+            {
+              icon: FaUser,
+              title: "Patient Portal",
+              description: "Patients can access their medical records, test results, and communicate with healthcare providers."
+            },
+            {
+              icon: FaRobot,
+              title: "AI Summarization",
+              description: "Advanced AI analyzes patient history to generate concise summaries for doctors, saving valuable time."
+            },
+            {
+              image: "https://1.bp.blogspot.com/-Ckn1SCIrp1o/YBaxJGUZ53I/AAAAAAAABcY/E_i9t7zt1S4f8tVuSN73yPnp6gweKNWYACLcBGAsYHQ/s886/Firebase%2B%255Bbagilogo.com%255D.png",
+              title: "Secure Storage",
+              description: "Utilized Cloudinary and Firebase for secure and efficient storage of patient data and images."
+            },
+            {
+              image: "https://freeappsforme.com/wp-content/uploads/2019/08/3xLOGIC-Facial-Recognition-logo-1024x1024.jpg",
+              title: "Facial Recognition",
+              description: "Implemented facial recognition for secure access to patient records, enhancing privacy and security."
+            },
+            
+           
+          ].map((item, index) => (
+            <ScaleFade 
+              initialScale={0.9} 
+              in={true} 
+              key={index}
+              transition={{ delay: index * 0.1 }}
+            >
+              <MotionBox
+                p={6}
+                shadow="lg"
+                borderWidth="1px"
+                borderRadius="xl"
+                textAlign="center"
+                bg="white"
+                whileHover={{ 
+                  y: -5,
+                  boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                <VStack spacing={4}>
+                  {item.icon ? (
+                    <MotionBox
+                      animate={pulseAnimation}
+                    >
+                      <Icon 
+                        as={item.icon} 
+                        w={12} 
+                        h={12} 
+                        color="teal.500" 
+                      />
+                    </MotionBox>
+                  ) : (
+                    <MotionBox
+                      animate={pulseAnimation}
+                    >
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        boxSize="70px"
+                        objectFit="contain"
+                      />
+                    </MotionBox>
+                  )}
+                  <Heading size="md">{item.title}</Heading>
+                  <Text color="gray.600">{item.description}</Text>
+                </VStack>
+              </MotionBox>
+            </ScaleFade>
+          ))}
+        </SimpleGrid>
+      </Box>
+
+      {/* Tech Used Section */}
+      <Box 
+        ref={techRef} 
+        p={10} 
+        bgGradient="linear(to-b, gray.50, gray.100)"
+        position="relative"
+        overflow="hidden"
+      >
+        <Box 
+          position="absolute"
+          top="10%"
+          left="10%"
+          w="100px"
+          h="100px"
+          borderRadius="50%"
+          bg="teal.200"
+          opacity="0.2"
+          animation={floatAnimation}
+        />
+        <Box 
+          position="absolute"
+          bottom="10%"
+          right="10%"
+          w="150px"
+          h="150px"
+          borderRadius="50%"
+          bg="blue.200"
+          opacity="0.2"
+          animation={`${floatAnimation} 4s ease-in-out infinite`}
+        />
+        
+        <Container maxW="container.lg">
+          <MotionHeading
+            fontSize="4xl"
+            fontWeight="bold"
+            mb={10}
+            textAlign="center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Technology Stack
+          </MotionHeading>
+          
+          <SimpleGrid columns={[1, 1, 2]} spacing={10}>
+            <SlideFade in={true} offsetY="20px">
+              <MotionBox
+                p={8}
+                bg="white"
+                borderRadius="xl"
+                boxShadow="lg"
+                whileHover={{ scale: 1.02 }}
+              >
+                <VStack align="start" spacing={6}>
+                  <Heading size="lg" color="teal.600">Frontend Development</Heading>
+                  <Text>
+                    Built with <strong>React</strong> and <strong>Chakra UI</strong>, our frontend delivers a responsive, 
+                    accessible user experience with beautiful, consistent components that work across all devices.
+                  </Text>
+                  <HStack spacing={4}>
+                    <Image 
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1280px-React-icon.svg.png" 
+                      alt="React" 
+                      boxSize="50px" 
+                      objectFit="contain"
+                    />
+                    <Image 
+                      src="https://img.stackshare.io/service/12421/rzylUjaf_400x400.jpg" 
+                      alt="Chakra UI" 
+                      boxSize="50px" 
+                      objectFit="contain"
+                    />
+                  </HStack>
+                </VStack>
+              </MotionBox>
+            </SlideFade>
+
+            <SlideFade in={true} offsetY="20px" delay={0.2}>
+              <MotionBox
+                p={8}
+                bg="white"
+                borderRadius="xl"
+                boxShadow="lg"
+                whileHover={{ scale: 1.02 }}
+              >
+                <VStack align="start" spacing={6}>
+                  <Heading size="lg" color="blue.600">Backend Development</Heading>
+                  <Text>
+                    Powered by <strong>Node.js</strong> and <strong>Express.js</strong>, our backend provides 
+                    a robust, scalable foundation for handling API requests efficiently and securely.
+                  </Text>
+                  <HStack spacing={4}>
+                    <Image 
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/1280px-Node.js_logo.svg.png" 
+                      alt="Node.js" 
+                      boxSize="50px" 
+                      objectFit="contain"
+                    />
+                    <Image 
+                      src="https://upload.wikimedia.org/wikipedia/commons/6/64/Expressjs.png" 
+                      alt="Express.js" 
+                      boxSize="50px" 
+                      objectFit="contain"
+                    />
+                  </HStack>
+                </VStack>
+              </MotionBox>
+            </SlideFade>
+
+            <SlideFade in={true} offsetY="20px" delay={0.4}>
+              <MotionBox
+                p={8}
+                bg="white"
+                borderRadius="xl"
+                boxShadow="lg"
+                whileHover={{ scale: 1.02 }}
+              >
+                <VStack align="start" spacing={6}>
+                  <Heading size="lg" color="purple.600">Database</Heading>
+                  <Text>
+                    <strong>MongoDB</strong> provides flexible, scalable data storage with its document-based 
+                    architecture, perfect for managing complex patient records.
+                  </Text>
+                  <HStack spacing={4}>
+                    <Image 
+                      src="https://th.bing.com/th/id/OIP.Al8weKZSstHJRmzugzj01QHaF7?rs=1&pid=ImgDetMain" 
+                      alt="MongoDB" 
+                      boxSize="120px" 
+                      objectFit="contain"
+                    />
+                  </HStack>
+                </VStack>
+              </MotionBox>
+            </SlideFade>
+
+            <SlideFade in={true} offsetY="20px" delay={0.6}>
+              <MotionBox
+                p={8}
+                bg="white"
+                borderRadius="xl"
+                boxShadow="lg"
+                whileHover={{ scale: 1.02 }}
+              >
+                <VStack align="start" spacing={6}>
+                  <Heading size="lg" color="orange.500">Storage & Security</Heading>
+                  <Text>
+                    <strong>Cloudinary</strong> and <strong>Firebase Storage</strong> handle media files, 
+                    while advanced <strong>facial recognition</strong> ensures secure authentication.
+                  </Text>
+                  <HStack spacing={4}>
+                    <Image 
+                      src="https://th.bing.com/th/id/OIP.bWgmv2jg_WjLuIMESDqFBQAAAA?rs=1&pid=ImgDetMain" 
+                      alt="Cloudinary" 
+                      boxSize="120px" 
+                      objectFit="contain"
+                    />
+                    <Image 
+                      src="https://th.bing.com/th/id/OIP.79mTav-hYqM-c0WrHDrQ2AAAAA?w=300&h=225&rs=1&pid=ImgDetMain" 
+                      alt="Firebase" 
+                      boxSize="120px" 
+                      objectFit="contain"
+                    />
+                  </HStack>
+                </VStack>
+              </MotionBox>
+            </SlideFade>
+          </SimpleGrid>
+        </Container>
+      </Box>
+
+      {/* Login Accounts Section */}
+      <Box
+        ref={loginRef}
+        p={10}
+        bgGradient="linear(to-b, teal.500, blue.600)"
+        color="white"
+        position="relative"
+        overflow="hidden"
+      >
+        <Box 
+          position="absolute"
+          top="20%"
+          right="10%"
+          w="100px"
+          h="100px"
+          borderRadius="50%"
+          bg="white"
+          opacity="0.1"
+          animation={floatAnimation}
+        />
+        <Box 
+          position="absolute"
+          bottom="20%"
+          left="10%"
+          w="150px"
+          h="150px"
+          borderRadius="50%"
+          bg="white"
+          opacity="0.1"
+          animation={`${floatAnimation} 4s ease-in-out infinite`}
+        />
+        
+        <Container maxW="container.md">
+          <MotionVStack
+            spacing={8}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            <MotionHeading
+              fontSize="4xl"
+              textAlign="center"
+              initial={{ y: -20 }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              Access the System
+            </MotionHeading>
+            <MotionText
+              textAlign="center"
+              maxW="lg"
+              fontSize="lg"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 1 }}
+            >
+              Click on any role below to access the respective login portal
+            </MotionText>
+
+            <SimpleGrid columns={[1, 2]} spacing={6} w="full">
+              {[
+                {
+                  icon: MdDashboard, // You'll need to import MdDashboard from 'react-icons/md'
+                  title: "Centralized Portal",
+                  url: 'https://medivault-hospitalmanagement.onrender.com',
+                  color: 'pink.200'
+                },
+                {
+                  icon: MdAdminPanelSettings,
+                  title: "Hospital Admin",
+                  url: 'https://medivault-admin.onrender.com',
+                  color: 'teal.200'
+                },
+                {
+                  icon: MdPerson,
+                  title: "Doctors",
+                  url: 'https://medivault-doctor.onrender.com',
+                  color: 'blue.200'
+                },
+                {
+                  icon: MdLocalHospital,
+                  title: "Nurses",
+                  url: 'https://medivault-nurse.onrender.com',
+                  color: 'green.200'
+                },
+                {
+                  icon: MdAssignment,
+                  title: "Scan Center",
+                  url: 'https://medivault-scancenter.onrender.com',
+                  color: 'purple.200'
+                },
+                {
+                  icon: FaUser, // You'll need to import FaUser from 'react-icons/fa'
+                  title: "Patient Portal",
+                  url: 'https://medivault-patient.onrender.com',
+                  color: 'orange.200'
+                }
+              ].map((item, index) => (
+                <MotionBox
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 + 0.3, duration: 0.5 }}
+                >
+                  <MotionBox
+                    p={6}
+                    borderRadius="xl"
+                    bg="rgba(255, 255, 255, 0.1)"
+                    backdropFilter="blur(10px)"
+                    border="1px solid"
+                    borderColor="rgba(255, 255, 255, 0.2)"
+                    cursor="pointer"
+                    whileHover={{ 
+                      y: -5,
+                      backgroundColor: "rgba(255, 255, 255, 0.2)"
+                    }}
+                    transition={{ duration: 0.3 }}
+                    onClick={() => handleCardClick(item.url)}
+                  >
+                    <HStack spacing={4}>
+                      <Icon 
+                        as={item.icon} 
+                        boxSize={8} 
+                        color={item.color} 
+                      />
+                      <Text fontSize="xl" fontWeight="semibold">{item.title}</Text>
+                    </HStack>
+                  </MotionBox>
+                </MotionBox>
+              ))}
+            </SimpleGrid>
+          </MotionVStack>
+        </Container>
+      </Box>
+
+      {/* Contact Section */}
+      <Box
+        p={10}
+        bg="white"
+        ref={contactRef}
+      >
+        <Container maxW="container.md">
+          <MotionVStack
+            spacing={8}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            <MotionHeading
+              fontSize="4xl"
+              textAlign="center"
+              bgGradient="linear(to-r, teal.500, blue.600)"
+              bgClip="text"
+            >
+              Contact Us
+            </MotionHeading>
+            
+            <MotionBox
+              w="full"
+              p={8}
+              borderRadius="xl"
+              boxShadow="xl"
+              bg="gray.50"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <form onSubmit={handleSubmit}>
+                <VStack spacing={6}>
+                  <FormControl id="name" isRequired>
+                    <FormLabel>Name</FormLabel>
+                    <Input 
+                      type="text" 
+                      placeholder="Your Name" 
+                      focusBorderColor="teal.500"
+                      size="lg"
+                    />
+                  </FormControl>
+                  <FormControl id="email" isRequired>
+                    <FormLabel>Email</FormLabel>
+                    <Input 
+                      type="email" 
+                      placeholder="Your Email" 
+                      focusBorderColor="teal.500"
+                      size="lg"
+                    />
+                  </FormControl>
+                  <FormControl id="message" isRequired>
+                    <FormLabel>Message</FormLabel>
+                    <Textarea 
+                      placeholder="Your Message" 
+                      focusBorderColor="teal.500"
+                      size="lg"
+                      rows={6}
+                    />
+                  </FormControl>
+                  <Button
+                    type="submit"
+                    colorScheme="teal"
+                    size="lg"
+                    w="full"
+                    mt={4}
+                    _hover={{
+                      transform: 'translateY(-2px)',
+                      boxShadow: 'lg',
+                    }}
+                  >
+                    Send Message
+                  </Button>
+                </VStack>
+              </form>
+            </MotionBox>
+          </MotionVStack>
+        </Container>
+      </Box>
+
+      {/* Footer */}
+      <MotionBox
+        as="footer"
+        bg={useColorModeValue('gray.100', 'gray.800')}
+        p={4}
+        initial={{ y: 100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Container maxW="container.xl">
+          <Flex justify="space-between" align="center" wrap="wrap">
+            <Text fontSize="sm" color={useColorModeValue('gray.600', 'gray.300')}>
+              © {new Date().getFullYear()} MediVault. All rights reserved.
+            </Text>
+            <Flex>
+              <Link 
+                href="/privacy-policy" 
+                mx={2} 
+                fontSize="sm" 
+                color={useColorModeValue('blue.500', 'blue.300')}
+                _hover={{ textDecoration: 'underline' }}
+              >
+                Privacy Policy
+              </Link>
+              <Link 
+                href="/terms-of-service" 
+                mx={2} 
+                fontSize="sm" 
+                color={useColorModeValue('blue.500', 'blue.300')}
+                _hover={{ textDecoration: 'underline' }}
+              >
+                Terms of Service
+              </Link>
+            </Flex>
+          </Flex>
+        </Container>
+      </MotionBox>
     </Box>
   );
 };
