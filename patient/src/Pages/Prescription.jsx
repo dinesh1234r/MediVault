@@ -10,6 +10,7 @@ const PrescriptionPage = () => {
   
   const details = useSelector((state) => state.history);
   
+  
   const dob=JSON.parse(localStorage.getItem('patient')).DOB;
   const [age, setAge] = useState(null);
 
@@ -55,7 +56,7 @@ const PrescriptionPage = () => {
             {'Dr .'+details.DoctorDetails.doctor.Doctor_name}
           </Heading>
           <Text fontSize="sm">{details.DoctorDetails.doctor.Qualifications}</Text>
-          <Text fontSize="sm">Phone No: {details.DoctorDetails.doctor.PhoneNo}</Text>
+          <Text fontSize="sm">Reg No: {details.DoctorDetails.doctor.Medical_License_Number}</Text>
         </VStack>
         <VStack align="end" spacing={1}>
           <Heading size="md" color="blue.600">
