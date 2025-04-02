@@ -43,7 +43,7 @@ const PrescriptionPage = () => {
   };
 
   const handleGoBack = () => {
-    navigate('/patient-history'); // Navigate to the previous page
+    navigate('/history'); // Navigate to the previous page
   };
 
   return (
